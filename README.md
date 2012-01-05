@@ -23,15 +23,24 @@ Includes loading test-data.lisp and test-data-init.lisp for demo:
 (solve-plot test-tsp (make-instance 'greedy-NN))
 ```
 or
+
 ```
 (solve-plot test-vrp (make-instance 'greedy-insertion))
 ```
 
+or using Tabu Search (animate plots every iteration in a .png file in run-frames/)
+
+```
+(solve-plot test-vrp (make-instance 'tabu-search :iterations 5 :animate T))
+```
+
 You can define your own problems with (to be extended)
+
 ```
 (define-problem 'vrp *node-coords* n "output.png")
 ```
 where *node-coords* is a list of node-coords and n is the number of vehicles.
+
 
 ## Vision
 
@@ -44,7 +53,7 @@ The ultimate vision for Open VRP is a simple intuitive embedded language for the
 ## TODO
 
 * A search framework for meta-heuristics (Tabu Search, Genetic Algorithms, etc..)
-* Benchmark test-case loader (Taillard/Solomon)
+* Benchmark test-case loader (Taillard/Solomon/Li&Lim, etc...)
 * Extend VRP model to CVRP, VRPTW and PDPTW
 * Run logs/statistics for test-result gathering (including batch runs)
 * User-interface (better macros)
