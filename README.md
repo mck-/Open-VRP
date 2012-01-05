@@ -52,7 +52,7 @@ The ultimate vision for Open VRP is a simple intuitive embedded language for the
 
 ## TODO
 
-* A search framework for meta-heuristics (Tabu Search, Genetic Algorithms, etc..)
+* A search framework for meta-heuristics (Tabu Search, Genetic Algorithms, etc..) **(wip)**
 * Benchmark test-case loader (Taillard/Solomon/Li&Lim, etc...)
 * Extend VRP model to CVRP, VRPTW and PDPTW
 * Run logs/statistics for test-result gathering (including batch runs)
