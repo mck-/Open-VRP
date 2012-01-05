@@ -13,6 +13,22 @@
 (defmethod route-indices ((v vehicle))
   (mapcar #'node-ID (vehicle-route v)))
 
+(defmethod route-indices ((f fleet))
+  (mapcar #'route-indices (fleet-vehicles f)))
+
+(defmethod route-indices ((p problem))
+  (route-indices (problem-fleet p)))
+
+(defgeneric vehicle-with-node (obj node-id)
+  (:method (obj node) "Expects <problem>/<fleet> and int as inputs!")
+  (:documentation "Given a node-ID, return the vehicle-ID that has the node in its route. The function for the input of the base-node 0 is undefined. Returns NIL if node-ID cannot be found."))
+
+(defmethod vehicle-with-node ((f fleet) node-ID)
+  (position-if #'(lambda (route) (member node-ID route)) (route-indices f)))
+
+(defmethod vehicle-with-node ((p problem) node-ID)
+  (vehicle-with-node (problem-fleet p) node-ID))
+
 (defgeneric total-dist (obj net)
   (:method (obj net) "Expects <vehicle>/<fleet> and <network> as inputs!")
   (:documentation "Returns total distance of the route(s) given a vehicle or a fleet."))

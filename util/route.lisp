@@ -48,13 +48,20 @@
     (remove-index index r)))
 
 ;; added Thu 29 Dec, 2011
-(defgeneric remove-node (vehicle node-ID)
-  (:method (vehicle node-ID) "Expects <vehicle> and int as inputs!")
-  (:documentation "Removes the <node> with node-ID from the route of <vehicle>"))
+(defgeneric remove-node-ID (veh/prob node-ID)
+  (:method (vehicle node-ID) "Expects <vehicle>/<problem> and int as inputs!")
+  (:documentation "Removes the <node> with node-ID from the route of <vehicle> which has it. Returns NIL if failed to find node-ID."))
 
-(defmethod remove-node ((v vehicle) node-ID)
-  (change-route v
-    (remove node-ID r :key #'node-id)))
+(defmethod remove-node-ID ((v vehicle) node-ID)
+  (if (member node-ID (route-indices v))
+      (change-route v
+	(remove node-ID r :key #'node-id))
+      nil))
+  
+(defmethod remove-node-ID ((prob problem) node-ID)
+  (aif (vehicle-with-node prob node-ID)
+       (remove-node-ID (vehicle prob it) node-ID)
+       nil))
 
 ;; 3. Last location
 (defgeneric last-node (vehicle)

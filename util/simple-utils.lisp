@@ -2,16 +2,39 @@
 ;;; ------------------------
 (in-package :open-vrp.util)
 
-;; Returns a list of all the elements in a tree. Flat.		       
+;; Simple utils from Paul Graham's Onlisp
+;; -------------------------------
+
+(defun mapa-b (fn a b &optional (step 1))
+  "Maps function over integers from a to b"
+  (do ((i a (+ i step))
+       (result nil))
+      ((> i b) (nreverse result))
+    (push (funcall fn i) result)))
+
+(defun map0-n (fn n)
+  "maps from 0 to n"
+  (mapa-b fn 0 n))
+
+(defun map1-n (fn n)
+  "maps from 1 to n"
+  (mapa-b fn 1 n))
+
+(defmacro mac (expr)
+  `(pprint (macroexpand-1 ',expr)))
+
+(defmacro while (test &body body)
+  `(do ()
+       ((not ,test))
+     ,@body))
+
 (defun flatten (x)
+  "Returns a list of all the elements in a tree. Flat."
   (labels ((rec (x acc)
 	     (cond ((null x) acc)
 		   ((atom x) (cons x acc))
 		   (t (rec (car x) (rec (cdr x) acc))))))
     (rec x nil)))
-
-;; ---- chap 14 - Anaphoric Macros (Paul Graham's Onlisp)
-;; using 'it' outside the macro to prevent repeated evals
 
 (defmacro aif (test-form then-form &optional else-form)
   `(let ((it ,test-form))
@@ -21,6 +44,8 @@
   `(do ((it ,expr ,expr))
        ((not it))
      ,@body))
+
+;; ----------------------------------------------------------
 
 (defun max-car (list)
   "Provided a list, return the maximum value considering the cars"
@@ -40,6 +65,7 @@
     (member type '(tsp fleet network node vehicle))))
 
 (defun copy-object (object)
+  "A deep-cloner for CLOS."
   (let* ((i-class (class-of object))
 	 (clone (allocate-instance i-class)))
     (dolist (slot (sb-mop:class-slots i-class))

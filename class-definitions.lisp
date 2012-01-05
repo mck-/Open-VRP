@@ -43,6 +43,7 @@
 ;; -----------------------
 ;; Uses: util-geometry.lisp (create-network) - util-vehicle.lisp (create-fleet)
 ;; Requires: *node-coords* to be the map of nodes
+;; NOTE: The <Problem> object is also a <Solution> object interchangably.
 
 (defclass problem ()
   ((name :reader problem-name :initarg :name)
@@ -95,24 +96,31 @@
   ((name :initform "Greedy Insertion heuristic")
    (desc :initform "Random greedy insertion heuristic; insert nodes to closest vehicle successively")))
 
+;; added Mon Dec 12, 2011
+;; note Thu Dec 15, 2011 - perhaps add slots that define the TS? moves/init sol/ts parameters..
+;; .. it is possible to use 'string in slot, and use slot value to make-instance (for moves)
+;; - it is possible to define your own moves and initial solution.
+(defclass tabu-search (algo)
+  ((name :initform "Tabu Search")
+   (desc :initform "Simple Tabu Search heuristic, see (Kuo 2011) for details.")
+   (moves :accessor tabu-search-moves :initarg :moves :initform 'TS-best-insertion-move)
+   (init-heur :accessor tabu-search-init-heur :initarg :init-heur :initform 'greedy-insertion)
+   (iterations :initform 5)
+   (animate :accessor tabu-search-animate :initarg :animate :initform nil)))
+
 ;; -------------------------------
 
-;; ;; TODO
-;; ;; added Mon Dec 12, 2011
-;; ;; note Thu Dec 15, 2011 - perhaps add slots that define the TS? moves/init sol/ts parameters..
-;; ;; .. it is possible to use 'string in slot, and use slot value to make-instance (for moves)
-;; ;; - it is possible to define your own moves and initial solution.
-;; (defclass tabu-search (algo)
-;;   ((name :initform "Tabu Search")
-;;    (desc :initform "Simple Tabu Search heuristic, see (Kuo 2011) for details.")
-;;    (moves :accessor tabu-search-moves :initarg :moves :initform 'best-insertion-move)
-;;    (init-heur :accessor tabu-search-init-heur :initarg init-heur :initform 'greedy-insertion)))
+;; added Thu Dec 15, 2011
+(defclass move ()
+  ((fitness :accessor move-fitness :initarg :fitness)))
 
-;; ;; added Thu Dec 15, 2011
-;; (defclass move ()
-;;   ((score :accessor move-score :initarg :score)))
+;; Given a node and a vehicle, TS-best-insertion inserts it in the best possible position
+(defclass TS-best-insertion-move (move)
+  ((node-ID :accessor move-node-ID :initarg :node-ID)
+   (vehicle-ID :accessor move-vehicle-ID :initarg :vehicle-ID)))
 
-;; (defclass best-insertion-move (move)
-;;   ((node-ID :accessor move-node-ID :initarg :node-ID)
-;;    (vehicle-ID :accessor move-vehicle-ID :initarg :vehicle-ID)))
-
+;; For intra-move insertion (algo/tools.lisp)
+(defclass insertion-move (move) 
+  ((node-ID :accessor move-node-ID :initarg :node-ID)
+   (vehicle-ID :accessor move-vehicle-ID :initarg :vehicle-ID)
+   (index :accessor move-index :initarg :index)))

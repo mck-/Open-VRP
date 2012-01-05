@@ -4,15 +4,9 @@
 (in-package :open-vrp.output)
 
 ;; Print solution
-(defmethod route-indices ((f fleet))
-  (mapcar #'route-indices (fleet-vehicles f)))
-
-(defmethod route-indices ((prob problem))
-  (route-indices (problem-fleet prob)))
-
 (defgeneric print-routes (solution)
   (:method (solution) "Expects <fleet> or <problem> object!")
-  (:documentation "Prints solution given a <fleet> object. Also prints the total distance when the input is a <problem> object."))
+  (:documentation "Prints solution given a <fleet>/<problem>/<algo> object. Also prints the total distance when the input is a <problem>/<algo> object."))
 
 (defmethod print-routes ((f fleet))
   (format t "Solution:~%~{Route: ~A~^~%~}" (route-indices f)))
@@ -21,3 +15,5 @@
   (print (fitness prob))
   (print-routes (problem-fleet prob)))
 
+(defmethod print-routes ((a algo))
+  (print-routes (algo-best-sol a)))

@@ -25,5 +25,6 @@
 (load "algo/tools")
 (load "algo/greedy-NN")
 (load "algo/greedy-insertion")
+(load "algo/TS")
 
 (load "test-data-init") ;test-data initialization 

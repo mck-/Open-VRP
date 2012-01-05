@@ -26,7 +26,8 @@
 	   :greedy-insertion
 	   :tabu-search
 	   :move
-	   :best-insertion-move
+	   :TS-best-insertion-move
+	   :insertion-move
 	   :drawer
 	   
 	   ;; accessor functions
@@ -53,9 +54,11 @@
 	   :algo-iterations
 	   :tabu-search-moves
 	   :tabu-search-init-heur
+	   :tabu-search-animate
 	   :move-node-ID
 	   :move-vehicle-ID
-	   :move-score
+	   :move-index
+	   :move-fitness
 	   :drawer-min-coord
 	   :drawer-max-coord
 	   :drawer-legend-x
@@ -70,7 +73,12 @@
 	:open-vrp.classess
 	:open-vrp.data)
   (:export ;; simple utils
+           :mac
            :flatten
+	   :mapa-b
+	   :map1-n
+	   :map0-n
+	   :while
 	   :aif
 	   :awhile
 	   :it
@@ -113,11 +121,13 @@
 
 	   ;; fleet utils
 	   :route-indices
+	   :vehicle-with-node
 	   :total-dist
 	   :vehicle
 	   :create-fleet
 
-	   :fitness))
+	   :fitness
+	   ))
 
 
 (defpackage :open-vrp.output
@@ -126,8 +136,7 @@
 	:open-vrp.util
    	:vecto
 	:open-vrp.data)
-  (:export :list-all-routes
-	   :print-routes
+  (:export :print-routes
 	   :plot-solution
 	   :plot-nodes))
 
@@ -140,7 +149,16 @@
 	   :solve-prob
 	   :solve-plot
 	   :re-init
-	   :get-closest-vehicle))
+	   :get-closest-vehicle
+	   :fitness-before-after
+	   :initialize
+	   :iterate
+	   :generate-moves
+	   :perform-move
+	   :assess-move
+	   :assess-moves
+	   :sort-moves
+	   :get-best-insertion-move))
 
 (defpackage :open-vrp
   (:use :common-lisp

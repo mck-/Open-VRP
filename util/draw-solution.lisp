@@ -95,11 +95,11 @@
 ;; Solution drawing
 ;; -----------------------------
 
-(defgeneric plot-solution (problem)
-  (:method (problem) "Expects <problem> object as input!")
-  (:documentation "Given a solution object (<problem>), draw the solution in output file given in the drawer object's :filename slot (which is held in problem-drawer slot)."))
+(defgeneric plot-solution (problem/algo &optional output-file)
+;  (:method (problem &optional output-file) "Expects <problem> object as input!")
+  (:documentation "Given a solution object (<problem>/<algo>), draw the solution in output file given in the drawer object's :filename slot (which is held in problem-drawer slot). When <algo> object as input, draw the best found solution by that algo object."))
  
-(defmethod plot-solution ((sol problem))
+(defmethod plot-solution ((sol problem) &optional output-file)
   (let ((dr (problem-drawer sol)))
     (with-canvas (:width (drawer-max-pix dr) :height (drawer-max-pix dr))
       (let ((font (get-font "FreeSerif.ttf")))
@@ -130,7 +130,12 @@
 					;draw results (temporary disabled, needs fix!)
 	(draw-string (* 0.1 (drawer-max-pix dr)) (* 0.1 (drawer-max-pix dr)) (write-to-string (fitness sol)))
 					; save file
-	(save-png (drawer-filename dr))))))
+	(if output-file
+	    (save-png output-file)
+	    (save-png (drawer-filename dr)))))))
+
+(defmethod plot-solution ((a algo) &optional output-file)
+  (plot-solution (algo-best-sol a) output-file))
 
 (defgeneric plot-nodes (problem)
   (:method (problem) "Expects <drawer> and <network> as input!")

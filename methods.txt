@@ -12,17 +12,17 @@ dist-table (<Network>/<Problem)		 - returns the dist-table (obsolete accessor?)
 
 -- util/fleet.lisp
 vehicle (<Fleet>/<Problem> int)		 - returns <Vehicle>, given ID
-route-indices (<Vehicle>)		 - returns the route as list of Node IDs
+route-indices (<Vehicle>/<Fleet>/<Problem>)- returns the route as list of Node IDs
+vehicle-with-node (<Fleet>/<Problem> int)- returns vehicle-ID which route has node-ID
 total-dist (<Vehicle>/<Network>)	 - returns the total distance of route/fleet
 
 -- util/output.lisp
-list-all-routes (<Fleet>/<Problem>)	 - returns list of <Node>lists
-print-routes (<Fleet>/<Problem>)	 - prints routes, given the fleet
+print-routes (<Fleet>/<Problem>/<Algo>)	 - prints routes, given the fleet/problem/algo
 
 -- util/draw-solution.lisp
 draw-nodes (<Drawer> <Network>)		 - Plots all <Nodes> in <Drawer> canvas (use plot-nodes)
-plot-solution (<Drawer> <Problem>)	 - Output .png file with plot of current solution
-plot-nodes (<Drawer> <Network>)		 - Output .png file showing only <Nodes>
+plot-solution (<Problem>/<Algo>)	 - Output .png file with plot of current/best solution
+plot-nodes (<Problem>)			 - Output .png file showing only <Nodes>
 
 -- util/fitness.lisp
 fitness (<Problem>)			 - fitness function (to be specified further)
@@ -30,7 +30,8 @@ fitness (<Problem>)			 - fitness function (to be specified further)
 -- util/route.lisp
 insert-node (<Vehicle> <Node> int)	 - inserts <Node> into the route of <Vehicle>, before i
 append-node (<Vehicle> <Node>)		 - appends <Node> at end of route of <Vehicle>
-remove-node (<Vehicle> int)		 - removes <Node> of route at i
+remove-node-at (<Vehicle> int)		 - removes <Node> of route at i
+remove-node-ID (<Vehicle>/<Problem> int) - removes <Node> with node-ID of route/solution
 last-node (<Vehicle>)  			 - returns last <Node> route
 closest-node (<Vehicle> <Network>)	 + returns closest <Node> from location of <Vehicle>
 closest-node (<Problem> int)		 + accepts <Problem> and vehicle ID
@@ -44,5 +45,12 @@ re-init (<Fleet>/<Problem>)		 - Resets all vehicles to initial location
 
 -- algo/tools.lisp
 get-closest-vehicle (<Node> <Problem>)	 - returns <Vehicle> that is closest to given <Node>
+initialize (<Problem> <Algo>)  		 - initializes the solution in :current-solution
+iterate (<Algo>)			 - performs one iteration, returns best-sol if finished
+generate-moves (<Algo>)			 - returns a list of all <Move>s to be considered
+perform-move (<Problem> <Move>)		 - performs <move> on and returns <problem>
+assess-move (<Problem> <Move>)		 - assess <Move>, returns and set in :fitness slot
+
+
 
 
