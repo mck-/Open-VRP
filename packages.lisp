@@ -4,14 +4,6 @@
  
 (in-package :cl-user)
 
-(defpackage :open-vrp.data
-  (:use :common-lisp)
-  (:export :*node-coords*
-	   :*fleet-size*
-	   :*min-coord*
-	   :*max-coord*
-	   :*plot-filename*))
-
 (defpackage :open-vrp.classess
   (:use :common-lisp)
   (:export :network
@@ -70,8 +62,7 @@
 
 (defpackage :open-vrp.util
   (:use :common-lisp
-	:open-vrp.classess
-	:open-vrp.data)
+	:open-vrp.classess)
   (:export ;; simple utils
            :mac
            :flatten
@@ -134,8 +125,7 @@
   (:use :common-lisp
 	:open-vrp.classess
 	:open-vrp.util
-   	:vecto
-	:open-vrp.data)
+   	:vecto)
   (:export :print-routes
 	   :plot-solution
 	   :plot-nodes))
@@ -163,11 +153,8 @@
 (defpackage :open-vrp
   (:use :common-lisp
 	:open-vrp.classess
-	:open-vrp.data
 	:open-vrp.util
 	:open-vrp.algo
-	:open-vrp.output)       
-  (:export :run-GA
-	   :run-greedy
-	   :run-TS
-	   :multi-start))
+	:open-vrp.output)
+  (:export :define-problem
+	   :load-testcase-Solomon))

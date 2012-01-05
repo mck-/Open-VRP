@@ -7,7 +7,6 @@
 (princ "; Loading 'Open-VRP'")
 (load "packages")
 (load "class-definitions")
-(load "test-data") ;test-data
 
 ;; utilities
 (load "util/simple-utils")
@@ -19,7 +18,11 @@
 (load "util/route")
 (load "util/draw-solution")
 (load "util/algo")
+
+;; data
+(load "util/var-init")
 (load "init-macros")
+(load "util/read-solomon")
 
 ;; algos
 (load "algo/tools")
@@ -27,4 +30,4 @@
 (load "algo/greedy-insertion")
 (load "algo/TS")
 
-(load "test-data-init") ;test-data initialization 
+(load "test-cases") ;test-data initialization 
