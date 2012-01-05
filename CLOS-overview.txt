@@ -13,7 +13,7 @@ A solution to the problem is defined as a <Fleet> object, which holds the <Fleet
 
 The fitness is calculated given a <Fleet> object.
 
-+ <Problem> defines the problem (to be inherited by VRP/VRPTW/CVRP...)
++ <Problem> defines the problem (to be inherited by TSP/VRP/VRPTW/CVRP...)
   - holds <Network> object (created using (create-network *node-coords*) in util-geometry.lisp)
     + <Network> is a class that defines the graph/network
        - holds LIST of <Node> objects (Using first node (ID = 0) as base node!)
@@ -50,17 +50,16 @@ The fitness is calculated given a <Fleet> object.
   - holds 'current-sol' for the current solution (when algo is interrupted)
   - holds 'iterations' to count the number of iterations left
 
-====== (wip)
-
 => <Tabu-search> inherits <algo>
   - holds 'moves' which states (quote) what class of moves will be used
   - holds 'init-heur' which states what heuristic will be used for initial solution
+  - holds 'animate' to trigger plotting each frame to be output in run-frames/...png
 
 + <Move> is the object describing a potential move
-=> best-insertion-move - insertion-move
+=> TS-best-insertion-move - insertion-move
   - holds 'fitness' -- after assessing move, this move gets a score
 
-=> <best-insertion-move> inherits <Move>
+=> <TS-best-insertion-move> inherits <Move>
   - holds 'node-ID' which is the <Node> to be moved
   - holds 'vehicle-ID' in which the <Node> will be 'best-inserted'
 
