@@ -1,2 +1,4 @@
 # Ignore all emacs backup files
 *~
+# Ignore newly plotted results
+*png

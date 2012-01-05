@@ -50,7 +50,17 @@
 	      (< new-fitness best-fitness))
       (setf (algo-best-fitness a) new-fitness)
       (setf (algo-best-sol a) sol))))
-		  
+
+;; Tabu Search animate
+;; -------------------------
+(defmethod iterate :after ((ts tabu-search))
+  (when (tabu-search-animate ts)
+    (plot-solution (algo-current-sol ts) (with-output-to-string (s)
+					   (princ "run-frames/Iteration " s)
+					   (princ (algo-iterations ts) s)
+					   (princ ".png" s)))))
+;; --------------------------
+
 
 ;; Generate-moves
 ;; -------------------

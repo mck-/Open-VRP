@@ -1,11 +1,11 @@
 ;;; Thu Dec 15, 2011 (c) Marc Kuo
 ;;; ----------------
-;;; Tabu Search implementation (uses iterate (util-algo.lisp))
+;;; Tabu Search implementation (uses algo/tools.lisp)
 ;;; 0. initialize algo object
 ;;; 1. generate moves
-;;; 2. assess moves
+;;; 2. perform move
 ;;; 3. select move
-;;; 4. perform move
+;;; 4. iterate
 
 (in-package :open-vrp.algo)
 
@@ -48,6 +48,8 @@
   prob)
 
 ;; WIP - currently just selects the best move; no tabu-list implementation yet!
+;; could not be a generic function, because the way a TS selects a move is different from
+;; say GA, but the argument is a list, not an object.
 (defun select-move (moves)
   "This function selects a move from a sorted list of moves, while considering the tabu-list."
   (car moves))
@@ -60,19 +62,14 @@
 	 (moves (assess-moves sol (generate-moves ts)))
  	 (sorted (sort-moves moves))
 	 (selected-move (select-move sorted)))
-    ;; for testing
-    (when (tabu-search-animate ts)
-      (plot-solution sol (with-output-to-string (s)
-			   (princ "run-frames/Iteration " s)
-			   (princ (algo-iterations ts) s)
-			   (princ ".png" s))))
+    ;; logging
     (princ "Performing ")
     (princ (tabu-search-moves ts))
     (princ " with Node ")
     (princ (move-node-ID selected-move))
     (princ " and Vehicle ")
     (princ (move-vehicle-ID selected-move))
-    ;; ------------
+    ;; ---------------
     (perform-move sol selected-move)))
 
 
