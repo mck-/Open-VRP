@@ -6,11 +6,23 @@ Open VRP is a framework to model and solve [VRP-like](http://neo.lcc.uma.es/radi
 
 * written from scratch
 * build using the toolkit of shared operators
-* or tweaked from existing implementations **(wip)**
+* or tweaked from existing implementations
 
 The Problem object (e.g. VRP) and the Algorithm object (e.g. Genetic Algorithm) are modelled seperately and combined with the generic method (solve-prob problem algo). Different solution algorithms can be tested and compared against each other on the same problem (which you only model once).
 
 The solutions are drawn using [vecto](http://www.xach.com/lisp/vecto/) in a .png file. Logs and statistics of the run are summarised in a .txt file **(wip)**.
+
+## Vision
+
+Too often have I found myself having to build a VRP model from scratch, just to experiment with some meta-heuristics for a school paper. Academics/students with a background/interest in Mathematics/Operations Research WITHOUT the skills/passion for coding, have no choice but to spend their valuable time stuck in the debug/test/debug cycle.
+
+With this framework, I hope to catalyze the research and application of routing solutions. Researchers in innovative new algorithms should not need to fiddle in the Eclipse debugger screen, frustratingly looking for a missing semi-colon. They should be able to focus all their energy and effort in devising their heuristics. OR should be kept fun and clean.
+
+The ultimate vision for Open VRP is a simple intuitive embedded language for the OR community, free for anyone.
+
+## Overview
+
+A better documentation of the code is pending (with pictures).
 
 ## Usage
    
@@ -42,21 +54,15 @@ You can define your own problems with (to be extended)
 where *node-coords* is a list of node-coords and n is the number of vehicles.
 
 
-## Vision
-
-Too often have I found myself having to build a VRP model from scratch, just to experiment with some meta-heuristics for a school paper. Academics/students with a background/interest in Mathematics/Operations Research WITHOUT the skills/passion for coding, have no choice but to spend their valuable time stuck in the debug/test/debug cycle.
-
-With this framework, I hope to catalyze the research and application of routing solutions. Researchers in innovative new algorithms should not need to fiddle in the Eclipse debugger screen, frustratingly looking for a missing semi-colon. They should be able to focus all their energy and effort in devising their heuristics. OR should be kept fun and clean.
-
-The ultimate vision for Open VRP is a simple intuitive embedded language for the OR community, free for anyone.
-
 ## TODO
 
 * A search framework for meta-heuristics (Tabu Search, Genetic Algorithms, etc..) **(wip)**
-* Benchmark test-case loader (Taillard/Solomon/Li&Lim, etc...)
+* Benchmark test-case loader (Taillard/Solomon/Li&Lim, etc...) **(wip)**
 * Extend VRP model to CVRP, VRPTW and PDPTW
 * Run logs/statistics for test-result gathering (including batch runs)
 * User-interface (better macros)
+* Plotting can be improved (real-time output instead of .png files)
+* ...
 
 ## License
 
