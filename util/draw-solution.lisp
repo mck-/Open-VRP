@@ -17,10 +17,10 @@
 
 (defun get-color ()
   "Returns a random color."
-  (let ((r (random 0.9))
-	(g (random 0.9))
-	(b (random 0.9))
-	(a (random 0.8)))
+  (let ((r (random 0.8))
+	(g (random 0.8))
+	(b (random 0.8))
+	(a (random 0.3)))
     (values r g b a)))
 
 ;; anaphoric macro input index of the node, and binds coords, pix-x and pix-y to the node's.
