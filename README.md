@@ -22,7 +22,7 @@ The ultimate vision for Open VRP is a simple intuitive embedded language for the
 
 ## Overview
 
-A better documentation of the code is pending (with pictures).
+![alt class-diagram](https://github.com/mck-/Open-VRP/blob/master/class-diagram.png?raw=true "Class-diagram")
 
 ## Usage
    
@@ -51,7 +51,7 @@ You can define your own problems with (to be extended)
 ```
 (define-problem 'vrp *node-coords* n "output.png")
 ```
-where *node-coords* is a list of node-coords and n is the number of vehicles.
+where *node-coords* is a list of pairs and n is the number of vehicles.
 
 
 ## TODO
