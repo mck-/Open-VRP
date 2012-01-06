@@ -2,3 +2,5 @@
 *~
 # Ignore newly plotted results
 *png
+# Ignore compiled list files
+*fasl

@@ -5,9 +5,9 @@
 ;;; 2. read from dist-table with (distance i j)
 (in-package :open-vrp.util)
 
-(defun distance (i j dist-table)
+(defun distance (i j dist-array)
   "Read from the distance-table with two indices."
-  (nth j (nth i dist-table)))
+  (aref dist-array i j))
 
 (defun distance-coords (x1 y1 x2 y2)
   "Calculates pythagoras distance"
@@ -15,6 +15,13 @@
 	   (* x x)))
     (sqrt (+ (square (- x1 x2)) (square (- y1 y2))))))
 
+(defun distance-coord-pair (n1 n2)
+   "Calculates distance given two coord pairs. Returns NIL if both coords are the same."
+   (if (eql n1 n2)
+       NIL
+       (distance-coords (car n1) (cdr n1)
+			(car n2) (cdr n2))))
+	         
 (defgeneric node-distance (node1 node2)
   (:method (node1 node) "Inputs are not two nodes.")
   (:documentation "Given two node objects, calculate and return their distance (Cartesian)."))
@@ -24,22 +31,24 @@
 	(x2 (node-xcor n2)) (y2 (node-ycor n2)))
     (distance-coords x1 y1 x2 y2)))
 
-;; Function for generating dist-table
-;; ---------------------------------------
-(defun generate-dist-table (coord-list)
-  "Given a list of coord pairs, generate a matrix of distances."
-  (flet ((helper (n1 n2)
-	   "Calculates distance given two coord pairs. Returns NIL if both coords are the same."
-	   (if (eql n1 n2)
-	       NIL
-	       (distance-coords (car n1) (cdr n1)
-				(car n2) (cdr n2)))))	   
-    (mapcar #'(lambda (node)
-		(mapcar #'(lambda (node2)
-			    (helper node node2))
-			coord-list))
-	    coord-list)))
+;; a cumbersome work-around to provide (make-array)'s second argument
+(defmacro gen-array (size)
+  `(let ((x ,size))
+     `(make-array (quote (,x ,x)) :initial-element nil)))
 
+(defun generate-dist-array (coord-list)
+  "Given a list of coord pairs, generate an array of distances."
+  (let* ((size (length coord-list))
+	 (dist-array (eval (gen-array size))))
+    (map0-n #'(lambda (x)
+		 (map0-n #'(lambda (y)
+			     (setf (aref dist-array x y)
+				   (distance-coord-pair (nth x coord-list)
+							(nth y coord-list))))
+			 (1- size)))
+	     (1- size))
+     dist-array))
+     
 ;; ----------------------------------------
 
 ;; Accessor functions
@@ -99,5 +108,5 @@
   "Given a coord-list, return an instance of class 'network, with nodes and dist-table initialised. Dist-table is a precalculated Cartesian distance matrix, for quick table-lookup. The nodes are created and numbered starting from 0, which is the base node. Reads by default *node-coords*. Use :type to choose what types of nodes will be generated."
 ;Thu Dec 29, 2011 - type may not be useful, since more args are required for e.g. TW-nodes
   (let ((nodes (create-node-objects node-coords type))
-	(dist-table (generate-dist-table node-coords)))
+	(dist-table (generate-dist-array node-coords)))
     (make-instance 'network :dist-table dist-table :nodes nodes)))

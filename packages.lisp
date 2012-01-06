@@ -104,7 +104,7 @@
 	   ;; network utils
 	   :distance
 	   :node-distance
-	   :generate-dist-table
+	   :generate-dist-array
 	   :node
 	   :coords
 	   :dist-table
