@@ -16,5 +16,5 @@
 	(cons -2 -2)))
 
 ;; Initialization of objects
-(defvar test-tsp (define-problem "test-case-TSP" 'tsp *node-coords* 1 "test-tsp.png"))
-(defvar test-vrp (define-problem "test-case-VRP" 'vrp *node-coords* 2 "test-vrp.png"))
+(defvar test-tsp (define-problem "test-case-TSP" 'tsp *node-coords* 1 "plots/test-tsp.png"))
+(defvar test-vrp (define-problem "test-case-VRP" 'vrp *node-coords* 2 "plots/test-vrp.png"))

@@ -1,6 +1,6 @@
 ;;; Sun Jul 3, 2011
 ;;; Interface to read in testcases from files
-;;; (Solomon style: http://neo.lcc.uma.es/radi-aeb/WebVRP/index.html?/Problem_Instances/SolomonDesc.html)
+;;; (Solomon style: http://neo.lcc.uma.es/radi-aeb/WebVRP/index.html?/Problem_Instances/CVRPTWInstances.html)
 ;;; ---
 (in-package :open-vrp)
 

@@ -28,30 +28,30 @@ The ultimate vision for Open VRP is a simple intuitive embedded language for the
    
 ```
 (load "load-all.lisp")
-```
-Includes loading test-data.lisp and test-data-init.lisp for demo:
-
-```
-(solve-plot test-tsp (make-instance 'greedy-NN))
-```
-or
-
-```
-(solve-plot test-vrp (make-instance 'greedy-insertion))
+(in-package open-vrp)
 ```
 
-or using Tabu Search (animate plots every iteration in a .png file in run-frames/)
+test-vrp is a demo problem, which will plot its result in plots/test-vrp.png. To use Tabu Search:
 
 ```
-(solve-plot test-vrp (make-instance 'tabu-search :iterations 5 :animate T))
+(solve-plot test-vrp (make-instance 'tabu-search))
 ```
 
-You can define your own problems with (to be extended)
+You can define your own problems with:
 
 ```
 (define-problem 'vrp *node-coords* n "output.png")
 ```
+
 where *node-coords* is a list of pairs and n is the number of vehicles.
+
+Or to load a [Solomon](http://neo.lcc.uma.es/radi-aeb/WebVRP/index.html?/Problem_Instances/CVRPTWInstances.html) test case:
+
+```
+(defvar test-case (load-testcase-solomon "path-to-file.txt"))
+(solve-plot test-case (make-instance 'tabu-search :iterations 10 :animate T))
+```
+When :animate is on, each iteration will produce a plot in run-frames/Iteration x.png
 
 
 ## TODO
