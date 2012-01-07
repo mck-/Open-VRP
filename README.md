@@ -24,6 +24,8 @@ The ultimate vision for Open VRP is a simple intuitive embedded language for the
 
 ![alt Open-VRP Class-diagram](https://github.com/mck-/Open-VRP/blob/master/class-diagram.png?raw=true "Open-VRP Class-diagram")
 
+---
+
 ![alt Iterator](https://github.com/mck-/Open-VRP/blob/master/iterator.png?raw=true "Iterator")
 
 ## Usage
