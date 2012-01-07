@@ -13,8 +13,11 @@
 (defmethod route-indices ((v vehicle))
   (mapcar #'node-ID (vehicle-route v)))
 
+;; ignore empty vehicles
 (defmethod route-indices ((f fleet))
-  (mapcar #'route-indices (fleet-vehicles f)))
+  (mapcar #'route-indices
+	  (remove-if #'(lambda (v) (> 2 (length (vehicle-route v))))
+		     (fleet-vehicles f))))
 
 (defmethod route-indices ((p problem))
   (route-indices (problem-fleet p)))
