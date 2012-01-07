@@ -37,14 +37,14 @@
   (:documentation "Returns total distance of the route(s) given a vehicle or a fleet."))
 
 (defmethod total-dist ((v vehicle) (net network))
-  (let ((route (route-indices v)) ;A list of node ID's..
+  (let ((route (vehicle-route v)) ;A list of node ID's..
 	(dist-table (network-dist-table net)))       ;..to be used for quick lookup
     (labels ((iter (togo sum)
 	       (if (null (cdr togo)) sum
 		   (iter (cdr togo)
 			 (+ sum
-			    (distance (car togo)
-				      (cadr togo)
+			    (distance (node-id (car togo))
+				      (node-id (cadr togo))
 				      dist-table))))))
       (iter route 0))))
 	       
