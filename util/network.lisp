@@ -36,6 +36,11 @@
   `(let ((x ,size))
      `(make-array (quote (,x ,x)) :initial-element nil)))
 
+(defun get-array-row (array row-index)
+  "Given a 2-dimenstional array and a row-index, return the row as a list"
+  (loop for row to (1- (array-dimension array 0))
+       collect (aref array row-index row)))
+
 (defun generate-dist-array (coord-list)
   "Given a list of coord pairs, generate an array of distances."
   (let* ((size (length coord-list))

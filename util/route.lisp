@@ -85,7 +85,7 @@
 
 (defmethod closest-node ((v vehicle) (net network) &optional tabu)
   (let* ((loc (last-node v))                                  ;binds list of distances..
-	 (dists (nth (node-id loc) (network-dist-table net))));..from the location only.
+	 (dists (get-array-row (network-dist-table net) (node-id loc))));..from the location..
     (aif (get-min-index-with-tabu dists tabu)
 	 (node net it)
 	 nil)))
@@ -95,35 +95,4 @@
 	(net (problem-network prob)))
     (closest-node veh net tabu)))
 
-;; ;;; Advanced: TABU SEARCH UTILS ---
-;; ;; added for TS - Sun Dec 11, 2011
-
-;; ;; 5. Move Node with nodeID from v1 to v2 at v2loc
-;; (defmethod move-node ((v1 vehicle) (v2 vehicle) nodeID v2loc)
-;;   "Move <node> with nodeID from <vehicle> v1 to v2 before the index of v2loc. Returns the two routes after performing move. DESTRUCTIVE."
-;;   (let ((node (find nodeID (vehicle-route v1) :key #'node-id)))
-;;     (if (not node)
-;; 	(error "The node ID is not existent in the route of v1! Cannot perform move.")
-;; 	(progn
-;; 	  (remove-node-ID v1 nodeID)             ;remove node from first route..
-;; 	  (insert-node v2 node v2loc))))         ;..and add it to the second one
-;;   (values
-;;    (route-indices v1)
-;;    (route-indices v2))) ; return the routes after move  
-	  
-;; ;; 6. Return route with node
-;; ;; Sun Dec 11, 2011 - needs testing!!
-;; (defmethod get-route-with ((sol tsp) nodeID)
-;;   "Returns the first <vehicle> with the nodeID in it from solution <tsp>."
-;;   (dolist (veh (fleet-vehicles (problem-fleet sol)))
-;;     (when (member nodeID (route-indices veh))
-;;       (return veh))))
-
-;; ;; 7. Best insertion - for TS
-;; ;; Thu Dec 15, 2011
-
-;; ;(defun effect-of-insertion (
-
-;; ;(defmethod best-insertion ((n node) (v vehicle) (net network))
-;; ;  "Inserts the <node> in the optimal position of the route of <vehicle>."
   

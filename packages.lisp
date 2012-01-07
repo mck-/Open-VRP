@@ -64,6 +64,7 @@
   (:use :common-lisp
 	:open-vrp.classess)
   (:export ;; simple utils
+           :single
            :mac
            :flatten
 	   :mapa-b
@@ -105,6 +106,7 @@
 	   :distance
 	   :node-distance
 	   :generate-dist-array
+	   :get-array-row
 	   :node
 	   :coords
 	   :dist-table

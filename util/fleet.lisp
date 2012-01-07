@@ -16,7 +16,7 @@
 ;; ignore empty vehicles
 (defmethod route-indices ((f fleet))
   (mapcar #'route-indices
-	  (remove-if #'(lambda (v) (> 2 (length (vehicle-route v))))
+	  (remove-if #'(lambda (v) (single (vehicle-route v)))
 		     (fleet-vehicles f))))
 
 (defmethod route-indices ((p problem))

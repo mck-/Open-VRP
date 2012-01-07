@@ -5,6 +5,9 @@
 ;; Simple utils from Paul Graham's Onlisp
 ;; -------------------------------
 
+(defun single (lst)
+  (and (consp lst) (not (cdr lst))))
+
 (defun mapa-b (fn a b &optional (step 1))
   "Maps function over integers from a to b"
   (do ((i a (+ i step))
