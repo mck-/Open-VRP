@@ -28,9 +28,11 @@
   "Generates a list of <move> instances (depending on what was defined in the ts slot) for all nodes and vehicles."
   (let* ((prob (algo-current-sol ts))
 	 (num-nodes (1- (length (coords prob)))) ;1- to account for base
-	 ;ignore empty vehicles, except for one (to allow moves to an empty vehicle)
-	 (num-vehicles (length (remove-if #'(lambda (v) (single (vehicle-route v)))
-					  (fleet-vehicles (problem-fleet prob))))) 
+	 ;ignore empty vehicles, except for one (if available! capped at fleet-size)
+	 (num-vehicles (min
+			(length (remove-if #'(lambda (v) (single (vehicle-route v)))
+					  (fleet-vehicles (problem-fleet prob))))
+			(1- (length (fleet-vehicles (problem-fleet prob))))))
 	 (move-type (tabu-search-moves ts)))
     (flatten
      (map1-n #'(lambda (node-id)
