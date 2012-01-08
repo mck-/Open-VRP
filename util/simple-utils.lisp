@@ -67,12 +67,12 @@
 
 ;; Tue Nov 29, 2011
 ;; quick ugly tsp cloner - DUPLICATES NODES! Network nodes != Vehicle route !!!
-;; copies every slot, but if slot contains an object that may contain more objects, recursively copy-object it. If it is a list (but;; not a matrix (for dist-table), then mapcar copy-object it, since this list may contain objects (e.g. <node> objects in a <vehicle>'s route slot. Very non-generic function, might run into trouble when extending. Needs fix?
+;; copies every slot, but if slot contains an object that may contain more objects, recursively copy-object it. If it is a list, then mapcar copy-object it, since this list may contain objects (e.g. <node> objects in a <vehicle>'s route slot. Very non-generic function, might run into trouble when extending. Needs fix?
 
 (defun vrp-object (object)
-  "Tests if the object is an instance of a VRP object. (problem, fleet, network, vehicle, node)"
+  "Tests if the object is an instance of a VRP object that needs deep copy. (problem, fleet, vehicle)"
   (let ((type (type-of object)))
-    (member type '(tsp fleet network node vehicle))))
+    (member type '(problem fleet vehicle))))
 
 (defun copy-object (object)
   "A deep-cloner for CLOS."
@@ -85,7 +85,7 @@
 	    (setf (slot-value clone slot-name)
 		  (cond ((vrp-object value)
 			 (copy-object (slot-value object slot-name)))
-			((and (listp value) (not (listp (car value))))
+			((listp value)
 			 (mapcar #'copy-object value))
 			(t value)))))))
     clone))
