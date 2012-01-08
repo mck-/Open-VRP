@@ -74,6 +74,7 @@
 	   :aif
 	   :awhile
 	   :it
+	   :sum
 	   :max-car
 	   :max-cdr
 	   :copy-object

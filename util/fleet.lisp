@@ -50,7 +50,7 @@
 	       
 
 (defmethod total-dist ((f fleet) (net network))
-  (reduce #'+ (mapcar #'(lambda (v) (total-dist v net)) (fleet-vehicles f))))
+  (sum (mapcar #'(lambda (v) (total-dist v net)) (fleet-vehicles f))))
 
 ;; Accessor functions
 ;; ------------------

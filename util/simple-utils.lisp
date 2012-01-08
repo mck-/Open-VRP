@@ -49,6 +49,13 @@
      ,@body))
 
 ;; ----------------------------------------------------------
+(defun sum (list)
+  "A quick list summer, 4 times as fast as (reduce #'+ list)"
+  (labels ((helper (todo ans)
+	     (if (null todo) ans
+		 (helper (cdr todo)
+			 (+ ans (car todo))))))
+    (helper list 0)))
 
 (defun max-car (list)
   "Provided a list, return the maximum value considering the cars"
