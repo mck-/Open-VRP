@@ -112,7 +112,8 @@
 	(dolist (veh (fleet-vehicles (problem-fleet sol))) ;Fri Dec 2, 2011 - changed for CLOS
 	  (unless (null (cdr (vehicle-route veh)))
 	    (multiple-value-bind (r g b a) (get-color)
-	      (draw-legend-item dr veh r g b a) ; draw legend item
+	      (when (drawer-legend dr)
+		  (draw-legend-item dr veh r g b a)) ; draw legend item
 	      (set-rgba-stroke r g b a))
 					
 	    (use-node dr (first (vehicle-route veh)) ; draw path
@@ -156,3 +157,15 @@
 
 ;; ----------------------------------------------
 
+(defgeneric toggle-legend (obj)
+  (:method (obj) "Expects <drawer>/<problem>!")
+  (:documentation "toggle the legend on/off."))
+	   
+
+(defmethod toggle-legend ((dr drawer))
+  (if (drawer-legend dr)
+      (setf (drawer-legend dr) nil)
+      (setf (drawer-legend dr) T)))
+
+(defmethod toggle-legend ((pr problem))
+  (toggle-legend (problem-drawer pr)))

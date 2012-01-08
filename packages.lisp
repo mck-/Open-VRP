@@ -53,6 +53,7 @@
 	   :move-fitness
 	   :drawer-min-coord
 	   :drawer-max-coord
+	   :drawer-legend
 	   :drawer-legend-x
 	   :drawer-legend-y
 	   :drawer-x-pos
@@ -131,7 +132,8 @@
    	:vecto)
   (:export :print-routes
 	   :plot-solution
-	   :plot-nodes))
+	   :plot-nodes
+	   :toggle-legend))
 
 (defpackage :open-vrp.algo
   (:use :common-lisp

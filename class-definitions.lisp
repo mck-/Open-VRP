@@ -71,6 +71,7 @@
    (x-pos :accessor drawer-x-pos :initarg :x-pos :initform 0)
    (y-pos :accessor drawer-y-pos :initarg :y-pos :initform 0)
    (max-pix :accessor drawer-max-pix :initarg :max-pix :initform 1000)
+   (legend :accessor drawer-legend :initarg :legend :initform T)
    (legend-x :accessor drawer-legend-x :initarg :legend-x :initform 100)
    (legend-y :accessor drawer-legend-y :initarg :legend-y :initform 900)
    (filename :accessor drawer-filename :initarg :filename :initform "testing.png")))
