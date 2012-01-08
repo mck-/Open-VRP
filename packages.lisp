@@ -2,8 +2,6 @@
 ;;; CLOS package descriptions
 ;;; -----------------------------
  
-(in-package :cl-user)
-
 (defpackage :open-vrp.classess
   (:use :common-lisp)
   (:export :network
