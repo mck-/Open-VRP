@@ -100,9 +100,18 @@
   (mapcar #'(lambda (move) (assess-move solution move)) moves)
   moves)
 
+;; Select move
+;; -------------------
+(defgeneric select-move (algo moves)
+  (:method (algo moves) "select-move: not defined for <Algo>")
+  (:documentation "Given an <Algo> object and the list of <Moves>, select a move. By default, sort the moves and select the best one, but e.g. for tabu-search, check first of the <Move> is tabu."))
+
 (defun sort-moves (moves)
   "Given a list of <Move>s, sort them according to fitness (ascending). DESTRUCTIVE."
   (sort moves #'< :key #'move-fitness))
+
+(defmethod select-move ((a algo) moves)
+  (car (sort-moves moves)))
 
 ;; ------------------------------------------------
 
