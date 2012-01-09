@@ -23,7 +23,7 @@
 ;; Check
 (defgeneric is-tabup (algo move)
   (:method (algo move) "is-tabup: method for <Algo> or <Move> is not defined!")
-  (:documentation "Returns T is <Move> is on the :tabu-list"))
+  (:documentation "Returns <Move> if on the :tabu-list, NIL otherwise"))
 
 (defmethod is-tabup ((ts tabu-search) (mv ts-best-insertion-move))
   (let ((tlist (tabu-list-tabu (tabu-search-tabu-list ts))))
