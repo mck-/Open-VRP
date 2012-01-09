@@ -104,7 +104,8 @@
 
 (defclass tabu-list ()
   ((tabu :accessor tabu-list-tabu :initarg :tabu :initform nil)
-   (tenure :accessor tabu-list-tenure :initarg :tenure :initform 10)))
+   (tenure :accessor tabu-list-tenure :initarg :tenure :initform 25)
+   (aspiration :accessor tabu-list-aspiration :initarg :aspiratoin :initform T)))
 
 ;; added Mon Dec 12, 2011
 ;; note Thu Dec 15, 2011 - perhaps add slots that define the TS? moves/init sol/ts parameters..

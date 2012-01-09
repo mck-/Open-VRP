@@ -17,9 +17,11 @@
 
 (defmethod initialize ((prob problem) (ts tabu-search))
   "Creates inital solution and sets it to :algo-current-sol. Returns the <tabu-search> object."
-  (setf (algo-current-sol ts)
-	(algo-current-sol 
-	 (solve-prob prob (make-instance (tabu-search-init-heur ts)))))
+  (let ((init-sol (algo-current-sol
+		   (solve-prob prob (make-instance (tabu-search-init-heur ts))))))
+    (setf (algo-current-sol ts) init-sol
+	  (algo-best-sol ts) (copy-object init-sol)
+	  (algo-best-fitness ts) (fitness init-sol)))	
   ts)
 
 ;; Original attempt was to make generate-moves a general method - using the move-type slot of ts - which can be used to generate all sorts of moves e.g. swap moves.. but the method below enumerates only along node-id (excluding 0) and vehicle-id. This may only be useful for TS-best-insertion-move?? For other moves, we need to define other defmethods?
@@ -87,13 +89,17 @@
 	(progn (remove-node-ID prob node-ID) (perform-move prob best-move))))
   prob)
 
-;; could not be a generic function, because the way a TS selects a move is different from
-;; say GA, but the argument is a list, not an object.
-(defun select-move (moves tabu-list)
-  "This function selects a move from a sorted list of moves, while considering the tabu-list."
-  (if (is-tabup tabu-list (car moves))
-      (select-move (cdr moves) tabu-list)
-      (car moves)))
+(defmethod select-move ((ts tabu-search) moves)
+  "This function selects a move from a sorted list of moves, while considering the tabu-list. When the aspiration criteria is set to T, then if by performing the move we get a new best solution, circumvent the tabu-list."
+  (if (<
+       (+ (fitness (algo-current-sol ts)) (move-fitness (car moves)))
+       (algo-best-fitness ts))
+      (car moves)
+      (labels ((iter (moves)
+		 (cond ((null moves) (error "No more moves! All are tabu! Reduce tenure!"))
+		       ((is-tabup ts (car moves)) (iter (cdr moves)))
+		       (t (car moves)))))
+	(iter moves))))
 
 ;; --------------------
 ;; perhaps all the logging in an output file as well
@@ -102,7 +108,7 @@
   (let* ((sol (algo-current-sol ts))
 	 (moves (assess-moves sol (generate-moves ts)))
  	 (sorted (sort-moves moves))
-	 (selected-move (select-move sorted (tabu-search-tabu-list ts))))
+	 (selected-move (select-move ts sorted)))
     ;; add move to tabu-list
     (add-to-tabu ts selected-move)
     ;; logging
