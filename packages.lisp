@@ -45,6 +45,7 @@
 	   :algo-iterations
 	   :tabu-list-tabu
 	   :tabu-list-tenure
+	   :tabu-search-tabu-list
 	   :tabu-search-moves
 	   :tabu-search-init-heur
 	   :tabu-search-animate
