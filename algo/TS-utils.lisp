@@ -27,9 +27,19 @@
   (:documentation "Returns <Move> if on the :tabu-list, NIL otherwise"))
 
 (defmethod is-tabup ((tl tabu-list) (mv ts-best-insertion-move))
+  (labels ((iter (tlist)	     
+	     (if (null (car tlist)) nil
+		 (or		 
+		  (and (= (move-node-id mv) (move-node-id (car tlist)))
+		       (= (move-vehicle-ID mv) (move-vehicle-ID (car tlist))))
+		  (iter (cdr tlist))))))
+    (iter (tabu-list-tabu tl))))
+		 
+(defmethod is-tabup ((tl tabu-list) (mv ts-best-insertion-move))
   (let ((tlist (tabu-list-tabu tl)))
-    (and (member (move-node-id mv) tlist :key #'move-node-id)
-	 (member (move-vehicle-ID mv) tlist :key #'move-vehicle-ID))))
+    (aif (member (move-node-id mv) tlist :key #'move-node-id)
+	 (= (move-vehicle-ID mv)
+	    #'move-vehicle-ID))))
 
 (defmethod is-tabup ((ts tabu-search) (mv ts-best-insertion-move))
   (is-tabup (tabu-search-tabu-list ts) mv))
