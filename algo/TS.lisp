@@ -72,12 +72,12 @@
 	  
 (defmethod perform-move ((prob problem) (mv TS-best-insertion-move))
   "Takes <Node> with node-ID and uses get-best-insertion to insert in vehicle-ID. DESTRUCTIVE."
-  (let ((node-ID (move-node-id mv)))
+  (let* ((node-ID (move-node-id mv))
+	 (best-move (get-best-insertion-move prob
+					     (move-vehicle-ID mv)
+					     node-ID)))
     (remove-node-ID prob node-ID)
-    (let ((best-move (get-best-insertion-move prob
-					      (move-vehicle-ID mv)
-					      node-ID)))
-      (perform-move prob best-move)))
+    (perform-move prob best-move))
   prob)
 
 ;; could not be a generic function, because the way a TS selects a move is different from
