@@ -14,11 +14,10 @@
 
 (defmethod add-to-tabu ((ts tabu-search) (mv ts-best-insertion-move))
   (let* ((tl (tabu-search-tabu-list ts))
-	 (tlist (tabu-list-tabu tl))
 	 (tenure (tabu-list-tenure tl)))
     (push mv (tabu-list-tabu tl))
-    (when (> (length tlist) tenure)
-      (setf tlist (subseq tlist 0 tenure)))))
+    (when (> (length (tabu-list-tabu tl)) tenure)
+      (setf (tabu-list-tabu tl) (subseq (tabu-list-tabu tl) 0 tenure)))))
 
 ;; Check
 (defgeneric is-tabup (algo move)
