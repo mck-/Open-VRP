@@ -97,6 +97,15 @@
   ((name :initform "Greedy Insertion heuristic")
    (desc :initform "Random greedy insertion heuristic; insert nodes to closest vehicle successively")))
 
+;; Tabu Search
+;; ---------------------------------------
+;; added Mon 9 Jan, 2012
+;; Tabu List object
+
+(defclass tabu-list ()
+  ((tabu :accessor tabu-list-tabu :initarg :tabu :initform nil)
+   (tenure :accessor tabu-list-tenure :initarg :tenure :initform 10)))
+
 ;; added Mon Dec 12, 2011
 ;; note Thu Dec 15, 2011 - perhaps add slots that define the TS? moves/init sol/ts parameters..
 ;; .. it is possible to use 'string in slot, and use slot value to make-instance (for moves)
@@ -107,7 +116,8 @@
    (moves :accessor tabu-search-moves :initarg :moves :initform 'TS-best-insertion-move)
    (init-heur :accessor tabu-search-init-heur :initarg :init-heur :initform 'greedy-insertion)
    (iterations :initform 5)
-   (animate :accessor tabu-search-animate :initarg :animate :initform nil)))
+   (animate :accessor tabu-search-animate :initarg :animate :initform nil)
+   (tabu-list :accessor tabu-search-tabu-list :initarg :tabu-list :initform (make-instance 'tabu-list))))
 
 ;; -------------------------------
 
