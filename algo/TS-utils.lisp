@@ -8,16 +8,18 @@
 ;; -----------------------------
 
 ;; Add
-(defgeneric add-to-tabu (algo move)
-  (:method (algo move) "add-to-tabu: method for <Algo> or <Move> is not defined!")
+(defgeneric add-to-tabu (obj move)
+  (:method (obj move) "add-to-tabu: method for <Algo>/<Tabu-list> or <Move> is not defined!")
   (:documentation "Put the <Move> on the :tabu-list of <Algo>, which is a <Tabu-list> object."))
 
-(defmethod add-to-tabu ((ts tabu-search) (mv ts-best-insertion-move))
-  (let* ((tl (tabu-search-tabu-list ts))
-	 (tenure (tabu-list-tenure tl)))
+(defmethod add-to-tabu ((tl tabu-list) (mv ts-best-insertion-move))
+  (let ((tenure (tabu-list-tenure tl)))
     (push mv (tabu-list-tabu tl))
     (when (> (length (tabu-list-tabu tl)) tenure)
       (setf (tabu-list-tabu tl) (subseq (tabu-list-tabu tl) 0 tenure)))))
+
+(defmethod add-to-tabu ((ts tabu-search) (mv ts-best-insertion-move))
+  (add-to-tabu (tabu-search-tabu-list ts) mv))
 
 ;; Check
 (defgeneric is-tabup (algo move)
