@@ -155,7 +155,9 @@
 	   :assess-move
 	   :assess-moves
 	   :sort-moves
-	   :get-best-insertion-move))
+	   :get-best-insertion-move
+	   :add-to-tabu
+	   :is-tabup))
 
 (defpackage :open-vrp
   (:use :common-lisp
