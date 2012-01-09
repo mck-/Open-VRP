@@ -50,10 +50,10 @@
 ;; added Thu 29 Dec, 2011
 (defgeneric remove-node-ID (veh/prob node-ID)
   (:method (vehicle node-ID) "Expects <vehicle>/<problem> and int as inputs!")
-  (:documentation "Removes the <node> with node-ID from the route of <vehicle> which has it. Returns NIL if failed to find node-ID."))
+  (:documentation "Removes the <node> with node-ID from the route of <vehicle>. Returns NIL if failed to find node-ID."))
 
 (defmethod remove-node-ID ((v vehicle) node-ID)
-  (if (member node-ID (route-indices v))
+  (if (member node-ID (vehicle-route v) :key #'node-id)
       (change-route v
 	(remove node-ID r :key #'node-id))
       nil))
