@@ -31,15 +31,23 @@
 	 ;ignore empty vehicles, except for one (if available! capped at fleet-size)
 	 (num-vehicles (min
 			(length (remove-if #'(lambda (v) (single (vehicle-route v)))
-					  (fleet-vehicles (problem-fleet prob))))
+					   (fleet-vehicles (problem-fleet prob))))
 			(1- (length (fleet-vehicles (problem-fleet prob))))))
 	 (move-type (tabu-search-moves ts)))
-    (flatten
-     (map1-n #'(lambda (node-id)
-		 (map0-n #'(lambda (veh-ID)
-			     (make-instance move-type :node-ID node-id :vehicle-ID veh-ID))
-			 num-vehicles))
-	     num-nodes))))
+    ;remove unnecessary moves that don't do anything, e.g. when vehicle 2's route is (0 1), then the move of best-inserting node 1 into vehicle 2 has no meaning (but causes trouble!) 
+    (remove-if #'(lambda (mv)
+		   (let ((route (vehicle-route (vehicle prob (move-vehicle-ID mv))))) 
+		     (and (null (cddr route)) ;route is of length 2 (has one destination only)
+			  (cadr route) ;it's not an empty one either
+			  (= (node-id (cadr route)) (move-node-ID mv))))) ;and same node
+	       (flatten
+		(map1-n #'(lambda (node-id)
+			    (map0-n #'(lambda (veh-ID)
+					(make-instance move-type
+						       :node-ID node-id
+						       :vehicle-ID veh-ID))
+				    num-vehicles))
+			num-nodes)))))
 
 ;; the difference between cost (inserting) and saving (removing)
 ;; cost of inserting is calculated by (get-best-insertion-move)
