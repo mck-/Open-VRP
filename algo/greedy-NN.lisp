@@ -14,5 +14,7 @@
 			  net
 			  (route-indices v))
       (append-node v it)))
-  (setf (algo-best-sol a) p)
+  (setf (algo-best-sol a) p
+	(algo-current-sol a) p
+	(algo-best-fitness a) (fitness p))
   a)
