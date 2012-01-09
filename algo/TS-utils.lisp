@@ -22,11 +22,16 @@
   (add-to-tabu (tabu-search-tabu-list ts) mv))
 
 ;; Check
-(defgeneric is-tabup (algo move)
-  (:method (algo move) "is-tabup: method for <Algo> or <Move> is not defined!")
+(defgeneric is-tabup (obj move)
+  (:method (obj move) "is-tabup: method for <Algo>/<Tabu-list> or <Move> is not defined!")
   (:documentation "Returns <Move> if on the :tabu-list, NIL otherwise"))
 
-(defmethod is-tabup ((ts tabu-search) (mv ts-best-insertion-move))
-  (let ((tlist (tabu-list-tabu (tabu-search-tabu-list ts))))
+(defmethod is-tabup ((tl tabu-list) (mv ts-best-insertion-move))
+  (let ((tlist (tabu-list-tabu tl)))
     (and (member (move-node-id mv) tlist :key #'move-node-id)
 	 (member (move-vehicle-ID mv) tlist :key #'move-vehicle-ID))))
+
+(defmethod is-tabup ((ts tabu-search) (mv ts-best-insertion-move))
+  (is-tabup (tabu-search-tabu-list ts) mv))
+
+    
