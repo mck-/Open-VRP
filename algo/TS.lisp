@@ -73,11 +73,18 @@
 (defmethod perform-move ((prob problem) (mv TS-best-insertion-move))
   "Takes <Node> with node-ID and uses get-best-insertion to insert in vehicle-ID. DESTRUCTIVE."
   (let* ((node-ID (move-node-id mv))
+	 (veh-ID (move-vehicle-ID mv))
 	 (best-move (get-best-insertion-move prob
-					     (move-vehicle-ID mv)
+					     veh-ID
 					     node-ID)))
-    (remove-node-ID prob node-ID)
-    (perform-move prob best-move))
+    ;if the move of node is intra-route, AND the node is being moved forward
+    (if (and (= (vehicle-with-node prob node-ID) veh-ID)
+	     (> (move-index best-move)
+		(position node-id (vehicle-route (vehicle prob veh-ID)) :key #'node-id)))
+	;then perform insertion first, afterward remove the old node, positioned before the new)
+	(progn (perform-move prob best-move) (remove-node-ID prob node-ID))
+	;in all other cases, it's okay to remove the node first, then reinsert
+	(progn (remove-node-ID prob node-ID) (perform-move prob best-move))))
   prob)
 
 ;; could not be a generic function, because the way a TS selects a move is different from
