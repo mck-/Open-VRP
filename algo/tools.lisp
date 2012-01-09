@@ -49,7 +49,7 @@
     (when (or (null best-fitness)
 	      (< new-fitness best-fitness))
       (setf (algo-best-fitness a) new-fitness)
-      (setf (algo-best-sol a) sol))))
+      (setf (algo-best-sol a) (copy-object sol)))))
 
 ;; Tabu Search animate
 ;; -------------------------
