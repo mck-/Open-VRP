@@ -80,12 +80,13 @@
       (perform-move prob best-move)))
   prob)
 
-;; WIP - currently just selects the best move; no tabu-list implementation yet!
 ;; could not be a generic function, because the way a TS selects a move is different from
 ;; say GA, but the argument is a list, not an object.
-(defun select-move (moves)
+(defun select-move (moves tabu-list)
   "This function selects a move from a sorted list of moves, while considering the tabu-list."
-  (car moves))
+  (if (is-tabup tabu-list (car moves))
+      (select-move (cdr moves) tabu-list)
+      (car moves)))
 
 ;; --------------------
 ;; perhaps all the logging in an output file as well
@@ -94,7 +95,9 @@
   (let* ((sol (algo-current-sol ts))
 	 (moves (assess-moves sol (generate-moves ts)))
  	 (sorted (sort-moves moves))
-	 (selected-move (select-move sorted)))
+	 (selected-move (select-move sorted (tabu-search-tabu-list ts))))
+    ;; add move to tabu-list
+    (add-to-tabu ts selected-move)
     ;; logging
     (princ "Performing ")
     (princ (tabu-search-moves ts))
