@@ -41,6 +41,27 @@
 			 num-vehicles))
 	     num-nodes))))
 
+;; the difference between cost (inserting) and saving (removing)
+;; cost of inserting is calculated by (get-best-insertion-move)
+;; saving by removing the connecting arcs before and after, and connecting them directly
+(defmethod assess-move ((sol problem) (mv TS-best-insertion-move))
+  (let* ((dist-array (network-dist-table (problem-network sol)))
+	 (node (move-node-id mv))
+	 (best-move (get-best-insertion-move sol (move-vehicle-ID mv) node))
+	 (route (vehicle-route (vehicle sol (vehicle-with-node sol node))))
+	 (pos (position node route :key #'node-id))
+	 (node-before (node-id (nth (1- pos) route)))
+	 (dist1 (distance node-before node dist-array)))
+    (setf (move-fitness mv)
+	  (- (move-fitness best-move)
+					;how much you save by removing:
+	     (if (= pos (1- (length route))) ;if the node is at end of route
+		 dist1
+		 (let ((node-after (node-id (nth (1+ pos) route))))
+		   (- (+ dist1
+			 (distance node node-after dist-array)) ;dist to next node
+		      (distance node-before node-after dist-array)))))))) ;minus direct route
+	  
 (defmethod perform-move ((prob problem) (mv TS-best-insertion-move))
   "Takes <Node> with node-ID and uses get-best-insertion to insert in vehicle-ID. DESTRUCTIVE."
   (let ((node-ID (move-node-id mv)))

@@ -112,13 +112,38 @@
 ;; -----------------------------------------------
 
 (defun generate-insertion-moves (sol vehicle-id node-id)
-  "Given the <solution> object, vehicle-id and node-id (integers), create all possible insertion-moves, and return them in a list."
-  (let* ((length (length (vehicle-route (vehicle sol vehicle-id)))))
-    (map1-n #'(lambda (index) (make-instance 'insertion-move
-					     :index index
-					     :vehicle-id vehicle-id
-					     :node-id node-id))
-	    length)))
+  "Given the <solution> object, vehicle-id and node-id (integers), create all possible insertion-moves, and return them in a list. Avoid generating moves that won't do anything (when doing intra-route insertion)."
+  (let* ((route (vehicle-route (vehicle sol vehicle-id)))
+	 (pos (position node-id route :key #'node-id)) ;check if we do intra-route insertion
+	 (moves '()))
+    (do ((index 1 (1+ index)))
+	((> index (length route)))
+      (unless (and pos (or (= index pos) (= index (1+ pos))))
+	(push (make-instance 'insertion-move
+			     :index index
+			     :vehicle-id vehicle-id
+			     :node-id node-id)
+	      moves)))
+    (nreverse moves)))
+
+;; calculates the added distance of performing the insertion-move
+;; when appending to the end, it's just the distance from last location to the node
+;; otherwise it is the distance to the nodes before and after, minus their direct connection
+(defmethod assess-move ((sol problem) (m insertion-move))
+  (let* ((route (vehicle-route (vehicle sol (move-vehicle-id m))))
+	 (dist-array (network-dist-table (problem-network sol)))
+	 (index (move-index m))
+	 (node (move-node-id m))
+	 (node-before (node-id (nth (1- index) route))))
+    (setf (move-fitness m)
+	  (if (= index (length route)) ;if appending to end of route
+	      (distance node (node-id (car (last route))) dist-array)
+	      (let ((node-after (node-id (nth index route))))
+		(-
+		 (+ (distance node node-before dist-array)
+		    (distance node node-after dist-array)) 
+		 (distance node-before node-after dist-array)))))))
+  
 					     
 (defmethod perform-move ((sol problem) (m insertion-move))
   "Performs the <move> on <problem>."
