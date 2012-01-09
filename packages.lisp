@@ -155,6 +155,7 @@
 	   :assess-move
 	   :assess-moves
 	   :sort-moves
+	   :select-move
 	   :get-best-insertion-move
 	   :add-to-tabu
 	   :is-tabup))
