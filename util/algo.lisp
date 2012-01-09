@@ -13,8 +13,7 @@
   (print (concatenate 'string "Final solution of run with " (string (type-of a))))
   (print "---------------------")
   (print-routes a)
-  (print "---------------------")
-  (setf (algo-current-sol a) p))
+  (print "---------------------"))
 
 ;; Fri Dec 9, 2011 - THINK OF WAY TO AUTOMATICALLY SET algo-best-sol & algo-best-fitness
 ;; Currently it is defined in each run-algo defmethod. Should be general?
