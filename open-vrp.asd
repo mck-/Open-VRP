@@ -25,7 +25,8 @@
 	       (:file "algo/tools")
 	       (:file "algo/greedy-NN")
 	       (:file "algo/greedy-insertion")
-	       (:file "algo/TS")
+	       (:file "algo/TS-utils")
+	       (:file "algo/TS")	       
 	       ;; test data
 	       (:file "test-cases")
 	       ))
