@@ -150,6 +150,7 @@
 	   :fitness-before-after
 	   :initialize
 	   :iterate
+	   :iterate-more
 	   :generate-moves
 	   :perform-move
 	   :assess-move

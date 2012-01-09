@@ -10,8 +10,8 @@
 (in-package :open-vrp.algo)
 
 (defmethod run-algo ((prob problem) (ts tabu-search))
-  "Initialize, iterate till finished."
-  (initialize prob ts)
+  "Initialize (if necessary), iterate till finished."
+  (when (null (algo-current-sol ts)) (initialize prob ts))
   (while (typep (iterate ts) 'problem))
   ts)
 

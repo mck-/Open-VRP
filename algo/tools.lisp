@@ -51,6 +51,16 @@
       (setf (algo-best-fitness a) new-fitness)
       (setf (algo-best-sol a) (copy-object sol)))))
 
+;; Resume run - add some more iterations
+;; ------------------------
+(defgeneric iterate-more (algo int)
+  (:method (algo int) "iterate-more: expects <Algo> and int as inputs")
+  (:documentation "When an algo finished (i.e. iterations = 0) using iterate-more allows you to keep running it x more iterations."))
+
+(defmethod iterate-more ((a algo) int)
+  (setf (algo-iterations a) int)
+  (run-algo (algo-current-sol a) a))
+
 ;; Tabu Search animate
 ;; -------------------------
 (defmethod iterate :after ((ts tabu-search))
