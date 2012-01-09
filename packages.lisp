@@ -14,6 +14,7 @@
 	   :algo
 	   :greedy-NN
 	   :greedy-insertion
+	   :tabu-list
 	   :tabu-search
 	   :move
 	   :TS-best-insertion-move
@@ -42,6 +43,8 @@
 	   :algo-best-fitness
 	   :algo-current-sol
 	   :algo-iterations
+	   :tabu-list-tabu
+	   :tabu-list-tenure
 	   :tabu-search-moves
 	   :tabu-search-init-heur
 	   :tabu-search-animate
