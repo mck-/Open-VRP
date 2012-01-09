@@ -55,7 +55,7 @@
 (defmethod remove-node-ID ((v vehicle) node-ID)
   (if (member node-ID (vehicle-route v) :key #'node-id)
       (change-route v
-	(remove node-ID r :key #'node-id))
+	(remove node-ID r :key #'node-id :count 1)) ;count 1 for perform-move in TS.lisp.
       nil))
   
 (defmethod remove-node-ID ((prob problem) node-ID)
