@@ -17,11 +17,10 @@
 
 (defun get-color ()
   "Returns a random color."
-  (let ((r (random 0.8))
-	(g (random 0.8))
-	(b (random 0.8))
-	(a (random 0.3)))
-    (values r g b a)))
+  (let ((r (random 0.99))
+	(g (random 0.99))
+	(b (random 0.99)))
+    (values r g b)))
 
 ;; anaphoric macro input index of the node, and binds coords, pix-x and pix-y to the node's.
 (defmacro use-node (drawer node &body body)
@@ -79,10 +78,10 @@
 
 ;; Legend drawing
 ;; -----------------------------
-(defun draw-legend-item (drawer veh-obj r g b a)
+(defun draw-legend-item (drawer veh-obj r g b)
   (let ((leg-x (drawer-legend-x drawer))
 	(leg-y (drawer-legend-y drawer)))
-    (set-rgba-fill r g b a)
+    (set-rgb-fill r g b)
     (centered-circle-path leg-x leg-y 12)
     (fill-path)
     (set-rgb-fill 0 0 0)
@@ -111,10 +110,10 @@
 				        ;iterate over fleet - draw routes & legend together
 	(dolist (veh (fleet-vehicles (problem-fleet sol))) ;Fri Dec 2, 2011 - changed for CLOS
 	  (unless (null (cdr (vehicle-route veh)))
-	    (multiple-value-bind (r g b a) (get-color)
+	    (multiple-value-bind (r g b) (get-color)
 	      (when (drawer-legend dr)
-		  (draw-legend-item dr veh r g b a)) ; draw legend item
-	      (set-rgba-stroke r g b a))
+		  (draw-legend-item dr veh r g b)) ; draw legend item
+	      (set-rgb-stroke r g b))
 					
 	    (use-node dr (first (vehicle-route veh)) ; draw path
 		      (centered-circle-path pix-x pix-y 12) ;circle the departing node
