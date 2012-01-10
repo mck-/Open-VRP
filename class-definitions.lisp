@@ -118,7 +118,8 @@
    (init-heur :accessor tabu-search-init-heur :initarg :init-heur :initform 'greedy-insertion)
    (iterations :initform 5)
    (animate :accessor tabu-search-animate :initarg :animate :initform nil)
-   (tabu-list :accessor tabu-search-tabu-list :initarg :tabu-list :initform (make-instance 'tabu-list))))
+   (tabu-list :accessor tabu-search-tabu-list :initarg :tabu-list :initform (make-instance 'tabu-list))
+   (candidate-list :accessor tabu-search-candidate-list :initarg :candidate-list :initform T)))
 
 ;; -------------------------------
 

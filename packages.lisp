@@ -49,6 +49,7 @@
 	   :tabu-search-moves
 	   :tabu-search-init-heur
 	   :tabu-search-animate
+	   :tabu-search-candidate-list
 	   :move-node-ID
 	   :move-vehicle-ID
 	   :move-index
@@ -159,7 +160,8 @@
 	   :select-move
 	   :get-best-insertion-move
 	   :add-to-tabu
-	   :is-tabup))
+	   :is-tabup
+	   :create-candidate-list))
 
 (defpackage :open-vrp
   (:use :common-lisp
