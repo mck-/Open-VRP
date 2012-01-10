@@ -44,7 +44,7 @@ test-vrp is a demo problem, which will plot its result in plots/test-vrp.png. To
 You can define your own problems with:
 
 ```
-(define-problem 'vrp *node-coords* n "output.png")
+(define-problem name 'vrp *node-coords* n "output.png")
 ```
 
 where *node-coords* is a list of pairs and n is the number of vehicles.
