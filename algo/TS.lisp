@@ -111,14 +111,7 @@
 	 (selected-move (select-move ts sorted)))
     ;; add move to tabu-list
     (add-to-tabu ts selected-move)
-    ;; logging
-    (princ "Performing ")
-    (princ (tabu-search-moves ts))
-    (princ " with Node ")
-    (princ (move-node-ID selected-move))
-    (princ " and Vehicle ")
-    (princ (move-vehicle-ID selected-move))
-    ;; ---------------
+    ;; perform
     (perform-move sol selected-move)))
 
 

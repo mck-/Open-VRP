@@ -86,6 +86,18 @@
     "perform-move: This move is not defined.")
   (:documentation "Performs the move defined in <move> on the solution. Returns the new solution (which is a class of <Problem>)"))
 
+;; logging
+(defmethod perform-move :after ((prob problem) (mv move))
+  (print "Performing ")
+  (princ (type-of mv))
+  (princ " with Node ")
+  (princ (move-node-ID mv))
+  (princ " and Vehicle ")
+  (princ (move-vehicle-ID mv))
+  (when (eq (type-of mv) 'insertion-move)
+    (princ " and Index ")
+    (princ (move-index mv))))
+
 ;; Assess move(s)
 ;; ------------------------
 (defgeneric assess-move (sol move)
