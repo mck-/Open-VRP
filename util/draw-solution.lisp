@@ -101,7 +101,8 @@
 (defmethod plot-solution ((sol problem) &optional output-file)
   (let ((dr (problem-drawer sol)))
     (with-canvas (:width (drawer-max-pix dr) :height (drawer-max-pix dr))
-      (let ((font (get-font "FreeSerif.ttf")))
+      (let ((font (get-font "FreeSerif.ttf"))
+	    (temp-y (drawer-legend-y dr))) ;save the original value (draw-legend-item sets it)
 					;settings
 	(set-font font 15)
 	(set-rgb-fill 1.0 1.0 1.0)
@@ -125,6 +126,7 @@
 				  (arrow-to dr pix-x pix-y 0.038 0.45) ;draw arrows
 				  (store-pix dr pix-x pix-y))))
 	    (stroke)))
+	(setf (drawer-legend-y dr) temp-y) ;reset to original value
 					;drawing nodes
 	(draw-nodes dr (problem-network sol))
 					;draw results (temporary disabled, needs fix!)
