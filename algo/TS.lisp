@@ -102,17 +102,27 @@
 	(iter moves))))
 
 ;; --------------------
-;; perhaps all the logging in an output file as well
-;; perhaps all the logging/animation in :before/:after methods?
+;; For each TS iteration:
+;; Select move from candidate-list. if there is none:
+;;   generate-assess-sort moves
+;;   if top move is an improving one
+;;     create a candidate list and perform top move
+;;     otherwise, select first move not on tabu-list
+
 (defmethod iterate ((ts tabu-search))
-  (let* ((sol (algo-current-sol ts))
-	 (moves (assess-moves sol (generate-moves ts)))
- 	 (sorted (sort-moves moves))
-	 (selected-move (select-move ts sorted)))
-    ;; add move to tabu-list
-    (add-to-tabu ts selected-move)
-    ;; perform
-    (perform-move sol selected-move)))
-
-
-
+  (let ((sol (algo-current-sol ts)))
+    (labels ((perform-add-tabu (move)
+	       (add-to-tabu ts move)
+	       (perform-move sol move))
+	     (select-perform-from-cand (ts)
+	       (let ((best-move (car (tabu-search-candidate-list ts))))
+		 (when (null best-move) (error "No move selected!"))
+		 (remove-affected-moves ts best-move) ;remove related moves from cand list
+		 (perform-add-tabu best-move))))
+      (aif (tabu-search-candidate-list ts) ;if there is a candidate list, select move from it
+	   (select-perform-from-cand ts)
+					;otherwise generate-assess-sort moves
+	   (let ((sorted-moves (sort-moves (assess-moves sol (generate-moves ts)))))
+	     (princ "no cand list")
+	     (setf (tabu-search-candidate-list ts) (create-candidate-list ts sorted-moves))
+	     (select-perform-from-cand ts))))))

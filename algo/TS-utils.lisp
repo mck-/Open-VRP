@@ -45,15 +45,17 @@
   "Returns T if move is an improving one, i.e. has a negative fitness."
   (< (move-fitness move) 0))
 
-(defun create-candidate-list (sorted-moves)
-  "Given a list of sorted moves, return the list with only improving moves. Will always at least return one move."
+(defun create-candidate-list (ts sorted-moves)
+  "Given a list of sorted moves, return the list with non-tabu improving moves. Will always at least return one (non-tabu) move."
   (labels ((iter (moves ans)
 	     (if (or (null moves) (not (improving-movep (car moves))))
-		 ans
+		 (nreverse ans)
 		 (iter (cdr moves)
-		       (push (car moves) ans)))))
-    (nreverse (iter (cdr sorted-moves)
-		    (list (car sorted-moves)))))) ;first move is always chosen
+		       (if (is-tabup ts (car moves))
+			   ans
+			   (push (car moves) ans)))))) ;only add if move is non-tabu
+    (iter (cdr sorted-moves)
+	  (list (select-move ts sorted-moves))))))) ;first move is non-tabu
 
 (defmethod remove-affected-moves ((ts tabu-search) move)
   "Given a <Tabu-search> and one <Move> (to be performed), remove all the moves from the candidate-list that do not apply anymore after the selected move is performed."
