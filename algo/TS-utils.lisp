@@ -55,9 +55,10 @@
     (nreverse (iter (cdr sorted-moves)
 		    (list (car sorted-moves)))))) ;first move is always chosen
 
-(defun remove-affected-moves (candidate-list move)
-  "Given a candidate-list of <Move>s and one <Move> (to be performed), remove all the moves from the candidate-list that do not apply anymore after the selected move is performed."
-  (remove-if #'(lambda (mv) (or (= (move-node-id mv) (move-node-id move))
-				(= (move-vehicle-ID mv) (move-vehicle-ID move))))
-	     candidate-list))
+(defmethod remove-affected-moves ((ts tabu-search) move)
+  "Given a <Tabu-search> and one <Move> (to be performed), remove all the moves from the candidate-list that do not apply anymore after the selected move is performed."
+  (setf (tabu-search-candidate-list ts)
+	(remove-if #'(lambda (mv) (or (= (move-node-id mv) (move-node-id move))
+				      (= (move-vehicle-ID mv) (move-vehicle-ID move))))
+		   (tabu-search-candidate-list ts))))
   
