@@ -29,17 +29,16 @@ The ultimate vision for Open VRP is a simple intuitive embedded language for the
 ![alt Iterator](https://github.com/mck-/Open-VRP/blob/master/iterator.png?raw=true "Iterator")
 
 ## Usage
-   
-```
-(load "load-all.lisp")
-(in-package open-vrp)
-```
 
-test-vrp is a demo problem, which will plot its result in plots/test-vrp.png. To use Tabu Search:
+`solve-plot` expects a problem object and an algo object. It calls `solve-prob` and `plot-solution`.
+
+`test-vrp` is a demo problem, which will plot its result in plots/test-vrp.png. To use Tabu Search:
 
 ```
-(solve-plot test-vrp (make-instance 'tabu-search))
+(solve-plot test-vrp (make-instance 'tabu-search :animate T))
 ```
+
+When :animate is set to T, each iteration will produce a plot in run-frames/Iteration x.png.
 
 You can define your own problems with:
 
@@ -53,10 +52,14 @@ Or to load a [Solomon](http://neo.lcc.uma.es/radi-aeb/WebVRP/index.html?/Problem
 
 ```
 (defvar test-case (load-testcase-solomon "path-to-file.txt"))
-(solve-plot test-case (make-instance 'tabu-search :iterations 10 :animate T))
+(solve-plot test-case (make-instance 'tabu-search :iterations 100))
 ```
-When :animate is on, each iteration will produce a plot in run-frames/Iteration x.png
 
+When the algo is finished running, it returns the Algo object, which contains :current-sol and :best-sol. Use `iterate-more` to keep searching:
+
+```
+(iterate-more <algo> int)
+```
 
 ## TODO
 
