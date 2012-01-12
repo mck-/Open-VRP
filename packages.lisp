@@ -129,6 +129,9 @@
 	   :vehicle
 	   :create-fleet
 
+	   ;; constraint utils
+	   :in-capacityp
+
 	   :fitness
 	   ))
 
