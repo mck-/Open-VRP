@@ -100,18 +100,26 @@
 ;; Initializing functions
 ;; ------------------
 
-(defun create-node-objects (node-coords &optional (type 'node))
-  "Given a coord-list (which is a list of x,y pairs), return list of Node objects, starting with ID 0."
-  (let ((node-list nil))
-    (do ((i 0 (1+ i)) ;id generator
-	 (coords-list node-coords (cdr coords-list))) ;iterate over the list
-	((null (car coords-list)))
-      (push (make-instance type :id i :xcor (caar coords-list) :ycor (cdar coords-list)) node-list))
-    (nreverse node-list)))
+(defmacro create-nodes (node-coords &optional demands)
+  (let ((nodes (gensym))
+	(i (gensym))
+	(coords-list (gensym))
+	(demand-list (gensym)))
+    `(let ((,nodes nil))
+       (do ((,i 0 (1+ ,i))
+	    (,coords-list ,node-coords (cdr ,coords-list))
+	    ,@(when demands `((,demand-list ,demands (cdr ,demand-list)))))
+	   ((null (car ,coords-list)))
+	 (push (make-instance ,(if demands ''node-c ''node)
+			      :id ,i
+			      :xcor (caar ,coords-list)
+			      :ycor (cdar ,coords-list)
+			      ,@(when demands `(:demand (car ,demand-list))))
+	       ,nodes))
+       (nreverse ,nodes))))
     
-(defun create-network (node-coords &key (type 'node))
-  "Given a coord-list, return an instance of class 'network, with nodes and dist-table initialised. Dist-table is a precalculated Cartesian distance matrix, for quick table-lookup. The nodes are created and numbered starting from 0, which is the base node. Reads by default *node-coords*. Use :type to choose what types of nodes will be generated."
-;Thu Dec 29, 2011 - type may not be useful, since more args are required for e.g. TW-nodes
-  (let ((nodes (create-node-objects node-coords type))
-	(dist-table (generate-dist-array node-coords)))
-    (make-instance 'network :dist-table dist-table :nodes nodes)))
+(defmacro create-network (node-coords &optional node-demands)
+  "Given a coord-list, return an instance of class 'network, with nodes and dist-table initialised. Dist-table is a precalculated Cartesian distance matrix, for quick table-lookup. The nodes are created and numbered starting from 0, which is the base node. By default creates normal nodes. When node-demands are provided, it creates node-C (nodes with demand)."
+  `(let ((nodes (create-nodes ,node-coords ,@(when node-demands `(,node-demands))))
+	 (dist-table (generate-dist-array ,node-coords)))
+     (make-instance 'network :dist-table dist-table :nodes nodes)))
