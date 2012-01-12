@@ -18,6 +18,9 @@
   ((id :reader node-id :initarg :id)
    (xcor :reader node-xcor :initarg :xcor)
    (ycor :reader node-ycor :initarg :ycor)))
+
+(defclass node-C (node)
+  ((load :reader node-load :initarg :load)))
 ;; --------------------------
 
 ;; A vehicle class - basic version for TSP/VRP (non-capacitated).
@@ -28,6 +31,9 @@
 (defclass vehicle ()
   ((id :reader vehicle-id :initarg :id)
    (route :accessor vehicle-route :initarg :route :initform nil)))
+
+(defclass vehicle-C (vehicle)
+  ((capacity :reader vehicle-capacity :initarg :capacity)))
 
 ;; Class that holds the list of vehicles, which make up the fleet.
 (defclass fleet ()
@@ -59,6 +65,10 @@
 (defclass VRP (TSP)
   ((name :initform "VRP")
    (desc :initform "Vehicle Routing Problem")))
+
+(defclass CVRP (VRP)
+  ((name :initform "CVRP")
+   (desc :initform "Capacitated Vehicle Routing Problem")))
 
 ;; ----------------------
 
