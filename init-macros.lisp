@@ -17,8 +17,8 @@
   
 ;; A simple test version of the define-problem macro. Needs a lot of generalization for creating different models. Parameter list different for each model? Strip off drawer-object?
 ;; Allow for optional parameters for TW or capacities, etc..
-(defmacro define-problem (name problem-type node-coords-list fleet-size plot-filename)
-  `(let* ((network (create-network ,node-coords-list)) ;todo choose node type automatically
+(defmacro define-problem (name problem-type node-coords-list fleet-size plot-filename &optional demands-list)
+  `(let* ((network (create-network ,node-coords-list ,@(when demands-list `(,demands-list))))
 	  (fleet (create-fleet ,fleet-size network));choose vehicle type automatically
 	  (drawer (make-instance 'drawer
 				 :min-coord (get-min-coord ,node-coords-list)
