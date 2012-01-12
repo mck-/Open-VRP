@@ -67,17 +67,22 @@
 ;; --------------------
 ;; Requires a network object to initialize the base locations
 
-(defun create-vehicles (fleet-size network &optional (type 'vehicle))
+(defmacro create-vehicles (fleet-size network &optional capacities)
   "Returns a list of vehicles, starting with ID 0. The starting location of their routs are all initialized at 0."
-  (let ((fleet nil)
-	(route (list (node network 0))))
-    (do ((i 0 (1+ i))) ;id generator
-	((= fleet-size i))
-      (push (make-instance type :id i :route route) fleet))
-    (nreverse fleet)))
+  (let ((fleet (gensym))
+	(i (gensym))
+	(route (gensym)))
+    `(let ((,fleet nil)
+	   (,route (list (node ,network 0))))
+       (do ((,i 0 (1+ ,i)))
+	   ((= ,i ,fleet-size) (nreverse ,fleet))
+	 (push (make-instance ,(if capacities ''vehicle-c ''vehicle)
+			      :id ,i
+			      :route ,route
+			      ,@(when capacities `(:capacity ,capacities)))
+	       ,fleet)))))
   
-(defun create-fleet (fleet-size network &key (type 'vehicle))
-  "Returns a fleet object, with the <vehicle> objects of type initialised in the vehicles slot. Requires a <network> object for base node initialisation."
-  ;note - type approach may not be sufficient of extentions of <vehicle> require more args?
-  (let ((fleet (create-vehicles fleet-size network type)))
-    (make-instance 'fleet :vehicles fleet)))
+(defmacro create-fleet (fleet-size network &optional capacities)
+  "Returns a fleet object, with the <vehicle> objects of type initialised in the vehicles slot. Requires a <network> object for base node initialisation. When capacities is provided, capacitated <vehicles-c> will be createed."
+  `(let ((fleet (create-vehicles ,fleet-size ,network ,@(when capacities `(,capacities)))))
+     (make-instance 'fleet :vehicles fleet)))

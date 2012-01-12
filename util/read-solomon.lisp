@@ -31,13 +31,13 @@
       (dotimes (n 12) (read in))
       (loop initially (clear-case)
 	 while (read in nil)
-	   collect (read in) into x-coords
-	   collect (read in) into y-coords
-	   collect (read in) into demands
-	   collect (read in) into min-times
-	   collect (read in) into max-times
-	   collect (read in) into service-duration
-	   finally
+	 collect (read in) into x-coords
+	 collect (read in) into y-coords
+	 collect (read in) into demands
+	 collect (read in) into min-times
+	 collect (read in) into max-times
+	 collect (read in) into service-duration
+	 finally
 	   (setf *node-coords* (couple-lists x-coords y-coords)
 		 *time-windows* (couple-lists min-times max-times)
 		 *demands* demands
@@ -45,7 +45,7 @@
       (setf *fleet-size* fleet-size
 	    *capacities* capacities)
       ;; Create the problem - currently ignoring *demands* and *time-windows*
-      (define-problem name 'vrp *node-coords* *fleet-size* (concatenate 'string "plots/" (string name) ".png") *demands*))))
+      (define-problem name 'vrp *node-coords* *fleet-size* (concatenate 'string "plots/" (string name) ".png") *demands* *capacities*))))
       
 	   
 	   
