@@ -90,7 +90,7 @@
   prob)
 
 (defmethod select-move ((ts tabu-search) moves)
-  "This function selects a move from a sorted list of moves, while considering the tabu-list. When the aspiration criteria is set to T, then if by performing the move we get a new best solution, circumvent the tabu-list."
+  "This function selects a move from a sorted list of moves, while considering the tabu-list. If by performing the move we get a new best solution, circumvent the tabu-list."
   (if (<
        (+ (fitness (algo-current-sol ts)) (move-fitness (car moves)))
        (algo-best-fitness ts))
