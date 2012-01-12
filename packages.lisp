@@ -6,11 +6,14 @@
   (:use :common-lisp)
   (:export :network
 	   :node
+	   :node-C
 	   :vehicle
+	   :vehicle-C
 	   :fleet
 	   :problem
 	   :TSP
 	   :VRP
+	   :CVRP
 	   :algo
 	   :greedy-NN
 	   :greedy-insertion
@@ -27,8 +30,10 @@
 	   :node-id
 	   :node-xcor
 	   :node-ycor
+	   :node-demand
 	   :vehicle-id
 	   :vehicle-route
+	   :vehicle-capacity
 	   :fleet-vehicles
 	   :fleet-from-depot
 	   :fleet-to-depot
