@@ -45,7 +45,7 @@
       (setf *fleet-size* fleet-size
 	    *capacities* capacities)
       ;; Create the problem - currently ignoring *demands* and *time-windows*
-      (define-problem name 'vrp *node-coords* *fleet-size* (concatenate 'string "plots/" (string name) ".png")))))
+      (define-problem name 'vrp *node-coords* *fleet-size* (concatenate 'string "plots/" (string name) ".png") *demands*))))
       
 	   
 	   
