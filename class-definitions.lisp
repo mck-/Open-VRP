@@ -20,7 +20,7 @@
    (ycor :reader node-ycor :initarg :ycor)))
 
 (defclass node-C (node)
-  ((load :reader node-load :initarg :load)))
+  ((demand :reader node-demand :initarg :demand)))
 ;; --------------------------
 
 ;; A vehicle class - basic version for TSP/VRP (non-capacitated).
