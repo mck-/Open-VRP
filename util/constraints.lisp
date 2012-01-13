@@ -13,7 +13,12 @@
 (defmethod constraintsp :around ((sol CVRP))
   (if (in-capacityp sol)
       (call-next-method)
-      NIL))      
+      NIL))
+
+;; (defmethod constraintsp :around ((sol VRPTW))
+;;   (if (in-timep sol)
+;;       (call-next-method)
+;;       NIL))
 
 (defgeneric in-capacityp (veh/fleet/problem)
   (:method (obj) "Expects a <Vehicle>/<Fleet>/<Problem> object!")
