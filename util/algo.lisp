@@ -8,7 +8,7 @@
     "run-algo: Either problem or algo is not defined/correct")
   (:documentation "Runs the algo on the problem. Destructive - will have side-effects on the <problem> and <algo> objects. Use solve-prob to prevent <problem> object being touched. Will return the <Algo> object, which will contain the solution (in the form of a copy of the <problem> object) in the :current-sol slot. When defining your own algorithms, make sure to implement a run-algo method for your algo, which sets the :current-sol slot appropriately, and returns the <algo> object."))
 
-;; After method that makes all algos print the final solution, and save last state solution in the current-solution slot of the algo object.
+;; After method that makes all algos print the final solution
 (defmethod run-algo :around ((p problem) (a algo))
   (unwind-protect
        (call-next-method)
