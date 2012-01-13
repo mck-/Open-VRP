@@ -3,6 +3,9 @@
 ;;; --------------
 (in-package :open-vrp.util)
 
+;; General Constraints Checker
+;; ----------------------------
+
 (defgeneric constraintsp (prob)
   (:method (obj) "constraintsp: Expects <Problem> object!")
   (:documentation "Tests weather the solution in the <problem> is complying with the constraints. If the problem is a CVRP, check for capacity. If it is a VRPTW, check for capacity and time-windows."))
@@ -19,6 +22,10 @@
 ;;   (if (in-timep sol)
 ;;       (call-next-method)
 ;;       NIL))
+;; -------------------------
+
+;; Capacity Constraints
+;; ------------------------
 
 (defgeneric in-capacityp (veh/fleet/problem)
   (:method (obj) "Expects a <Vehicle>/<Fleet>/<Problem> object!")
@@ -44,6 +51,8 @@
 
 (defmethod in-capacityp ((pr problem))
   (in-capacityp (problem-fleet pr)))
+
+;; --------------------------------
 	   
 		       
 		  
