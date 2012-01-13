@@ -17,6 +17,7 @@
 	       (:file "util/route")
 	       (:file "util/draw-solution")
 	       (:file "util/algo")
+	       (:file "util/constraints")
 	       ;; data
 	       (:file "util/var-init")
 	       (:file "init-macros")
