@@ -43,9 +43,10 @@
 	    (,ignore ,(if (eq predicate #'<)
 			 `(1+ (get-max ,list))
 			 `(1- (get-min ,list)))))
-       (sort (copy-list ,list)
+       (sort (copy-list ,sequence)
 	     ,predicate
-	     :key #'(lambda (x) (or x ,ignore))))))
+	     :key #'(lambda (x) (or ,(if key `(funcall ,key x) `x)
+				    ,ignore))))))
   
 ;; Single route
 ;; Sun Dec 11, 2011 - Adjusted to not allow for index-out-of-bounds
