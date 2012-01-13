@@ -9,3 +9,8 @@
 
 (defmethod fitness ((prob problem))
   (total-dist (problem-fleet prob) (problem-network prob)))
+
+(defmethod fitness ((cvrp CVRP))
+  (values
+   (call-next-method)
+   (in-capacityp cvrp)))
