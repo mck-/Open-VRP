@@ -35,6 +35,18 @@
   "Returns index of the largest value on list, while ignoring NIL. Returns index and its value (closest node and value)."
   (get-index-of list #'get-max))
 
+(defmacro sort-ignore-nil (sequence predicate &key key)
+  "Sorts the sequence with #'< or #'> while passing all NIL values towards the end of result."
+  (let ((list (gensym))
+	(ignore (gensym)))
+    `(let* ((,list ,(if key `(mapcar ,key ,sequence) sequence))
+	    (,ignore ,(if (eq predicate #'<)
+			 `(1+ (get-max ,list))
+			 `(1- (get-min ,list)))))
+       (sort (copy-list ,list)
+	     ,predicate
+	     :key #'(lambda (x) (or x ,ignore))))))
+  
 ;; Single route
 ;; Sun Dec 11, 2011 - Adjusted to not allow for index-out-of-bounds
 (defun insert-before (object index list)

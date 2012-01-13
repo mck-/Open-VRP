@@ -93,6 +93,7 @@
 	   :get-max
 	   :get-min-index
 	   :get-max-index
+	   :sort-ignore-nil
 	   :insert-before
 	   :insert-at-end
 	   :remove-index
