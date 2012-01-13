@@ -130,6 +130,7 @@
 	   :create-fleet
 
 	   ;; constraint utils
+	   :constraintsp
 	   :in-capacityp
 
 	   :fitness
