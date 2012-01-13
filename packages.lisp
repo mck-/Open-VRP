@@ -144,6 +144,7 @@
 	:open-vrp.util
 	:open-vrp.output)
   (:export :run-algo
+	   :*algo-backup*
 	   :solve-prob
 	   :solve-plot
 	   :re-init
