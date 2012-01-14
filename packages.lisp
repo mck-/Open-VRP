@@ -133,6 +133,7 @@
 	   ;; constraint utils
 	   :constraintsp
 	   :in-capacityp
+	   :node-fit-in-vehiclep
 
 	   :fitness
 	   ))

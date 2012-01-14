@@ -54,5 +54,10 @@
 
 ;; --------------------------------
 	   
-		       
+(defun node-fit-in-vehiclep (sol node-id vehicle-id)
+  "Helper function for assessing constraints. Used by assess-move :around."
+  (multiple-value-bind (comply cap-left) (in-capacityp (vehicle sol vehicle-id))
+    (if (not comply) (error "node-fit-in-vehiclep: The solution was infeasible to begin with!")
+	(<= (node-demand (node sol node-id)) cap-left))))
+
 		  
