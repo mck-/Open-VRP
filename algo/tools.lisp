@@ -10,11 +10,23 @@
   (:documentation "Returns the closest <vehicle> to <node>. Used by insertion heuristic. When multiple <vehicle> are on equal distance, choose first one (i.e. lowest ID)."))
  
 (defmethod get-closest-vehicle ((n node) (prob problem))
-  (let* ((locations (mapcar #'last-node (fleet-vehicles (problem-fleet prob)))) ;list of <Vehicle> locations
-	 (distances (mapcar #'(lambda (x) (node-distance x n)) locations)) ;all distances
-	 (id (get-min-index distances)))
-    (vehicle prob id)))
+  (let ((distances (mapcar #'(lambda (x) (node-distance (last-node x) n))
+			   (fleet-vehicles (problem-fleet prob))))) ;all distances
+    (vehicle prob (get-min-index distances))))
 
+;; allow only feasible vehicles to be selected
+(defmethod get-closest-vehicle ((n node) (prob CVRP))
+  (let* ((vehicles (fleet-vehicles (problem-fleet prob)))
+	 (dists (mapcar #'(lambda (x) (node-distance (last-node x) n)) vehicles))
+	 (caps (mapcar #'(lambda (x)
+			   (multiple-value-bind (c cap)
+			       (in-capacityp x) (when c cap)))
+		       vehicles))
+	 (filtered (mapcar #'(lambda (dist cap)
+			       (if (> (node-demand n) cap) nil dist))
+			   dists caps)))
+    (vehicle prob (get-min-index filtered))))	   
+        
 ;; Mon Dec 12, 2011 - TODO
 ;; Attempt for Iterator on <Algo> object. Used by TS (or even GA or other metaheuristics).
 ;; --------------------------------------------
