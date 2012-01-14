@@ -29,11 +29,11 @@
 
 (defgeneric in-capacityp (veh/fleet/problem)
   (:method (obj) "Expects a <Vehicle>/<Fleet>/<Problem> object!")
-  (:documentation "Tests weather the route on <vehicle> is complying with the capacity constraint. When <Fleet> is provided, test all vehicles."))
+  (:documentation "Tests weather the route on <vehicle> is complying with the capacity constraint. Returns T and the remaining capacity if it does. When <Fleet> is provided, test all vehicles."))
 
 (defmethod in-capacityp ((v vehicle))
   (labels ((iter (route cap)
-	     (if (null route) T
+	     (if (null route) (values T cap)
 		 (let ((demand (node-demand (car route))))
 		   (and
 		    (<= demand cap)
