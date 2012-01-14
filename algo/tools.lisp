@@ -174,7 +174,14 @@
 		 (+ (distance node node-before dist-array)
 		    (distance node node-after dist-array)) 
 		 (distance node-before node-after dist-array)))))))
-  
+
+;; around method for checking constraints. If move is infeasible, return NIL.
+(defmethod assess-move :around ((sol CVRP) (m insertion-move))
+  (multiple-value-bind (comply cap-left) (in-capacityp (vehicle sol (move-vehicle-id m)))
+    (if (not comply) (error "assess-move: The solution was infeasible to beign with!")
+	(if (> (node-demand (node sol (move-node-ID m))) cap-left)
+	    (setf (move-fitness m) nil)
+	    (call-next-method)))))
 					     
 (defmethod perform-move ((sol problem) (m insertion-move))
   "Performs the <move> on <problem>."
