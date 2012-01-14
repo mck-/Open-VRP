@@ -71,6 +71,12 @@
 		   (- (+ dist1
 			 (distance node node-after dist-array)) ;dist to next node
 		      (distance node-before node-after dist-array)))))))) ;minus direct route
+
+;; around method for checking constraints. If move is infeasible, return NIL.
+(defmethod assess-move :around ((sol CVRP) (m TS-best-insertion-move))
+  (if (node-fit-in-vehiclep sol (move-node-id m) (move-vehicle-ID m))
+      (call-next-method)
+      (setf (move-fitness m) nil)))
 	  
 (defmethod perform-move ((prob problem) (mv TS-best-insertion-move))
   "Takes <Node> with node-ID and uses get-best-insertion to insert in vehicle-ID. DESTRUCTIVE."
