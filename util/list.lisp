@@ -40,9 +40,9 @@
   (let ((list (gensym))
 	(ignore (gensym)))
     `(let* ((,list ,(if key `(mapcar ,key ,sequence) sequence))
-	    (,ignore ,(if (eq predicate #'<)
-			 `(1+ (get-max ,list))
-			 `(1- (get-min ,list)))))
+	    (,ignore (if (eq ,predicate #'<)
+			  (1+ (get-max ,list))
+			  (1- (get-min ,list)))))
        (sort (copy-list ,sequence)
 	     ,predicate
 	     :key #'(lambda (x) (or ,(if key `(funcall ,key x) `x)
