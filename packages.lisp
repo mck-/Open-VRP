@@ -7,6 +7,7 @@
   (:export :network
 	   :node
 	   :node-C
+	   :node-TW
 	   :vehicle
 	   :vehicle-C
 	   :fleet
@@ -14,6 +15,7 @@
 	   :TSP
 	   :VRP
 	   :CVRP
+	   :VRPTW
 	   :algo
 	   :greedy-NN
 	   :greedy-insertion
@@ -31,6 +33,9 @@
 	   :node-xcor
 	   :node-ycor
 	   :node-demand
+	   :node-start
+	   :node-end
+	   :node-duration
 	   :vehicle-id
 	   :vehicle-route
 	   :vehicle-capacity

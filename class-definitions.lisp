@@ -21,6 +21,11 @@
 
 (defclass node-C (node)
   ((demand :reader node-demand :initarg :demand)))
+
+(defclass node-TW (node-C)
+  ((start :reader node-start :initarg :start)
+   (end :reader node-end :initarg :end)
+   (duration :reader node-duration :initarg :duration)))
 ;; --------------------------
 
 ;; A vehicle class - basic version for TSP/VRP (non-capacitated).
@@ -69,6 +74,10 @@
 (defclass CVRP (VRP)
   ((name :initform "CVRP")
    (desc :initform "Capacitated Vehicle Routing Problem")))
+
+(defclass VRPTW (CVRP)
+  ((name :initform "VRPTW")
+   (desc :initform "(Capacitated) Vehicle Routing Problem with Time Windows")))
 
 ;; ----------------------
 
