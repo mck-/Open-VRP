@@ -32,23 +32,25 @@ The ultimate vision for Open VRP is a simple intuitive embedded language for the
 
 `solve-plot` expects a problem object and an algo object. It calls `solve-prob` and `plot-solution`.
 
-`test-vrp` is a demo problem, which will plot its result in plots/test-vrp.png. To use Tabu Search:
+`test-vrp`, `solomon25` and `solomon100` are pre-loaded demo problems. To use Tabu Search:
 
 ```
 (solve-plot test-vrp (make-instance 'tabu-search :animate T))
+(solve-plot solomon100 (make-instance 'tabu-search :iterations 500))
 ```
 
-When :animate is set to T, each iteration will produce a plot in run-frames/Iteration x.png.
+When :animate is set to T, each iteration will produce a plot in run-frames/Iteration x.png (much slower).
 
 You can define your own problems with:
 
 ```
-(define-problem name 'vrp *node-coords* n "output.png")
+(define-problem name node-coords n "plots/vrp.png")
+(define-problem name node-coords n "plots/cvrp.png" demands-list capacity)
 ```
 
-where *node-coords* is a list of pairs and n is the number of vehicles.
+where *node-coords* is a list of pairs, *demands-list* a list of associated demands, and n is the number of vehicles. When n is 1, the resulting problem is a TSP. When n is larger than 1, the resulting problem is a VRP. When a *demands-list* and vehicle *capacity* are provided, the resulting problem is a CVRP.
 
-Or to load a [Solomon](http://neo.lcc.uma.es/radi-aeb/WebVRP/index.html?/Problem_Instances/CVRPTWInstances.html) test case:
+Or to load from a text-file [Solomon-format](http://neo.lcc.uma.es/radi-aeb/WebVRP/index.html?/Problem_Instances/CVRPTWInstances.html):
 
 ```
 (defvar test-case (load-testcase-solomon "path-to-file.txt"))
