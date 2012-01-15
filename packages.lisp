@@ -10,6 +10,7 @@
 	   :node-TW
 	   :vehicle
 	   :vehicle-C
+	   :vehicle-TW
 	   :fleet
 	   :problem
 	   :TSP
@@ -39,6 +40,7 @@
 	   :vehicle-id
 	   :vehicle-route
 	   :vehicle-capacity
+	   :vehicle-speed
 	   :fleet-vehicles
 	   :fleet-from-depot
 	   :fleet-to-depot

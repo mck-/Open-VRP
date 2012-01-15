@@ -40,6 +40,9 @@
 (defclass vehicle-C (vehicle)
   ((capacity :reader vehicle-capacity :initarg :capacity)))
 
+(defclass vehicle-TW (vehicle-C)
+  ((speed :accessor vehicle-speed :initarg :speed :initform 1)))
+
 ;; Class that holds the list of vehicles, which make up the fleet.
 (defclass fleet ()
   ((vehicles :accessor fleet-vehicles :initarg :vehicles)))
