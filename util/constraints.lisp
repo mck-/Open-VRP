@@ -103,3 +103,30 @@
     (iter (fleet-vehicles f))))			       
 		  
 		 
+;; check if node fits in route
+;; given node-id, vehicle-route and insertion index
+;; 1. check if on time. If so, check if routes afterward still on time.
+
+(defmethod feasible-insertionp ((m insertion-move) (sol VRPTW))
+  "Tests if insertion move is feasible in route at index. Makes sure the remaining nodes on the route are still on time."
+  (let* ((v (vehicle sol (move-vehicle-ID m)))
+	 (route (vehicle-route v))
+	 (node-id (move-node-ID m))
+	 (index (move-index m)))
+    (labels ((iter (loc route time i)
+	       (if (and (null route) (< i 1)) T
+		   (let ((to (car route)))
+		     (when (= i 1) (setf to (node sol node-id)))
+		     (let ((arr-time (+ time (travel-time v
+							  (problem-network sol)
+							  (node-id loc)
+							  (node-id to)))))
+		       (and (<= arr-time (node-end to))
+			    (iter to
+				  (if (= 1 i) route (cdr route)) ;don't skip after detour
+				  (if (< arr-time (node-start to))
+				      (+ (node-start to) (node-duration to)) ;wait
+				      (+ arr-time (node-duration to)))
+				  (1- i))))))))
+      (iter (car route) (cdr route) 0 index))))
+		    
