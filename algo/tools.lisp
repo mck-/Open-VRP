@@ -192,6 +192,11 @@
   (if (node-fit-in-vehiclep sol (move-node-id m) (move-vehicle-id m))      
       (call-next-method)
       (setf (move-fitness m) nil)))
+
+(defmethod assess-move :around ((sol VRPTW) (m insertion-move))
+  (if (feasible-insertionp m sol)
+      (call-next-method)
+      (setf (move-fitness m) nil)))
 					     
 (defmethod perform-move ((sol problem) (m insertion-move))
   "Performs the <move> on <problem>."

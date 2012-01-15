@@ -142,6 +142,7 @@
 	   :in-capacityp
 	   :node-fit-in-vehiclep
 	   :in-timep
+	   :feasible-insertionp
 
 	   :fitness
 	   ))
