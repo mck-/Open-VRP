@@ -77,6 +77,12 @@
   (if (node-fit-in-vehiclep sol (move-node-id m) (move-vehicle-ID m))
       (call-next-method)
       (setf (move-fitness m) nil)))
+
+(defmethod assess-move :around ((sol VRPTW) (m TS-best-insertion-move))
+  (if (feasible-insertionp (get-best-insertion-move sol (move-vehicle-ID m) (move-node-id m))
+			   sol)
+      (call-next-method)
+      (setf (move-fitness m) nil)))
 	  
 (defmethod perform-move ((prob problem) (mv TS-best-insertion-move))
   "Takes <Node> with node-ID and uses get-best-insertion to insert in vehicle-ID. DESTRUCTIVE."
