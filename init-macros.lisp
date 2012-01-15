@@ -16,14 +16,15 @@
 ;; ---------------------------
   
 ;; 
-(defmacro define-problem (name node-coords-list fleet-size plot-filename &optional demands-list capacity time-windows-list duration-list)
+(defmacro define-problem (name node-coords-list fleet-size plot-filename &optional demands-list capacity time-windows-list duration-list speeds)
   "Creates a <Problem> object from the inputs. When fleet-size is 1 (and no optional arguments), creates a TSP problem. When fleet-size is more than 1, creates a VRP problem. With only the demands-list and capacity, creates a CVRP problem. With time-windows and durations, creates a VRPTW problem."
   `(let* ((network (create-network ,node-coords-list
 				   ,@(when demands-list `(,demands-list))
 				   ,@(when time-windows-list `(,time-windows-list))
 				   ,@(when duration-list `(,duration-list))))
 	  (fleet (create-fleet ,fleet-size network
-			       ,@(when capacity `(,capacity))))			       
+			       ,@(when capacity `(,capacity))
+			       ,@(when duration-list `((or ,speeds 1))))) ;default speed of 1
 	  (drawer (make-instance 'drawer
 				 :min-coord (get-min-coord ,node-coords-list)
 				 :max-coord (get-max-coord ,node-coords-list)

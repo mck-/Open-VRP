@@ -67,7 +67,7 @@
 ;; --------------------
 ;; Requires a network object to initialize the base locations
 
-(defmacro create-vehicles (fleet-size network &optional capacities)
+(defmacro create-vehicles (fleet-size network &optional capacities speeds)
   "Returns a list of vehicles, starting with ID 0. The starting location of their routs are all initialized at 0."
   (let ((fleet (gensym))
 	(i (gensym))
@@ -76,13 +76,18 @@
 	   (,route (list (node ,network 0))))
        (do ((,i 0 (1+ ,i)))
 	   ((= ,i ,fleet-size) (nreverse ,fleet))
-	 (push (make-instance ,(if capacities ''vehicle-c ''vehicle)
+	 (push (make-instance ,(cond (speeds ''vehicle-tw)
+				     (capacities ''vehicle-c)
+				     (t ''vehicle))
 			      :id ,i
 			      :route ,route
-			      ,@(when capacities `(:capacity ,capacities)))
+			      ,@(when capacities `(:capacity ,capacities))
+			      ,@(when speeds `(:speed ,speeds)))
 	       ,fleet)))))
   
-(defmacro create-fleet (fleet-size network &optional capacities)
+(defmacro create-fleet (fleet-size network &optional capacities speeds)
   "Returns a fleet object, with the <vehicle> objects of type initialised in the vehicles slot. Requires a <network> object for base node initialisation. When capacities is provided, capacitated <vehicles-c> will be createed."
-  `(let ((fleet (create-vehicles ,fleet-size ,network ,@(when capacities `(,capacities)))))
+  `(let ((fleet (create-vehicles ,fleet-size ,network
+				 ,@(when capacities `(,capacities))
+				 ,@(when speeds `(,speeds)))))
      (make-instance 'fleet :vehicles fleet)))
