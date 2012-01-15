@@ -26,7 +26,25 @@
 			       (if (> (node-demand n) cap) nil dist))
 			   dists caps)))
     (vehicle prob (get-min-index filtered))))	   
-        
+
+(defmethod get-closest-vehicle ((n node) (prob VRPTW))
+  (let* ((vehicles (fleet-vehicles (problem-fleet prob)))
+	 (dists (mapcar #'(lambda (x) (node-distance (last-node x) n)) vehicles))
+	 (times (mapcar #'(lambda (x)
+			    (multiple-value-bind (c time)
+				(in-timep x (problem-network prob)) (when c time)))
+			vehicles))
+	 (filtered (mapcar #'(lambda (veh dist time)
+			       (if (> (+ time (travel-time veh
+							   (problem-network prob)
+							   (node-id (last-node veh))
+							   (node-id n)))
+				      (node-end n))
+				   nil
+				   dist))
+			   vehicles dists times)))
+    (vehicle prob (get-min-index filtered))))	   
+
 ;; Mon Dec 12, 2011 - TODO
 ;; Attempt for Iterator on <Algo> object. Used by TS (or even GA or other metaheuristics).
 ;; --------------------------------------------
