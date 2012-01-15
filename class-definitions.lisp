@@ -7,7 +7,7 @@
 ;; Thu Oct 27, 2011
 ;; The network object
 ;; ----------------------
-;; 1. An object that encapsulates the nodes (starting with ID 0)
+;; 1. An object that encapsulates the nodes (starting with ID 0, which is the base)
 ;; 2. Holds a distance-matrix variable for easy distance lookup between the nodes
 
 (defclass network ()
@@ -28,10 +28,12 @@
    (duration :reader node-duration :initarg :duration)))
 ;; --------------------------
 
-;; A vehicle class - basic version for TSP/VRP (non-capacitated).
+;; The fleet object
 ;; ---------------------------
-;; id = integer
-;; route = list<nodes>
+;; 1. An object that holds all vehicles (starting with ID 0)
+
+(defclass fleet ()
+  ((vehicles :accessor fleet-vehicles :initarg :vehicles)))
 
 (defclass vehicle ()
   ((id :reader vehicle-id :initarg :id)
@@ -43,10 +45,6 @@
 (defclass vehicle-TW (vehicle-C)
   ((speed :accessor vehicle-speed :initarg :speed :initform 1)))
 
-;; Class that holds the list of vehicles, which make up the fleet.
-(defclass fleet ()
-  ((vehicles :accessor fleet-vehicles :initarg :vehicles)))
-
 ;; Not required in simple fleets.
 ;   (from-depot :accessor fleet-from-depot :initarg :from-depot :initform T)
 ;   (to-depot :accessor fleet-to-depot :initarg :to-depot :initform T)))
@@ -55,8 +53,6 @@
 
 ;; The problem object class
 ;; -----------------------
-;; Uses: util-geometry.lisp (create-network) - util-vehicle.lisp (create-fleet)
-;; Requires: *node-coords* to be the map of nodes
 ;; NOTE: The <Problem> object is also a <Solution> object interchangably.
 
 (defclass problem ()
@@ -119,20 +115,10 @@
   ((name :initform "Greedy Insertion heuristic")
    (desc :initform "Random greedy insertion heuristic; insert nodes to closest vehicle successively")))
 
-;; Tabu Search
+;; Tabu Search - added Mon Dec 12, 2011
 ;; ---------------------------------------
-;; added Mon 9 Jan, 2012
-;; Tabu List object
+;; - it is possible to define your own moves and initial solution heuristic.
 
-(defclass tabu-list ()
-  ((tabu :accessor tabu-list-tabu :initarg :tabu :initform nil)
-   (tenure :accessor tabu-list-tenure :initarg :tenure :initform 25)
-   (aspiration :accessor tabu-list-aspiration :initarg :aspiratoin :initform T)))
-
-;; added Mon Dec 12, 2011
-;; note Thu Dec 15, 2011 - perhaps add slots that define the TS? moves/init sol/ts parameters..
-;; .. it is possible to use 'string in slot, and use slot value to make-instance (for moves)
-;; - it is possible to define your own moves and initial solution.
 (defclass tabu-search (algo)
   ((name :initform "Tabu Search")
    (desc :initform "Simple Tabu Search heuristic, see (Kuo 2011) for details.")
@@ -143,7 +129,15 @@
    (tabu-list :accessor tabu-search-tabu-list :initarg :tabu-list :initform (make-instance 'tabu-list))
    (candidate-list :accessor tabu-search-candidate-list :initarg :candidate-list :initform nil)))
 
+(defclass tabu-list ()
+  ((tabu :accessor tabu-list-tabu :initarg :tabu :initform nil)
+   (tenure :accessor tabu-list-tenure :initarg :tenure :initform 25)
+   (aspiration :accessor tabu-list-aspiration :initarg :aspiratoin :initform T)))
+
 ;; -------------------------------
+
+;; The Move class
+;; -------------------------
 
 ;; added Thu Dec 15, 2011
 (defclass move ()
