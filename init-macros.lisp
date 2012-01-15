@@ -15,16 +15,21 @@
   (reduce #'max (flatten node-coords)))
 ;; ---------------------------
   
-;; A simple test version of the define-problem macro. Needs a lot of generalization for creating different models. Parameter list different for each model? Strip off drawer-object?
-;; Allow for optional parameters for TW or capacities, etc..
-(defmacro define-problem (name node-coords-list fleet-size plot-filename &optional demands-list capacity)
-  `(let* ((network (create-network ,node-coords-list ,@(when demands-list `(,demands-list))))
-	  (fleet (create-fleet ,fleet-size network ,@(when capacity `(,capacity))))
+;; 
+(defmacro define-problem (name node-coords-list fleet-size plot-filename &optional demands-list capacity time-windows-list duration-list)
+  "Creates a <Problem> object from the inputs. When fleet-size is 1 (and no optional arguments), creates a TSP problem. When fleet-size is more than 1, creates a VRP problem. With only the demands-list and capacity, creates a CVRP problem. With time-windows and durations, creates a VRPTW problem."
+  `(let* ((network (create-network ,node-coords-list
+				   ,@(when demands-list `(,demands-list))
+				   ,@(when time-windows-list `(,time-windows-list))
+				   ,@(when duration-list `(,duration-list))))
+	  (fleet (create-fleet ,fleet-size network
+			       ,@(when capacity `(,capacity))))			       
 	  (drawer (make-instance 'drawer
 				 :min-coord (get-min-coord ,node-coords-list)
 				 :max-coord (get-max-coord ,node-coords-list)
 				 :filename ,plot-filename)))
-     (make-instance ,@(cond (capacity '('cvrp))
+     (make-instance ,@(cond (time-windows-list '('vrptw))
+			    (capacity '('cvrp))
 			    ((> fleet-size 1) '('vrp))
 			    (t '('tsp)))
 		    :name ,name :fleet fleet :network network :drawer drawer)))

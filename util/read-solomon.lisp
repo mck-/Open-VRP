@@ -44,8 +44,7 @@
 		 *service-duration* service-duration))
       (setf *fleet-size* fleet-size
 	    *capacities* capacities)
-      ;; Create the problem - currently ignoring *demands* and *time-windows*
-      (define-problem name *node-coords* *fleet-size* (concatenate 'string "plots/" (string name) ".png") *demands* *capacities*))))
+      (define-problem name *node-coords* *fleet-size* (concatenate 'string "plots/" (string name) ".png") *demands* *capacities* *time-windows* *service-duration*))))
       
 	   
 	   
