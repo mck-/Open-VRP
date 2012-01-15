@@ -18,10 +18,10 @@
       (call-next-method)
       NIL))
 
-;; (defmethod constraintsp :around ((sol VRPTW))
-;;   (if (in-timep sol)
-;;       (call-next-method)
-;;       NIL))
+(defmethod constraintsp :around ((sol VRPTW))
+  (if (in-timep (problem-fleet sol) (problem-network sol))
+      (call-next-method)
+      NIL))
 ;; -------------------------
 
 ;; Capacity Constraints
@@ -51,8 +51,6 @@
 
 (defmethod in-capacityp ((pr problem))
   (in-capacityp (problem-fleet pr)))
-
-;; --------------------------------
 	   
 (defun node-fit-in-vehiclep (sol node-id vehicle-id)
   "Helper function for assessing constraints. Used by assess-move :around."
@@ -60,4 +58,48 @@
     (if (not comply) (error "node-fit-in-vehiclep: The solution was infeasible to begin with!")
 	(<= (node-demand (node sol node-id)) cap-left))))
 
+;; ------------------------------
+
+;; Time-window constraints
+;; -------------------------
+
+(defmethod travel-time ((v vehicle-TW) (n network) node1 node2)
+  (let ((dist (distance node1 node2 (network-dist-table n))))
+    (/ dist (vehicle-speed v))))
+
+(defgeneric in-timep (veh/fleet network)
+  (:method (obj net) "in-timep: Expects <Vehicle-TW>/<Fleet> and a <Network> object!")
+  (:documentation "Tests weather the route on <Vehicle> is complying with the time-window constraints. Returns T and the time of finishing its last task. When <Fleet> is provided, test all vehicles."))
+
+;; check for each node
+;; arrival time is current time + travel time
+;; if arrival time < end-time, on time (if not on time, return NIL - no need to check more)
+;;   if arrival time < begin-time, wait until begin time -> set time to begin + duration
+;;   if arrival after begin-time -> set time to arrival + duration
+
+(defmethod in-timep ((v vehicle-TW) (n network))
+  (labels ((iter (loc route time)	     
+	     (if (null route) (values T time) ;also returns time of finishing all tasks
+		 (let* ((to (car route))
+			(arr-time (+ time
+				     (travel-time v n (node-id loc) (node-id to)))))
+		   (and
+		    (<= arr-time (node-end to)) ;arrive before end-time
+		    (iter to
+			  (cdr route)
+			  (if (< arr-time (node-start to))
+			      (+ (node-start to) (node-duration to)) ;wait for start-time
+			      (+ arr-time (node-duration to)))))))))
+    (iter (car (vehicle-route v))
+	  (cdr (vehicle-route v))
+	  0)))
+
+(defmethod in-timep ((f fleet) (n network))
+  (labels ((iter (veh)
+	     (if (null veh) T
+		 (and
+		  (in-timep (car veh) n)
+		  (iter (cdr veh))))))
+    (iter (fleet-vehicles f))))			       
 		  
+		 

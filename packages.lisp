@@ -141,6 +141,7 @@
 	   :constraintsp
 	   :in-capacityp
 	   :node-fit-in-vehiclep
+	   :in-timep
 
 	   :fitness
 	   ))
