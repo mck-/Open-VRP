@@ -19,7 +19,8 @@
 	   :VRPTW
 	   :algo
 	   :greedy-NN
-	   :greedy-insertion
+	   :greedy-append
+	   :greedy-best-insertion
 	   :tabu-list
 	   :tabu-search
 	   :move
@@ -170,6 +171,7 @@
 	   :solve-plot
 	   :re-init
 	   :get-closest-vehicle
+	   :get-closest-feasible-vehicle
 	   :fitness-before-after
 	   :initialize
 	   :iterate

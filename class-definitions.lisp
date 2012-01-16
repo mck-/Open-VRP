@@ -111,9 +111,13 @@
   ((name :initform "Greedy NN-algo")
    (desc :initform "Nearest Neighborhood algo; from base/random, select next closest one")))
 
-(defclass greedy-insertion (algo)
-  ((name :initform "Greedy Insertion heuristic")
-   (desc :initform "Random greedy insertion heuristic; insert nodes to closest vehicle successively")))
+(defclass greedy-append (algo)
+  ((name :initform "Greedy Appending heuristic")
+   (desc :initform "Random greedy insertion heuristic; append nodes to closest vehicle successively. Used as initial solution for search algos.")))
+
+(defclass greedy-best-insertion (algo)
+  ((name :initform "Greedy Best Insertion heuristic")
+   (desc :initform "Randomly insert nodes one by one to best vehicle at best location. Used as initial solution for search algos.")))
 
 ;; Tabu Search - added Mon Dec 12, 2011
 ;; ---------------------------------------
