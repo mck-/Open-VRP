@@ -77,10 +77,9 @@
 		       (let ((new (get-best-insertion-move sol
 							   (vehicle-id (car flt))
 							   (node-id n))))
-			 (if (or (null best-move)
-				 (< (move-fitness new) (move-fitness best-move))) ;better move?
+			 (if (and (move-fitness new) ;check if new move is feasible
+				  (or (null best-move) ;first move
+				      (< (move-fitness new) (move-fitness best-move)))) ;better?
 			     new
 			     best-move))))))
     (iter (fleet-vehicles (problem-fleet sol)) nil)))
-		       
-  
