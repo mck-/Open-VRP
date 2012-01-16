@@ -2,6 +2,9 @@
 ;;; ------------------------
 ;;; Greedy Appending heuristic
 ;;; Using a (random) sequence, append the <Nodes> one by one in the nearest <Vehicle>
+;;; May cause error for VRPTW or CVRP, when the number of vehicles available are too low
+;;; to append all the nodes. Use greedy-best-insertion instead!
+
 (in-package :open-vrp.algo)
 
 ;; 1. Generate random insertion sequence
