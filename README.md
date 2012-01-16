@@ -67,7 +67,9 @@ When the algo is finished running, it returns the Algo object, which contains :c
 
 An example output of Solomon's VRPTW 100-customers benchmark test-case, solved with Tabu Search.
 
-![alt Optimal solution](https://github.com/mck-/Open-VRP/blob/master/solomon100-optimal.png?raw=true "Optimal solution")
+![alt Optimal solution](https://github.com/mck-/Open-VRP/blob/master/plots/solomon100-optimal.png?raw=true "Optimal solution")
+
+Currently, the output is in the REPL, except for the plot. Log stats is **wip**.
 
 ## TODO
 
