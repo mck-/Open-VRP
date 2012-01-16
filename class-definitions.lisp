@@ -127,7 +127,7 @@
   ((name :initform "Tabu Search")
    (desc :initform "Simple Tabu Search heuristic, see (Kuo 2011) for details.")
    (moves :accessor tabu-search-moves :initarg :moves :initform 'TS-best-insertion-move)
-   (init-heur :accessor tabu-search-init-heur :initarg :init-heur :initform 'greedy-insertion)
+   (init-heur :accessor tabu-search-init-heur :initarg :init-heur :initform 'greedy-best-insertion)
    (iterations :initform 5)
    (animate :accessor tabu-search-animate :initarg :animate :initform nil)
    (tabu-list :accessor tabu-search-tabu-list :initarg :tabu-list :initform (make-instance 'tabu-list))
