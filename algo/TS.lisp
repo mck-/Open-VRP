@@ -135,3 +135,13 @@
 	   (let ((sorted-moves (sort-moves (assess-moves sol (generate-moves ts)))))
 	     (setf (tabu-search-candidate-list ts) (create-candidate-list ts sorted-moves))
 	     (select-perform-from-cand ts))))))
+
+;; Tabu Search animate
+;; -------------------------
+(defmethod iterate :after ((ts tabu-search))
+  (when (tabu-search-animate ts)
+    (plot-solution (algo-current-sol ts) (with-output-to-string (s)
+					   (princ "run-frames/Iteration " s)
+					   (princ (algo-iterations ts) s)
+					   (princ ".png" s)))))
+;; --------------------------
