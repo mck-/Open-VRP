@@ -49,7 +49,7 @@
 			   (multiple-value-bind (c cap)
 			       (in-capacityp x) (when c cap)))
 		       vehicles))
-	 (filtered (mapcar #'(lambda (veh dist time)
+	 (filtered (mapcar #'(lambda (veh dist time cap)
 			       (if (or (> (node-demand n) cap)
 				       (> (+ time (travel-time veh
 							       (problem-network prob)
@@ -58,7 +58,7 @@
 					  (node-end n)))
 				   nil
 				   dist))
-			   vehicles dists times)))
+			   vehicles dists times caps)))
     (vehicle prob (get-min-index filtered))))	   
 
 ;; ----------------------
