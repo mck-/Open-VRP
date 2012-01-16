@@ -6,11 +6,11 @@ Open VRP is a framework to model and solve [VRP-like](http://neo.lcc.uma.es/radi
 
 * written from scratch
 * build using the toolkit of shared operators
-* or tweaked from existing implementations
+* or tweaked from existing implementations - (currently only Tabu Search implemented)
 
 The Problem object (e.g. VRP) and the Algorithm object (e.g. Genetic Algorithm) are modelled seperately and combined with the generic method (solve-prob problem algo). Different solution algorithms can be tested and compared against each other on the same problem (which you only model once).
 
-The solutions are drawn using [vecto](http://www.xach.com/lisp/vecto/) in a .png file. Logs and statistics of the run are summarised in a .txt file **(wip)**.
+The solutions are drawn using [vecto](http://www.xach.com/lisp/vecto/) in a .png file.
 
 ## Vision
 
@@ -36,7 +36,7 @@ The ultimate vision for Open VRP is a simple intuitive embedded language for the
 
 ```
 (solve-plot test-vrp (make-instance 'tabu-search :animate T))
-(solve-plot solomon100 (make-instance 'tabu-search :iterations 500))
+(solve-plot solomon100 (make-instance 'tabu-search :iterations 100))
 ```
 
 When :animate is set to T, each iteration will produce a plot in run-frames/Iteration x.png (much slower).
@@ -63,11 +63,15 @@ When the algo is finished running, it returns the Algo object, which contains :c
 (iterate-more <algo> int)
 ```
 
+## Output
+
+An example output of Solomon's VRPTW 100-customers benchmark test-case, solved with Tabu Search.
+
+![alt Optimal solution](https://github.com/mck-/Open-VRP/blob/master/solomon100-optimal.png?raw=true "Optimal solution")
+
 ## TODO
 
-* A search framework for meta-heuristics (Tabu Search, Genetic Algorithms, etc..) **(wip)**
-* Benchmark test-case loader (Taillard/Solomon/Li&Lim, etc...) **(wip)**
-* Extend VRP model to CVRP, VRPTW and PDPTW
+* Extend VRP model to PDPTW
 * Run logs/statistics for test-result gathering (including batch runs)
 * User-interface (better macros)
 * Plotting can be improved (real-time output instead of .png files)
