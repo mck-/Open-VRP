@@ -1,8 +1,14 @@
 ;;; Thu 29 Dec, 2011 (c) Marc Kuo
 ;;; Tools to be shared among algorithms
 ;;; ---------------------------
+;;; - get-closest-vehicle
+;;; - get-closest-feasible-vehicle
+;;; - optimal-insertion
+
 (in-package :open-vrp.algo)
 
+;; Closest Vehicle
+;; ---------------------------
 ;; Thu Dec 8, 2011
 ;; challenge: what if the vehicle is located on the node n - use only for initial insertion?
 (defgeneric get-closest-vehicle (node problem)
@@ -55,3 +61,26 @@
 			   vehicles dists times)))
     (vehicle prob (get-min-index filtered))))	   
 
+;; ----------------------
+
+;; Optimal insertion
+;; ---------------------
+
+(defgeneric optimal-insertion (prob node)
+  (:method (prob node) "optimal-insertionL: Expects <Problem> and <Node>.")
+  (:documentation "Given a node and a solution (that does not have this node yet), insert the node in the best possible and feasible location."))
+
+(defmethod optimal-insertion ((sol tsp) (n node))
+  (labels ((iter (flt best-move)
+	     (if (null flt) best-move
+		 (iter (cdr flt)
+		       (let ((new (get-best-insertion-move sol
+							   (vehicle-id (car flt))
+							   (node-id n))))
+			 (if (or (null best-move)
+				 (< (move-fitness new) (move-fitness best-move))) ;better move?
+			     new
+			     best-move))))))
+    (iter (fleet-vehicles (problem-fleet sol)) nil)))
+		       
+  

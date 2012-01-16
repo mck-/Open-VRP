@@ -172,6 +172,7 @@
 	   :re-init
 	   :get-closest-vehicle
 	   :get-closest-feasible-vehicle
+	   :optimal-insertion
 	   :fitness-before-after
 	   :initialize
 	   :iterate
