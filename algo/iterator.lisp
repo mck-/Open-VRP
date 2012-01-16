@@ -2,6 +2,7 @@
 ;; Search framework
 ;; Iterator on <Algo> object. Used by TS (or even GA and other metaheuristics).
 ;; --------------------------------------------
+(in-package :open-vrp.algo)
 
 ;; initializer
 ;; -----------
