@@ -19,7 +19,6 @@
 	       (:file "util/algo")
 	       (:file "util/constraints")
 	       ;; data
-	       (:file "util/var-init")
 	       (:file "init-macros")
 	       (:file "util/read-solomon")
 	       ;; algos
