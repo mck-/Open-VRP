@@ -1,9 +1,7 @@
 ;;; Sat 31, 2011 (c) Marc Kuo
 ;;; -------------
-;;; Problem building macros
-;;; Used for quickly defining problems, requiring only a list of node-coords
-;;; Needs adjustment when extended with advanced nodes! (e.g. time-windows, load)
-;;; Think of a different approach!
+;;; Define problem macro
+
 (in-package :open-vrp)
 
 ;; Initialising Drawer object functions
