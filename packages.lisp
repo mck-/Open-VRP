@@ -111,15 +111,12 @@
 	   :random-list-permutation
 
 	   ;; route utils
-	   :change-route
 	   :insert-node
 	   :append-node
 	   :remove-node-at
 	   :remove-node-ID
 	   :last-node
 	   :closest-node
-	   :move-node
-	   :get-route-with
 
 	   ;; network utils
 	   :distance
@@ -127,8 +124,6 @@
 	   :generate-dist-array
 	   :get-array-row
 	   :node
-	   :coords
-	   :dist-table
 	   :create-network
 
 	   ;; fleet utils
@@ -169,11 +164,15 @@
 	   :*algo-backup*
 	   :solve-prob
 	   :solve-plot
-	   :re-init
+	   
+	   ;; tools
 	   :get-closest-vehicle
 	   :get-closest-feasible-vehicle
 	   :optimal-insertion
 	   :fitness-before-after
+	   :get-best-insertion-move
+
+	   ;; iterator
 	   :initialize
 	   :iterate
 	   :iterate-more
@@ -183,7 +182,8 @@
 	   :assess-moves
 	   :sort-moves
 	   :select-move
-	   :get-best-insertion-move
+	   
+	   ;; Tabu Search
 	   :add-to-tabu
 	   :is-tabup
 	   :create-candidate-list))

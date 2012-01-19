@@ -29,7 +29,7 @@
 (defmethod generate-moves ((ts tabu-search))
   "Generates a list of <move> instances (depending on what was defined in the ts slot) for all nodes and vehicles."
   (let* ((prob (algo-current-sol ts))
-	 (num-nodes (1- (length (coords prob)))) ;1- to account for base
+	 (num-nodes (1- (length (network-nodes (problem-network prob))))) ;1- for base
 	 ;ignore empty vehicles, except for one (if available! capped at fleet-size)
 	 (num-vehicles (min
 			(length (remove-if #'(lambda (v) (single (vehicle-route v)))

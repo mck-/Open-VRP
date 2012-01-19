@@ -93,11 +93,6 @@
   (mapcar #'(lambda (x) (setf (nth x list) nil)) indices)
   list)
 
-(defun mark-nill-table (table x y)
-  "Given 2-coords, mark the cell NIL. DESTRUCTIVE."
-  (setf (nth y (nth x table)) nil)
-  table)
-
 (defun mark-nill-items (list items)
   "Marks the items on list with NIL."
   (labels ((iter (rest-items ans)

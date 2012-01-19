@@ -31,11 +31,6 @@
 	(x2 (node-xcor n2)) (y2 (node-ycor n2)))
     (distance-coords x1 y1 x2 y2)))
 
-;; a cumbersome work-around to provide (make-array)'s second argument
-(defmacro gen-array (size)
-  `(let ((x ,size))
-     `(make-array (quote (,x ,x)) :initial-element nil)))
-
 (defun get-array-row (array row-index)
   "Given a 2-dimenstional array and a row-index, return the row as a list"
   (loop for row to (1- (array-dimension array 0))
@@ -44,7 +39,7 @@
 (defun generate-dist-array (coord-list)
   "Given a list of coord pairs, generate an array of distances."
   (let* ((size (length coord-list))
-	 (dist-array (eval (gen-array size))))
+	 (dist-array (eval `(make-array '(,size ,size) :initial-element nil))))
     (map0-n #'(lambda (x)
 		 (map0-n #'(lambda (y)
 			     (setf (aref dist-array x y)
@@ -70,31 +65,6 @@
 (defmethod node ((prob problem) id)
   (node (problem-network prob) id))
 
-(defgeneric coords (object)
-  (:method (object)
-    "No coords can be returned from this object type. Or object is non-existent, e.g. when index is out of bounds.")
-  (:documentation "Returns the coords of the nodes from the object. Route in vehicle, whole network if network object, and one cons if object is a node."))
-
-(defmethod coords ((n node))
-  (cons (node-xcor n) (node-ycor n)))
-    
-(defmethod coords ((net network))
-  (mapcar #'(lambda (node) (cons (node-xcor node) (node-ycor node))) (network-nodes net)))
-
-(defmethod coords ((prob problem))
-  (coords (problem-network prob)))
-
-(defmethod coords ((veh vehicle))
-  (mapcar #'(lambda (node) (cons (node-xcor node) (node-ycor node))) (vehicle-route veh)))
-
-(defgeneric dist-table (object)
-  (:documentation "Returns the dist-matrix; a precalculated distance table to all nodes."))
-
-(defmethod dist-table ((net network))
-  (network-dist-table net))
-
-(defmethod dist-table ((prob problem))
-  (dist-table (problem-network prob)))
 ;; --------------------------------
 
 ;; Initializing functions

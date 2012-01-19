@@ -10,8 +10,6 @@
 ;;; 2. Remove node from the route
 ;;; 3. Last location
 ;;; 4. Closest node
-;;; TABU SEARCH UTILS ---
-;;; 5. Move Node with nodeID from v1 to v2 at v2loc
 
 ;; change-route macro binds the route to r and sets it to the result of &body
 (defmacro change-route (vehicle &body body)
