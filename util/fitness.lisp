@@ -13,4 +13,4 @@
 (defmethod fitness ((cvrp CVRP))
   (values
    (call-next-method)
-   (in-capacityp cvrp)))
+   (constraintsp cvrp)))
