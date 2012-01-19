@@ -7,14 +7,12 @@ The list of accessors are not shown here - refer to class-definitions.lisp for a
 -- util/network.lisp
 node-distance (<Node> <Node>) 	    	 - returns distance
 node (<Network>/<Problem> int)		 - returns Node, given ID
-coords (<Node>/<Network>/<Problem>/<Vehicle>)- returns the relevant coords, given each object
-dist-table (<Network>/<Problem)		 - returns the dist-table (obsolete accessor?)
 
 -- util/fleet.lisp
 vehicle (<Fleet>/<Problem> int)		 - returns <Vehicle>, given ID
 route-indices (<Vehicle>/<Fleet>/<Problem>)- returns the route as list of Node IDs
 vehicle-with-node (<Fleet>/<Problem> int)- returns vehicle-ID which route has node-ID
-total-dist (<Vehicle>/<Network>)	 - returns the total distance of route/fleet
+total-dist (<Vehicle>/<Fleet> <Network>) - returns the total distance of route/fleet
 
 -- util/output.lisp
 print-routes (<Fleet>/<Problem>/<Algo>)	 - prints routes, given the fleet/problem/algo
@@ -33,24 +31,26 @@ append-node (<Vehicle> <Node>)		 - appends <Node> at end of route of <Vehicle>
 remove-node-at (<Vehicle> int)		 - removes <Node> of route at i
 remove-node-ID (<Vehicle>/<Problem> int) - removes <Node> with node-ID of route/solution
 last-node (<Vehicle>)  			 - returns last <Node> route
-closest-node (<Vehicle> <Network>)	 + returns closest <Node> from location of <Vehicle>
+closest-node (<Vehicle> <Network>)	 + returns closest <Node> to location of <Vehicle>
 closest-node (<Problem> int)		 + accepts <Problem> and vehicle ID
-closest-unchosen-node (<Vehicle> <Network> list)   - ..given list of <Node> to ignore
+closest-node (arg1 arg2 &optional tabu)  + optional arg tabu to exclude certain node-IDs
 
 -- util/algo.lisp
 run-algo (<Problem> <Algo>) 	 	 - runs, prints solution, sets current/best solution
 	 				   slots in <Algo> and return the <Algo> object
-solve-tsp (<Problem> <Algo>)		 - NON-destructive wrapper for run-algo. 
-re-init (<Fleet>/<Problem>)		 - Resets all vehicles to initial location
+solve-prob (<Problem> <Algo>)		 - NON-destructive wrapper for run-algo. 
+solve-plot (<Problem> <Algo>)		 - solves and plots best solution
 
 -- algo/tools.lisp
 get-closest-vehicle (<Node> <Problem>)	 - returns <Vehicle> that is closest to given <Node>
+get-closest-feasible-vehicle (<Node> <Problem>) - .. whilst constraints checking
+optimal-insertion (<Problem> <Node>)     - Insert <Node> optimally (see: greedy-best-insertion)
+
+-- algo/iterator.lisp
 initialize (<Problem> <Algo>)  		 - initializes the solution in :current-solution
 iterate (<Algo>)			 - performs one iteration, returns best-sol if finished
+iterate-more (<Algo> int)		 - resume search with int iterations
 generate-moves (<Algo>)			 - returns a list of all <Move>s to be considered
 perform-move (<Problem> <Move>)		 - performs <move> on and returns <problem>
 assess-move (<Problem> <Move>)		 - assess <Move>, returns and set in :fitness slot
-
-
-
-
+select-move (<Algo> moves)		 - selects <Move> out of moves to be performed next
