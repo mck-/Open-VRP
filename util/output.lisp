@@ -10,11 +10,14 @@
 
 ;; ignore empty vehicles
 (defmethod print-routes ((f fleet))
-  (format t "Solution:~%~{Route: ~A~^~%~}"
-	  (remove-if #'(lambda (route) (null (cdr route))) (route-indices f))))
+  (format t "~&~{Route: ~A~^~%~}"
+	  (remove-if #'(lambda (route) (null (cdr route))) (route-indices f)))
+  (format t "~&---------------"))
 
 (defmethod print-routes ((prob problem))
-  (print (fitness prob))
+  (format t "~&---------------")
+  (format t "~&Fitness: ~A" (fitness prob))
+  (format t "~&---------------")
   (print-routes (problem-fleet prob)))
 
 (defmethod print-routes ((a algo))

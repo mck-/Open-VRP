@@ -21,7 +21,7 @@
 ;; when no more iterations, print solution and return the <Algo> object.
 (defmethod iterate :around ((a algo))
   (if (< (algo-iterations a) 1)
-      (progn
+      (progn	
 	(print-routes (algo-best-sol a))
 	a)
       (call-next-method))) ; otherwise iterate
@@ -29,6 +29,7 @@
 ;; After each iteration, check to see if a new best solution has been found and save it.
 (defmethod iterate :after ((a algo))
   (setf (algo-iterations a) (1- (algo-iterations a)))
+  (format t "~&Iterations to go: ~A~%" (algo-iterations a))
   (let* ((sol (algo-current-sol a))
 	 (new-fitness (fitness sol))
 	 (best-fitness (algo-best-fitness a)))
@@ -65,15 +66,10 @@
 
 ;; logging
 (defmethod perform-move :after ((prob problem) (mv move))
-  (print "Performing ")
-  (princ (type-of mv))
-  (princ " with Node ")
-  (princ (move-node-ID mv))
-  (princ " and Vehicle ")
-  (princ (move-vehicle-ID mv))
+  (format t "~&Performing ~A with Node ~A and Vehicle ~A" (type-of mv) (move-node-ID mv) (move-vehicle-ID mv))
   (when (eq (type-of mv) 'insertion-move)
-    (princ " and Index ")
-    (princ (move-index mv))))
+    (format t " and Index ~A" (move-index mv))))
+    
 
 ;; Assess move(s)
 ;; ------------------------
