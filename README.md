@@ -41,14 +41,15 @@ The ultimate vision for Open VRP is a simple intuitive embedded language for the
 
 When :animate is set to T, each iteration will produce a plot in run-frames/Iteration x.png (much slower).
 
-You can define your own problems with:
+You can define your own problem objects with:
 
 ```
 (define-problem name node-coords n "plots/vrp.png")
 (define-problem name node-coords n "plots/cvrp.png" demands-list capacity)
+(define-problem name node-coords n "plots/vrptw.png" demands-list capacity time-windows durations)
 ```
 
-where *node-coords* is a list of pairs, *demands-list* a list of associated demands, and n is the number of vehicles. When n is 1, the resulting problem is a TSP. When n is larger than 1, the resulting problem is a VRP. When a *demands-list* and vehicle *capacity* are provided, the resulting problem is a CVRP.
+where *node-coords* is a list of pairs, *demands-list* a list of associated demands, and n is the number of vehicles. When n is 1, the resulting problem is a TSP. When n is larger than 1, the resulting problem is a VRP. When a *demands-list* and vehicle *capacity* are provided, the resulting problem is a CVRP. If in addition *time-windows* (list of pairs) and *durations* are given, the resulting problem object is a VRPTW.
 
 Or to load from a text-file [Solomon-format](http://neo.lcc.uma.es/radi-aeb/WebVRP/index.html?/Problem_Instances/CVRPTWInstances.html):
 
