@@ -151,6 +151,7 @@
 	:open-vrp.util
    	:vecto)
   (:export :print-routes
+	   :print-multi-run-stats
 	   :plot-solution
 	   :plot-nodes
 	   :toggle-legend))
@@ -165,7 +166,7 @@
 	   :solve-prob
 	   :solve-plot
 	   :multi-run
-	   :get-best-solution
+	   :get-best-solution	  
 	   
 	   ;; tools
 	   :get-closest-vehicle
