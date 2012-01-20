@@ -164,6 +164,8 @@
 	   :*algo-backup*
 	   :solve-prob
 	   :solve-plot
+	   :multi-run
+	   :get-best-solution
 	   
 	   ;; tools
 	   :get-closest-vehicle

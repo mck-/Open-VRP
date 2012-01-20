@@ -4,8 +4,11 @@
 ;;; 1. run-algo (problem algo) - DESTRUCTIVE
 ;;; 2. solve-prob (problem algo) - UNDESTRUCTIVE
 ;;; 3. solve-plot (problem algo) - plots the best solution after solving
-
+;;; 4. multi-run (int algo-call) - Run algo int times - collect all results
 (in-package :open-vrp.algo)
+
+;; Run Algo
+;; -------------------------
 
 (defgeneric run-algo (problem algo)
   (:method (problem algo)
@@ -25,6 +28,11 @@
   (print-routes a)
   (print "---------------------"))
 
+;; -----------------------------
+
+;; Solve Prob
+;; ---------------------------------
+
 ;; a wrapper method to prevent destructive behaviour of CLOS. 
 (defgeneric solve-prob (problem algo)
   (:method (problem algo)
@@ -35,6 +43,11 @@
   (let ((clone (copy-object problem)))
     (run-algo clone algo)))
 
+;; ----------------------------
+
+;; Solve Plot
+;; ------------------------------
+
 (defgeneric solve-plot (problem algo)
   (:method (problem algo) "solve-plot: Requires two input objects: <problem>, <algo>")
   (:documentation "Solves and plots. Returns <algo> object. Will have side-effects on <algo> object, which contains the solution. Will leave <problem> object untouched. Calls solve-prob and plot-solution."))
@@ -43,3 +56,26 @@
   (let ((algo-obj (solve-prob problem algo)))
     (plot-solution (algo-best-sol algo-obj))
     algo-obj))
+
+;; ---------------------------
+
+;; Multi-run
+;; ---------------------------
+
+(defmacro multi-run (times algo-call)
+  "Run algo x times and collect all resulting solution objects in a list."
+  `(loop for ,(gensym) below ,times
+	collect ,algo-call into solutions
+	finally (return solutions)))
+
+(defun get-best-solution (solutions)
+  "Given a list of solutions (from multi-run), return the best solution."
+  (labels ((iter (sols best)
+	     (if sols
+		 (iter (cdr sols)
+		       (if (< (algo-best-fitness (car sols)) (algo-best-fitness best))
+			   (car sols)
+			   best))
+		 best)))
+    (iter (cdr solutions) (car solutions))))
+	
