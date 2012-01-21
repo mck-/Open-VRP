@@ -198,4 +198,8 @@
 	:open-vrp.algo
 	:open-vrp.output)
   (:export :define-problem
-	   :load-testcase-Solomon))
+	   :load-testcase-Solomon
+	   :solve-prob
+	   :iterate-more
+	   :solve-plot
+	   :plot-solution))
