@@ -69,7 +69,7 @@
 		 (let ((node-after (node-id (nth (1+ pos) route))))
 		   (- (+ dist1
 			 (distance node node-after dist-array)) ;dist to next node
-		      (distance node-before node-after dist-array)))))))) ;minus direct route
+		      (or (distance node-before node-after dist-array) 0)))))))) ;minus direct route, which is 0 if the node-before and node-after are the same.
 
 ;; around method for checking constraints. If move is infeasible, return NIL.
 (defmethod assess-move :around ((sol CVRP) (m TS-best-insertion-move))
