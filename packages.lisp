@@ -113,6 +113,7 @@
 	   ;; route utils
 	   :empty-routep
 	   :get-busy-vehicles
+	   :one-destinationp
 	   :insert-node
 	   :append-node
 	   :remove-node-at

@@ -22,6 +22,10 @@
   "Returns a list of <Vehicles> that are not empty."
   (remove-if #'empty-routep (fleet-vehicles f)))
 
+(defun one-destinationp (route)
+  "Return T if there is only one destination on route, excluding base nodes. Used by generate-moves in TS.lisp."
+  (= 1 (length (remove 0 route :key #'node-id))))
+
 ;; -------------------------
 
 ;; Route Operations

@@ -32,14 +32,14 @@
 	 (num-nodes (1- (length (network-nodes (problem-network prob))))) ;1- for base
 	 ;ignore empty vehicles, except for one (if available! capped at fleet-size)
 	 (num-vehicles (min
-			(length (get-busy-vehicles (problem-fleet prob)))
+			(1+ (vehicle-id (car (last (get-busy-vehicles (problem-fleet prob))))))
 			(1- (length (fleet-vehicles (problem-fleet prob))))))
 	 (move-type (tabu-search-moves ts)))
     ;remove unnecessary moves that don't do anything, e.g. when vehicle 2's route is (0 1), then the move of best-inserting node 1 into vehicle 2 has no meaning (but causes trouble!) 
     (remove-if #'(lambda (mv)
-		   (let ((route (vehicle-route (vehicle prob (move-vehicle-ID mv))))) 
-		     (and (null (cddr route)) ;route is of length 2 (has one destination only)
-			  (cadr route) ;it's not an empty one either
+		   (let ((route (vehicle-route (vehicle prob (move-vehicle-ID mv)))))
+			  ;route has one destination only
+		     (and (one-destinationp route)			  
 			  (= (node-id (cadr route)) (move-node-ID mv))))) ;and same node
 	       (flatten
 		(map1-n #'(lambda (node-id)
