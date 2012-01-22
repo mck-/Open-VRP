@@ -33,7 +33,8 @@
 ;; 1. An object that holds all vehicles (starting with ID 0)
 
 (defclass fleet ()
-  ((vehicles :accessor fleet-vehicles :initarg :vehicles)))
+  ((vehicles :accessor fleet-vehicles :initarg :vehicles)
+   (to-depot :accessor fleet-to-depot :initarg :to-depot :initform T)))  
 
 (defclass vehicle ()
   ((id :reader vehicle-id :initarg :id)
@@ -47,7 +48,6 @@
 
 ;; Not required in simple fleets.
 ;   (from-depot :accessor fleet-from-depot :initarg :from-depot :initform T)
-;   (to-depot :accessor fleet-to-depot :initarg :to-depot :initform T)))
 
 ;; ----------------------------
 
