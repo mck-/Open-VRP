@@ -10,8 +10,8 @@
 	 (pos (position node-id route :key #'node-id)) ;check if we do intra-route insertion
 	 (moves '()))
     (do ((index 1 (1+ index)))
-	((> index (length route)))
-      (unless (and pos (or (= index pos) (= index (1+ pos))))
+	((> index (if (fleet-to-depot (problem-fleet sol)) (1- (length route)) (length route))))
+      (unless (and pos (or (= index pos) (= index (1+ pos)))) ;useless moves avoided
 	(push (make-instance 'insertion-move
 			     :index index
 			     :vehicle-id vehicle-id
@@ -30,12 +30,12 @@
 	 (node-before (node-id (nth (1- index) route))))
     (setf (move-fitness m)
 	  (if (= index (length route)) ;if appending to end of route
-	      (distance node (node-id (car (last route))) dist-array)
+	      (distance node (node-id (last-node route)) dist-array)
 	      (let ((node-after (node-id (nth index route))))
 		(-
 		 (+ (distance node node-before dist-array)
 		    (distance node node-after dist-array)) 
-		 (distance node-before node-after dist-array)))))))
+		 (or (distance node-before node-after dist-array) 0))))))) ; NIL -> 0
 
 ;; around method for checking constraints. If move is infeasible, return NIL.
 (defmethod assess-move :around ((sol CVRP) (m insertion-move))
