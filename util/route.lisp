@@ -52,7 +52,9 @@
 
 (defmethod append-node ((v vehicle) (n node))
   (change-route v
-    (insert-at-end n r)))
+    (if (= 0 (node-id (car (last (vehicle-route v))))) ; if last node is 0, insert before that
+	(reverse (insert-before n 1 (reverse r)))
+	(insert-at-end n r))))
 
 ;; 2. Remove Node
 ;; adjusted Sun Dec 11, 2011
