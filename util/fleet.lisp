@@ -91,4 +91,4 @@
   `(let ((fleet (create-vehicles ,fleet-size ,network ,to-depot
 				 ,@(when capacities `(,capacities))
 				 ,@(when speeds `(,speeds)))))
-     (make-instance 'fleet :vehicles fleet)))
+     (make-instance 'fleet :vehicles fleet :to-depot ,to-depot)))
