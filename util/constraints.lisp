@@ -63,9 +63,10 @@
 ;; Time-window constraints
 ;; -------------------------
 
-(defmethod travel-time ((v vehicle-TW) (n network) node1 node2)
-  (let ((dist (distance node1 node2 (network-dist-table n))))
-    (/ dist (vehicle-speed v))))
+(defmethod travel-time ((v vehicle-TW) (n network) node-id1 node-id2)
+  (if (= node-id1 node-id2) 0 ; travel-time from base to base is 0
+      (let ((dist (distance node-id1 node-id2 (network-dist-table n))))
+	(/ dist (vehicle-speed v)))))
 
 (defgeneric in-timep (veh/fleet network)
   (:method (obj net) "in-timep: Expects <Vehicle-TW>/<Fleet> and a <Network> object!")
