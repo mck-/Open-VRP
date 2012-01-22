@@ -87,7 +87,7 @@
   (:documentation "Returns the last <node> in its route. Depicts the current location (before returning to base)."))
 
 (defmethod last-node (route)
-  (let ((r (nreverse route)))
+  (let ((r (reverse route)))
     (if (= 0 (node-id (car r)))
 	(or (cadr r) (car r)) ;in case route has only one base-node.
 	(car r))))
