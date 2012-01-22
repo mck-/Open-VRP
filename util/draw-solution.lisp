@@ -109,29 +109,27 @@
 	(clear-canvas)
 	(set-line-width 3)
 				        ;iterate over fleet - draw routes & legend together
-	(dolist (veh (fleet-vehicles (problem-fleet sol))) ;Fri Dec 2, 2011 - changed for CLOS
-	  (unless (null (cdr (vehicle-route veh)))
-	    (multiple-value-bind (r g b) (get-color)
-	      (when (drawer-legend dr)
-		  (draw-legend-item dr veh r g b)) ; draw legend item
-	      (set-rgb-stroke r g b))
-					
-	    (use-node dr (first (vehicle-route veh)) ; draw path
-		      (centered-circle-path pix-x pix-y 12) ;circle the departing node
-		      (stroke)
-		      (move-to pix-x pix-y)	  
-		      (store-pix dr pix-x pix-y)
-		      (dolist (node (rest (vehicle-route veh)))
-			(use-node dr node
-				  (arrow-to dr pix-x pix-y 0.038 0.45) ;draw arrows
-				  (store-pix dr pix-x pix-y))))
-	    (stroke)))
-	(setf (drawer-legend-y dr) temp-y) ;reset to original value
-					;drawing nodes
-	(draw-nodes dr (problem-network sol))
-					;draw results (temporary disabled, needs fix!)
+	(dolist (veh (get-busy-vehicles (problem-fleet sol)))
+	  (multiple-value-bind (r g b) (get-color)
+	    (when (drawer-legend dr)
+	      (draw-legend-item dr veh r g b)) ; draw legend item
+	    (set-rgb-stroke r g b))
+	  
+	  (use-node dr (first (vehicle-route veh)) ; draw path
+	    (centered-circle-path pix-x pix-y 12) ;circle the departing node
+	    (stroke)
+	    (move-to pix-x pix-y)	  
+	    (store-pix dr pix-x pix-y)
+	    (dolist (node (rest (vehicle-route veh)))
+	      (use-node dr node
+		(arrow-to dr pix-x pix-y 0.038 0.45) ;draw arrows
+		(store-pix dr pix-x pix-y))))
+	  (stroke))
+
+	(setf (drawer-legend-y dr) temp-y) ;reset to original value       
+	(draw-nodes dr (problem-network sol)) ;drawing nodes
 	(draw-string (* 0.1 (drawer-max-pix dr)) (* 0.1 (drawer-max-pix dr)) (write-to-string (fitness sol)))
-					; save file
+	; save file
 	(if output-file
 	    (save-png output-file)
 	    (save-png (drawer-filename dr)))))))
