@@ -5,13 +5,15 @@
 ;;; -------
 ;;; A route is a list of <Node> objects (util-geometry.lisp)
 ;;; This list is to be held in a <vehicle>'s route slot (util-vehicle.lisp)
-;;; 0. Given a route, check if it is an empty route, i.e. does not leave base-node 0
+;;; 0. Route utils
 ;;; 1. Insert node into the route
 ;;; 2. Remove node from the route
 ;;; 3. Last location
 ;;; 4. Closest node
+;;; --------------------
 
-;; 0. Empty route?
+;; 0. Route utils
+;; ---------------------
 (defmethod empty-routep ((v vehicle))
   "Given a <vehicle>, return T if the route only has base-nodes."
   (not (member 0 (vehicle-route v) :key #'node-id :test-not #'=)))
@@ -19,6 +21,11 @@
 (defmethod get-busy-vehicles ((f fleet))
   "Returns a list of <Vehicles> that are not empty."
   (remove-if #'empty-routep (fleet-vehicles f)))
+
+;; -------------------------
+
+;; Route Operations
+;; -------------------------
 
 ;; change-route macro binds the route to r and sets it to the result of &body
 (defmacro change-route (vehicle &body body)
@@ -73,12 +80,17 @@
 ;; 3. Last location
 (defgeneric last-node (vehicle)
   (:method (vehicle) "Expects <vehicle>")
-  (:documentation "Returns the last <node> in its route. Depicts the current location."))
+  (:documentation "Returns the last <node> in its route. Depicts the current location (before returning to base)."))
+
+(defmethod last-node (route)
+  (let ((r (nreverse route)))
+    (if (= 0 (node-id (car r)))
+	(or (cadr r) (car r)) ;in case route has only one base-node.
+	(car r))))
 
 (defmethod last-node ((v vehicle))
-  "Returns the last node in the route."
-  (car (last (vehicle-route v))))
-
+  (last-node (vehicle-route v)))
+      
 ;; 4. Closest node
 ;; Using the ID of the last node on the route of the vehicle, to lookup the dist-matrix for quick lookup, instead of recalculating the distances. After getting the closest node ID, retrieve the <Node> object from the network.
 (defun get-min-index-with-tabu (distances tabu)
