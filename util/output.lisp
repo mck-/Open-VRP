@@ -10,9 +10,9 @@
 
 ;; ignore empty vehicles
 (defmethod print-routes ((f fleet))
-  (format t "~&~{Route: ~A~^~%~}"
-	  (remove-if #'(lambda (route) (null (cdr route))) (route-indices f)))
-  (format t "~&---------------"))
+  (let ((vehs (get-busy-vehicles f)))
+    (format t "~&~{Route: ~A~^~%~}" (mapcar #'route-indices vehs))
+    (format t "~&---------------")))
 
 (defmethod print-routes ((prob problem))
   (format t "~&---------------")

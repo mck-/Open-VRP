@@ -111,6 +111,8 @@
 	   :random-list-permutation
 
 	   ;; route utils
+	   :empty-routep
+	   :get-busy-vehicles
 	   :insert-node
 	   :append-node
 	   :remove-node-at

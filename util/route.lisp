@@ -5,11 +5,20 @@
 ;;; -------
 ;;; A route is a list of <Node> objects (util-geometry.lisp)
 ;;; This list is to be held in a <vehicle>'s route slot (util-vehicle.lisp)
-;;; Operations:
+;;; 0. Given a route, check if it is an empty route, i.e. does not leave base-node 0
 ;;; 1. Insert node into the route
 ;;; 2. Remove node from the route
 ;;; 3. Last location
 ;;; 4. Closest node
+
+;; 0. Empty route?
+(defmethod empty-routep ((v vehicle))
+  "Given a <vehicle>, return T if the route only has base-nodes."
+  (not (member 0 (vehicle-route v) :key #'node-id :test-not #'=)))
+
+(defmethod get-busy-vehicles ((f fleet))
+  "Returns a list of <Vehicles> that are not empty."
+  (remove-if #'empty-routep (fleet-vehicles f)))
 
 ;; change-route macro binds the route to r and sets it to the result of &body
 (defmacro change-route (vehicle &body body)
