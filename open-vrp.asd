@@ -3,7 +3,7 @@
   :version "0.1"
   :author "Marc Kuo"
   :licence "LLGPL"
-  :depends-on (vecto) 
+  :depends-on (vecto fiveam) 
   :serial t
   :components ((:file "packages")
 	       (:file "class-definitions")
@@ -32,4 +32,5 @@
 	       (:file "algo/TS")	       
 	       ;; test data
 	       (:file "test-cases")
+	       (:file "test-suite")
 	       ))

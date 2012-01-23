@@ -199,10 +199,12 @@
 	:open-vrp.classess
 	:open-vrp.util
 	:open-vrp.algo
-	:open-vrp.output)
+	:open-vrp.output
+	:fiveam)
   (:export :define-problem
 	   :load-testcase-Solomon
 	   :solve-prob
 	   :iterate-more
 	   :solve-plot
-	   :plot-solution))
+	   :plot-solution
+	   :run!))
