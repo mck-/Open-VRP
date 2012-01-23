@@ -68,6 +68,12 @@
       (let ((dist (distance node-id1 node-id2 (network-dist-table n))))
 	(/ dist (vehicle-speed v)))))
 
+(defun time-after-serving-node (node arrival-time)
+  "Given a node to serve and the current time, return the new time (if on-time to begin with). When arrival-time is too early, wait till earliest start time."
+  (cond ((> arrival-time (node-end node)) (error "time-after-serving-node - too late!"))
+	((< arrival-time (node-start node)) (+ (node-start node) (node-duration node))) ;wait
+	(t (+ arrival-time (node-duration node)))))
+
 (defgeneric in-timep (veh/fleet network)
   (:method (obj net) "in-timep: Expects <Vehicle-TW>/<Fleet> and a <Network> object!")
   (:documentation "Tests weather the route on <Vehicle> is complying with the time-window constraints. Returns T and the time of finishing its last task. When <Fleet> is provided, test all vehicles."))
@@ -78,6 +84,7 @@
 ;;   if arrival time < begin-time, wait until begin time -> set time to begin + duration
 ;;   if arrival after begin-time -> set time to arrival + duration
 
+;; check for one vehicle
 (defmethod in-timep ((v vehicle-TW) (n network))
   (labels ((iter (loc route time)	     
 	     (if (null route) (values T time) ;also returns time of finishing all tasks
@@ -88,13 +95,12 @@
 		    (<= arr-time (node-end to)) ;arrive before end-time
 		    (iter to
 			  (cdr route)
-			  (if (< arr-time (node-start to))
-			      (+ (node-start to) (node-duration to)) ;wait for start-time
-			      (+ arr-time (node-duration to)))))))))
+			  (time-after-serving-node to arr-time)))))))
     (iter (car (vehicle-route v))
 	  (cdr (vehicle-route v))
 	  0)))
 
+;; check for whole fleet
 (defmethod in-timep ((f fleet) (n network))
   (labels ((iter (veh)
 	     (if (null veh) T
@@ -117,7 +123,7 @@
     (labels ((iter (loc route time i)
 	       (if (and (null route) (< i 1)) T
 		   (let ((to (car route)))
-		     (when (= i 1) (setf to (node sol node-id)))
+		     (when (= i 1) (setf to (node sol node-id))) ; this is the place to insert
 		     (let ((arr-time (+ time (travel-time v
 							  (problem-network sol)
 							  (node-id loc)
@@ -125,9 +131,7 @@
 		       (and (<= arr-time (node-end to))
 			    (iter to
 				  (if (= 1 i) route (cdr route)) ;don't skip after detour
-				  (if (< arr-time (node-start to))
-				      (+ (node-start to) (node-duration to)) ;wait
-				      (+ arr-time (node-duration to)))
+				  (time-after-serving-node to arr-time)
 				  (1- i))))))))
       (iter (car route) (cdr route) 0 index))))
 		    
