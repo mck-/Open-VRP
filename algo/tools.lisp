@@ -43,7 +43,7 @@
 	 (dists (mapcar #'(lambda (x) (node-distance (last-node x) n)) vehicles))
 	 (times (mapcar #'(lambda (x)
 			    (multiple-value-bind (c time)
-				(in-timep x (problem-network prob)) (when c time)))
+				(in-timep x) (when c time)))
 			vehicles))
 	 (caps (mapcar #'(lambda (x)
 			   (multiple-value-bind (c cap)
@@ -51,10 +51,7 @@
 		       vehicles))
 	 (filtered (mapcar #'(lambda (veh dist time cap)
 			       (if (or (> (node-demand n) cap)
-				       (> (+ time (travel-time veh
-							       (problem-network prob)
-							       (node-id (last-node veh))
-							       (node-id n)))
+				       (> (+ time (travel-time (last-node veh) n))
 					  (node-end n)))
 				   nil
 				   dist))

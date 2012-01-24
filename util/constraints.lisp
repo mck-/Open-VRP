@@ -19,10 +19,11 @@
       NIL))
 
 (defmethod constraintsp :around ((sol VRPTW))
-  (if (in-timep (problem-fleet sol) (problem-network sol))
+  (if (in-timep (problem-fleet sol))
       (call-next-method)
       NIL))
 
+;; Helper macro for defining constraints-checking methods below
 (defmacro constraints-check (arglist init-forms next-forms testform)
   `(labels ((iter ,arglist
 	      (if (null ,(car arglist)) (values T ,@(cdr arglist))
@@ -67,10 +68,10 @@
 ;; Time-window constraints
 ;; -------------------------
 
-(defmethod travel-time ((v vehicle-TW) (n network) node-id1 node-id2)
-  (if (= node-id1 node-id2) 0 ; travel-time from base to base is 0
-      (let ((dist (distance node-id1 node-id2 (network-dist-table n))))
-	(/ dist (vehicle-speed v)))))
+(defmethod travel-time ((n1 node) (n2 node) &optional (speed 1))
+  (if (= (node-id n1) (node-id n2)) 0
+      (/ (node-distance n1 n2)
+	 speed)))
 
 (defun time-after-serving-node (node arrival-time)
   "Given a node to serve and the current time, return the new time (if on-time to begin with). When arrival-time is too early, wait till earliest start time."
@@ -78,8 +79,8 @@
 	((< arrival-time (node-start node)) (+ (node-start node) (node-duration node))) ;wait
 	(t (+ arrival-time (node-duration node)))))
 
-(defgeneric in-timep (veh/fleet network)
-  (:method (obj net) "in-timep: Expects <Vehicle-TW>/<Fleet> and a <Network> object!")
+(defgeneric in-timep (veh/fleet)
+  (:method (veh/fleet) "in-timep: Expects <Vehicle-TW>/<Fleet>!")
   (:documentation "Tests weather the route on <Vehicle> is complying with the time-window constraints. Returns T and the time of finishing its last task. When <Fleet> is provided, test all vehicles."))
 
 ;; check for each node
@@ -89,12 +90,11 @@
 ;;   if arrival after begin-time -> set time to arrival + duration
 
 ;; check for one vehicle
-(defmethod in-timep ((v vehicle-TW) (n network))
+(defmethod in-timep ((v vehicle-TW))
   (labels ((iter (loc route time)	     
 	     (if (null route) (values T time) ;also returns time of finishing all tasks
 		 (let* ((to (car route))
-			(arr-time (+ time
-				     (travel-time v n (node-id loc) (node-id to)))))
+			(arr-time (+ time (travel-time loc to))))
 		   (and
 		    (<= arr-time (node-end to)) ;arrive before end-time
 		    (iter to
@@ -105,11 +105,11 @@
 	  0)))
 
 ;; check for whole fleet
-(defmethod in-timep ((f fleet) (n network))
+(defmethod in-timep ((f fleet))
   (labels ((iter (veh)
 	     (if (null veh) T
 		 (and
-		  (in-timep (car veh) n)
+		  (in-timep (car veh))
 		  (iter (cdr veh))))))
     (iter (fleet-vehicles f))))			       
 		  
@@ -128,10 +128,7 @@
 	       (if (and (null route) (< i 1)) T
 		   (let ((to (car route)))
 		     (when (= i 1) (setf to (node sol node-id))) ; this is the place to insert
-		     (let ((arr-time (+ time (travel-time v
-							  (problem-network sol)
-							  (node-id loc)
-							  (node-id to)))))
+		     (let ((arr-time (+ time (travel-time loc to))))
 		       (and (<= arr-time (node-end to))
 			    (iter to
 				  (if (= 1 i) route (cdr route)) ;don't skip after detour
