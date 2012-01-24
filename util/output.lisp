@@ -31,7 +31,7 @@
 	     (square (x) (* x x))
 	     (stdv (list)
 	       (sqrt
-		(sum
+		(average
 		 (mapcar #'(lambda (x) (square (- x (average list)))) list)))))
       (format t "~&Runs: ~8a~%Max: ~8a~%Min: ~8a~%Avg: ~8a~%Std: ~8a~%"
 	      (length results) (get-max results) (get-min results) (average results) (stdv results)))))
