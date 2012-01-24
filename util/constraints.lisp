@@ -22,6 +22,14 @@
   (if (in-timep (problem-fleet sol) (problem-network sol))
       (call-next-method)
       NIL))
+
+(defmacro constraints-check (arglist init-forms next-forms testform)
+  `(labels ((iter ,arglist
+	      (if (null ,(car arglist)) (values T ,@(cdr arglist))
+		  (and
+		   ,testform
+		   (iter ,@next-forms)))))
+     (iter ,@init-forms)))
 ;; -------------------------
 
 ;; Capacity Constraints
@@ -31,24 +39,20 @@
   (:method (obj) "Expects a <Vehicle>/<Fleet>/<Problem> object!")
   (:documentation "Tests weather the route on <vehicle> is complying with the capacity constraint. Returns T and the remaining capacity if it does. When <Fleet> is provided, test all vehicles."))
 
-(defmethod in-capacityp ((v vehicle))
-  (labels ((iter (route cap)
-	     (if (null route) (values T cap)
-		 (let ((demand (node-demand (car route))))
-		   (and
-		    (<= demand cap)
-		    (iter (cdr route) (- cap demand)))))))
-    (iter (vehicle-route v)
-	  (vehicle-capacity v))))
+ (defmethod in-capacityp ((v vehicle))
+   (constraints-check
+    (route cap)
+    ((vehicle-route v) (vehicle-capacity v))
+    ((cdr route) (- cap (node-demand (car route))))
+    (<= (node-demand (car route)))))   
 
 (defmethod in-capacityp ((f fleet))
-  (labels ((iter (veh)
-	     (if (null veh) T
-		 (and
-		  (in-capacityp (car veh))
-		  (iter (cdr veh))))))
-    (iter (fleet-vehicles f))))
-
+  (constraints-check
+   (flt)
+   ((fleet-vehicles f))
+   ((cdr flt))
+   (in-capacityp (car flt))))
+		  
 (defmethod in-capacityp ((pr problem))
   (in-capacityp (problem-fleet pr)))
 	   
