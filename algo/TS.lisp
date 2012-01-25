@@ -12,7 +12,8 @@
 (defmethod run-algo ((prob problem) (ts tabu-search))
   "Initialize (if necessary), iterate till finished."
   (when (null (algo-current-sol ts)) (initialize prob ts))
-  (while (typep (iterate ts) 'problem))
+  (while (< 0 (algo-iterations ts))
+    (iterate ts))
   ts)
 
 (defmethod initialize ((prob problem) (ts tabu-search))
