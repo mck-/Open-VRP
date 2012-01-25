@@ -6,11 +6,6 @@
 
 (in-package :open-vrp.output)
 
-;; initial color (determined after trial and error)
-(defvar *r* 0.3)
-(defvar *g* 0.28)
-(defvar *b* 0.62)
-
 ;; Helper functions 
 ;; -----------------------------
 (defun coord->pix (drawer x)
@@ -105,7 +100,11 @@
   (:documentation "Given a solution object (<problem>/<algo>), draw the solution in output file given in the drawer object's :filename slot (which is held in problem-drawer slot). When <algo> object as input, draw the best found solution by that algo object."))
  
 (defmethod plot-solution ((sol problem) &optional output-file)
-  (let ((dr (problem-drawer sol)))
+  (let ((dr (problem-drawer sol))
+	;; initial color (determined after trial and error)
+	(*r* 0.3)
+	(*g* 0.28)
+	(*b* 0.62))
     (with-canvas (:width (drawer-max-pix dr) :height (drawer-max-pix dr))
       (let ((font (get-font "FreeSerif.ttf"))
 	    (temp-y (drawer-legend-y dr))) ;save the original value (draw-legend-item sets it)
