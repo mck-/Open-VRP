@@ -169,7 +169,7 @@
 	   :solve-prob
 	   :solve-plot
 	   :multi-run
-	   :get-best-solution	  
+	   :get-best-solution-from-multi-run
 	   
 	   ;; tools
 	   :get-closest-vehicle

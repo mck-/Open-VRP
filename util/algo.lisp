@@ -68,7 +68,7 @@
 	collect ,algo-call into solutions
 	finally (return solutions)))
 
-(defun get-best-solution (solutions)
+(defun get-best-solution-from-multi-run (solutions)
   "Given a list of solutions (from multi-run), return the best solution."
   (labels ((iter (sols best)
 	     (if sols
