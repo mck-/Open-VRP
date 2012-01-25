@@ -5,7 +5,12 @@
 ;;; (plot-nodes <problem>) for just the nodes.
 
 (in-package :open-vrp.output)
-       
+
+;; initial color (determined after trial and error)
+(defvar *r* 0.3)
+(defvar *g* 0.28)
+(defvar *b* 0.62)
+
 ;; Helper functions 
 ;; -----------------------------
 (defun coord->pix (drawer x)
@@ -16,11 +21,12 @@
     (* (- x min) (/ max-pix (- max min)))))
 
 (defun get-color ()
-  "Returns a random color."
-  (let ((r (random 0.99))
-	(g (random 0.99))
-	(b (random 0.99)))
-    (values r g b)))
+  "Returns next color. Deterministically random."
+  (macrolet ((get-next-color (c inc)
+	       `(setf ,c (mod (+ ,c ,inc) 1))))
+    (values (get-next-color *r* 0.15)
+	    (get-next-color *g* 0.23)
+	    (get-next-color *b* 0.32))))
 
 ;; anaphoric macro input index of the node, and binds coords, pix-x and pix-y to the node's.
 (defmacro use-node (drawer node &body body)
