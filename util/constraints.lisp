@@ -24,13 +24,15 @@
       NIL))
 
 ;; Helper macro for defining constraints-checking methods below
-(defmacro constraints-check (arglist init-forms next-forms testform)
-  `(labels ((iter ,arglist
-	      (if (null ,(car arglist)) (values T ,@(cdr arglist))
-		  (and
-		   ,testform
-		   (iter ,@next-forms)))))
-     (iter ,@init-forms)))
+;; Returns NIL as soon as it finds out that a constraint is violated
+(defmacro constraints-check (arglist init-forms next-forms testform endtest)
+  (let ((iter (gensym)))
+    `(labels ((,iter ,arglist
+		(if ,endtest (values T ,@(cdr arglist))
+		    (and
+		     ,testform
+		     (,iter ,@next-forms)))))
+       (,iter ,@init-forms))))
 ;; -------------------------
 
 ;; Capacity Constraints
@@ -45,14 +47,16 @@
     (route cap)
     ((vehicle-route v) (vehicle-capacity v))
     ((cdr route) (- cap (node-demand (car route))))
-    (<= (node-demand (car route)))))   
+    (<= (node-demand (car route)))
+    (null route)))
 
 (defmethod in-capacityp ((f fleet))
   (constraints-check
    (flt)
    ((fleet-vehicles f))
    ((cdr flt))
-   (in-capacityp (car flt))))
+   (in-capacityp (car flt))
+   (null flt)))
 		  
 (defmethod in-capacityp ((pr problem))
   (in-capacityp (problem-fleet pr)))
@@ -91,48 +95,44 @@
 
 ;; check for one vehicle
 (defmethod in-timep ((v vehicle-TW))
-  (labels ((iter (loc route time)	     
-	     (if (null route) (values T time) ;also returns time of finishing all tasks
-		 (let* ((to (car route))
-			(arr-time (+ time (travel-time loc to))))
-		   (and
-		    (<= arr-time (node-end to)) ;arrive before end-time
-		    (iter to
-			  (cdr route)
-			  (time-after-serving-node to arr-time)))))))
-    (iter (car (vehicle-route v))
-	  (cdr (vehicle-route v))
-	  0)))
-
+  (symbol-macrolet ((to (car route))
+		    (arr-time (+ time (travel-time loc to))))
+    (constraints-check
+     (route time loc)
+     ((cdr (vehicle-route v)) 0 (car (vehicle-route v)))
+     ((cdr route) (time-after-serving-node to arr-time) to)
+     (<= arr-time (node-end to))
+     (null route))))
+    
 ;; check for whole fleet
 (defmethod in-timep ((f fleet))
-  (labels ((iter (veh)
-	     (if (null veh) T
-		 (and
-		  (in-timep (car veh))
-		  (iter (cdr veh))))))
-    (iter (fleet-vehicles f))))			       
+  (constraints-check
+   (veh)
+   ((fleet-vehicles f))
+   ((cdr veh))
+   (in-timep (car veh))
+   (null veh)))
 		  
 		 
-;; check if node fits in route
-;; given node-id, vehicle-route and insertion index
-;; 1. check if on time. If so, check if routes afterward still on time.
+;; -------------------------
 
+;; Move feasibility check
+;; ------------------------
+
+;; check if move is feasible
+;; check if on time. If so, check if routes afterward still on time.
 (defmethod feasible-insertionp ((m insertion-move) (sol VRPTW))
-  "Tests if insertion move is feasible in route at index. Makes sure the remaining nodes on the route are still on time."
-  (let* ((v (vehicle sol (move-vehicle-ID m)))
-	 (route (vehicle-route v))
-	 (node-id (move-node-ID m))
-	 (index (move-index m)))
-    (labels ((iter (loc route time i)
-	       (if (and (null route) (< i 1)) T
-		   (let ((to (car route)))
-		     (when (= i 1) (setf to (node sol node-id))) ; this is the place to insert
-		     (let ((arr-time (+ time (travel-time loc to))))
-		       (and (<= arr-time (node-end to))
-			    (iter to
-				  (if (= 1 i) route (cdr route)) ;don't skip after detour
-				  (time-after-serving-node to arr-time)
-				  (1- i))))))))
-      (iter (car route) (cdr route) 0 index))))
-		    
+  (symbol-macrolet ((full-route (vehicle-route (vehicle sol (move-vehicle-ID m))))
+		    (ins-node (node sol (move-node-ID m)))
+		    (to (if (= 1 i) ins-node (car route)))
+		    (arr-time (+ time (travel-time loc to))))		    
+    (constraints-check
+     (route time loc i)
+     ((cdr full-route) 0 (car full-route) (move-index m))
+     ((if (= 1 i) route (cdr route)) ;don't skip after inserting new node
+      (time-after-serving-node to arr-time) ;set time after new node
+      to (1- i))
+     (progn
+;       (format t "Route: ~A~% Loc: ~A~% To: ~A~% Time: ~A~% Arr-time: ~A~% Node-start: ~A~% Node-end: ~A~% Duration: ~A~% ins-node-end: ~A~% i: ~A~%" (mapcar #'node-id route) (node-id loc) (node-id to) time arr-time (node-start to) (node-end to) (node-duration to) (node-end ins-node) i)
+       (<= arr-time (node-end to)))
+     (and (null route) (< i 1))))) ; case of append, need to check once more
