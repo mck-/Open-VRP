@@ -63,6 +63,7 @@
 	   :tabu-search-init-heur
 	   :tabu-search-animate
 	   :tabu-search-candidate-list
+	   :tabu-search-runs
 	   :move-node-ID
 	   :move-vehicle-ID
 	   :move-index

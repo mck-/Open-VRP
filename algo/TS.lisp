@@ -10,11 +10,18 @@
 (in-package :open-vrp.algo)
 
 (defmethod run-algo ((prob problem) (ts tabu-search))
-  "Initialize (if necessary), iterate till finished."
-  (when (null (algo-current-sol ts)) (initialize prob ts))
-  (while (< 0 (algo-iterations ts))
-    (iterate ts))
-  ts)
+  "Initialize (if necessary), iterate till finished. Prints run stats and the best solution. Returns (best) <Algo> object."
+  (flet ((algo-call (prob ts)
+	   (when (null (algo-current-sol ts)) (initialize prob ts))
+	   (while (< 0 (algo-iterations ts))
+	     (iterate ts))
+	   ts))
+    (let* ((results (multi-run (tabu-search-runs ts) (algo-call prob (copy-object ts))))
+	   (best (get-best-solution-from-multi-run results)))
+      (print-multi-run-stats results)
+      (print-routes best)
+      best)))
+
 
 (defmethod initialize ((prob problem) (ts tabu-search))
   "Creates inital solution and sets it to :algo-current-sol. Returns the <tabu-search> object."
