@@ -3,7 +3,7 @@
   :version "0.1"
   :author "Marc Kuo"
   :licence "LLGPL"
-  :depends-on (vecto fiveam) 
+  :depends-on (vecto alexandria fiveam) 
   :serial t
   :components ((:file "packages")
 	       (:file "class-definitions")

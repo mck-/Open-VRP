@@ -80,11 +80,11 @@
 
 (defpackage :open-vrp.util
   (:use :common-lisp
-	:open-vrp.classess)
+	:open-vrp.classess
+	:alexandria)
   (:export ;; simple utils
            :single
            :mac
-           :flatten
 	   :mapa-b
 	   :map1-n
 	   :map0-n
@@ -201,6 +201,7 @@
 	:open-vrp.util
 	:open-vrp.algo
 	:open-vrp.output
+	:alexandria
 	:fiveam)
   (:export :define-problem
 	   :load-testcase-Solomon
