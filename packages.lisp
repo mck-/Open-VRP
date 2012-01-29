@@ -80,8 +80,8 @@
 
 (defpackage :open-vrp.util
   (:use :common-lisp
-	:open-vrp.classess
-	:alexandria)
+	:open-vrp.classess)
+  (:import-from	:alexandria :shuffle :flatten)
   (:export ;; simple utils
            :single
            :mac
@@ -154,6 +154,7 @@
 	:open-vrp.classess
 	:open-vrp.util
    	:vecto)
+  (:import-from :alexandria :mean :standard-deviation)
   (:export :print-routes
 	   :print-multi-run-stats
 	   :plot-solution
@@ -165,6 +166,7 @@
 	:open-vrp.classess
 	:open-vrp.util
 	:open-vrp.output)
+  (:import-from :alexandria :shuffle :flatten)  
   (:export :run-algo
 	   :*algo-backup*
 	   :solve-prob
@@ -201,8 +203,8 @@
 	:open-vrp.util
 	:open-vrp.algo
 	:open-vrp.output
-	:alexandria
 	:fiveam)
+  (:import-from	:alexandria :shuffle :flatten)
   (:export :define-problem
 	   :load-testcase-Solomon
 	   :solve-prob
