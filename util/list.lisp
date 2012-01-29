@@ -107,23 +107,20 @@
 (defmacro with-tabu-items (tabu-items fn arg-list)
   `(funcall ,fn (mark-nill-items (copy-list ,arg-list) ,tabu-items)))
 
-(defun enumerate-interval (x)
-  "Returns a list from 1 to x."
-  (if (= 0 x)
-      nil
-      (append (enumerate-interval (1- x))
-	      (list x))))
+(defun enumerate-interval (n)
+  "Returns a list from 1 to n."
+  (map1-n #'(lambda (x) x) n))
 
 (defun shuffle-pool (pool)
-  "Given a pool, shuffle the pool and return a new pool. A pool is a list of any object."
+  "Given a pool, shuffle the pool and return a new pool. Undestructive."
   (if (null pool)
       nil
       (let* ((len (length pool))
-	     (x (random len))
-	     (val (nth x pool)))
-	(cons val
-	      (shuffle-pool (remove val pool))))))
+            (x (random len))
+            (val (nth x pool)))
+       (cons val
+             (shuffle-pool (remove val pool))))))
 
 (defun random-list-permutation (length)
   "Randomly creates a permutation from 1 to length."
-  (shuffle-pool (enumerate-interval length)))
+  (shuffle (enumerate-interval length)))
