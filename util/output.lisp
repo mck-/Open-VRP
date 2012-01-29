@@ -25,13 +25,6 @@
 
 ;; multi-run/batch run stats
 (defun print-multi-run-stats (solutions)
-  (let ((results (mapcar #'algo-best-fitness solutions)))
-    (labels ((average (list)
-	       (/ (apply #'+ list) (length list)))
-	     (square (x) (* x x))
-	     (stdv (list)
-	       (sqrt
-		(average
-		 (mapcar #'(lambda (x) (square (- x (average list)))) list)))))
-      (format t "~&Runs: ~8a~%Max: ~8a~%Min: ~8a~%Avg: ~8a~%Std: ~8a~%"
-	      (length results) (get-max results) (get-min results) (average results) (stdv results)))))
+  (let ((results (mapcar #'algo-best-fitness solutions)))    
+    (format t "~&Runs: ~8a~%Max: ~8a~%Min: ~8a~%Avg: ~8a~%Std: ~8a~%"
+	    (length results) (get-max results) (get-min results) (mean results) (standard-deviation results))))
