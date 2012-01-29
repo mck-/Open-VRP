@@ -31,14 +31,6 @@
        ((not ,test))
      ,@body))
 
-(defun flatten (x)
-  "Returns a list of all the elements in a tree. Flat."
-  (labels ((rec (x acc)
-	     (cond ((null x) acc)
-		   ((atom x) (cons x acc))
-		   (t (rec (car x) (rec (cdr x) acc))))))
-    (rec x nil)))
-
 (defmacro aif (test-form then-form &optional else-form)
   `(let ((it ,test-form))
      (if it ,then-form ,else-form)))
