@@ -1,9 +1,12 @@
-;;; Thu 12 Jan, 2012
 ;;; Constraint checking functions
 ;;; --------------
+;;; 0. General Constraints Checker tools
+;;; 1. Capacity Constraints
+;;; 2. Time-window Constraints
+;;; ---------------
 (in-package :open-vrp.util)
 
-;; General Constraints Checker
+;; 0. General tools/definitions
 ;; ----------------------------
 
 (defgeneric constraintsp (prob)
@@ -35,7 +38,7 @@
        (,iter ,@init-forms))))
 ;; -------------------------
 
-;; Capacity Constraints
+;; 1. Capacity Constraints
 ;; ------------------------
 
 (defgeneric in-capacityp (veh/problem)
@@ -66,10 +69,11 @@
 
 ;; ------------------------------
 
-;; Time-window constraints
+;; 2. Time-window constraints
 ;; -------------------------
 
-(defmethod travel-time ((n1 node) (n2 node) &optional (speed 1))
+(defun travel-time (n1 n2 &optional (speed 1))
+  "Given two <nodes> and optional speed, return the travel-time."
   (if (= (node-id n1) (node-id n2)) 0
       (/ (node-distance n1 n2)
 	 speed)))
@@ -128,8 +132,9 @@
      ((cdr full-route) 0 (car full-route) (move-index m))
      ((if (= 1 i) route (cdr route)) ;don't skip after inserting new node
       (time-after-serving-node to arr-time) ;set time after new node
-      to (1- i))
-     (progn
-;       (format t "Route: ~A~% Loc: ~A~% To: ~A~% Time: ~A~% Arr-time: ~A~% Node-start: ~A~% Node-end: ~A~% Duration: ~A~% ins-node-end: ~A~% i: ~A~%" (mapcar #'node-id route) (node-id loc) (node-id to) time arr-time (node-start to) (node-end to) (node-duration to) (node-end ins-node) i)
-       (<= arr-time (node-end to)))
+      to (1- i))   
+     (<= arr-time (node-end to))
      (and (null route) (< i 1))))) ; case of append, need to check once more
+
+;; for debugging
+;       (format t "Route: ~A~% Loc: ~A~% To: ~A~% Time: ~A~% Arr-time: ~A~% Node-start: ~A~% Node-end: ~A~% Duration: ~A~% ins-node-end: ~A~% i: ~A~%" (mapcar #'node-id route) (node-id loc) (node-id to) time arr-time (node-start to) (node-end to) (node-duration to) (node-end ins-node) i)
