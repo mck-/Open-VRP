@@ -16,7 +16,7 @@
 	       (:file "util/output")
 	       (:file "util/route")
 	       (:file "util/draw-solution")
-	       (:file "util/algo")
+	       (:file "util/solver")
 	       (:file "util/constraints")
 	       ;; data
 	       (:file "init-macros")
