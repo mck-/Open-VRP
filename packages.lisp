@@ -105,6 +105,7 @@
 	   :enumerate-interval
 	   :shuffle-pool
 	   :random-list-permutation
+	   :with-tabu-indices
 
 	   ;; route utils
 	   :empty-routep
