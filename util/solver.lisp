@@ -1,10 +1,11 @@
-;;; Thu Nov 10, 2011 (c) Marc Kuo
 ;;; High-level methods to start solving
-;;; -----
-;;; 1. run-algo (problem algo) - DESTRUCTIVE
-;;; 2. solve-prob (problem algo) - UNDESTRUCTIVE
-;;; 3. solve-plot (problem algo) - plots the best solution after solving
-;;; 4. multi-run (int algo-call) - Run algo int times - collect all results
+;;; --------------------------
+;;; - run-algo (<problem> <algo>)        - DESTRUCTIVE
+;;; - solve-prob (<problem> <algo>)      - UNDESTRUCTIVE
+;;; - solve-plot (<problem> <algo>)      - plots the best solution after solving
+;;; - multi-run (int algo-call)          - Run algo int times - collect all results
+;;; - get-best-solution-from-multi-run   - returns the best solution from collection
+;;; ----------------------------
 (in-package :open-vrp.algo)
 
 ;; Run Algo
