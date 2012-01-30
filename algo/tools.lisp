@@ -1,15 +1,29 @@
-;;; Thu 29 Dec, 2011 (c) Marc Kuo
 ;;; Tools to be shared among algorithms
 ;;; ---------------------------
+;;; - get-closest-node
 ;;; - get-closest-vehicle
 ;;; - get-closest-feasible-vehicle
 ;;; - optimal-insertion
 
 (in-package :open-vrp.algo)
 
+;; Closest node
+;; ---------------------------
+
+(defun get-min-index-with-tabu (distances tabu)
+  "Returns index of the first next closest, that is not in chosen (which is a list)."
+  (with-tabu-indices tabu #'get-min-index distances))
+
+(defun get-closest-node ((prob problem) veh-id &optional tabu)
+  "Returns the closest node from the last location of vehicle. Requires <problem> and vehicle-ID. A tabu list of node-IDs is optional to exclude consideration of some nodes."
+  (let* ((loc (last-node (vehicle prob veh-id)))
+	 (dists (get-array-row (problem-dist-array prob) (node-id loc))))
+    (aif (get-min-index-with-tabu dists tabu)
+	 (node prob it)
+	 nil)))
+
 ;; Closest Vehicle
 ;; ---------------------------
-;; Thu Dec 8, 2011
 ;; challenge: what if the vehicle is located on the node n - use only for initial insertion?
 (defgeneric get-closest-vehicle (node problem)
   (:method (node problem) "get-closest-vehicle: Expects <node> and <problem> inputs!")

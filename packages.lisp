@@ -116,7 +116,6 @@
 	   :remove-node-at
 	   :remove-node-ID
 	   :last-node
-	   :closest-node
 
 	   ;; network utils
 	   :distance
@@ -128,7 +127,7 @@
 
 	   ;; fleet utils
 	   :route-indices
-	   :vehicle-with-node
+	   :vehicle-with-node-ID
 	   :total-dist
 	   :vehicle
 	   :create-vehicles
@@ -176,6 +175,7 @@
 	   :optimal-insertion
 	   :fitness-before-after
 	   :get-best-insertion-move
+	   :get-closest-node
 
 	   ;; iterator
 	   :initialize
