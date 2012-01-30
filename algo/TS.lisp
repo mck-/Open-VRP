@@ -65,7 +65,7 @@
   (let* ((dist-array (problem-dist-array sol))
 	 (node (move-node-id mv))
 	 (best-move (get-best-insertion-move sol (move-vehicle-ID mv) node))
-	 (route (vehicle-route (vehicle sol (vehicle-with-node sol node))))
+	 (route (vehicle-route (vehicle sol (vehicle-with-node-ID sol node))))
 	 (pos (position node route :key #'node-id))
 	 (node-before (node-id (nth (1- pos) route)))
 	 (dist1 (distance node-before node dist-array)))
@@ -99,7 +99,7 @@
 					     veh-ID
 					     node-ID)))
     ;if the move of node is intra-route, AND the node is being moved forward
-    (if (and (= (vehicle-with-node prob node-ID) veh-ID)
+    (if (and (= (vehicle-with-node-ID prob node-ID) veh-ID)
 	     (> (move-index best-move)
 		(position node-id (vehicle-route (vehicle prob veh-ID)) :key #'node-id)))
 	;then perform insertion first, afterward remove the old node, positioned before the new)
