@@ -53,17 +53,9 @@
 
 ;; Accessor functions
 ;;--------------------------
-;; Thu Nov 10, 2011
-
-(defgeneric node (obj id)
-  (:method (obj id) "This node method only accepts a <network> or <problem> object.")
-  (:documentation "Returns <Node> object, given a <network>/<problem> and a node ID (int)."))
-
-(defmethod node ((net network) id) 
-  (nth id (network-nodes net)))
 
 (defmethod node ((prob problem) id)
-  (node (problem-network prob) id))
+  (aref (problem-network prob) id))
 
 ;; --------------------------------
 
@@ -71,36 +63,24 @@
 ;; ------------------
 
 (defmacro create-nodes (node-coords &optional demands time-windows durations)
-  (let ((nodes (gensym))
-	(i (gensym))
-	(coords-list (gensym))
-	(demand-list (gensym))
-	(tw-list (gensym))
-	(dur-list (gensym)))
-    `(let ((,nodes nil))
+  "Given a coord-list, return a vector of nodes. The nodes are created and numbered starting from 0, which is the base node. By default creates normal nodes. When node-demands are provided, it creates node-C (nodes with demand). With time-windows and durations, creates node-TW."
+  (with-gensyms (nodes i coords-list demand-list tw-list dur-list)
+    `(let ((,nodes (make-array (length ,node-coords) :fill-pointer 0))) ;vector of nodes
        (do ((,i 0 (1+ ,i))
 	    (,coords-list ,node-coords (cdr ,coords-list))
 	    ,@(when demands `((,demand-list ,demands (cdr ,demand-list))))
 	    ,@(when time-windows `((,tw-list ,time-windows (cdr ,tw-list))))
 	    ,@(when durations `((,dur-list ,durations (cdr ,dur-list)))))
 	   ((null (car ,coords-list)))
-	 (push (make-instance ,(cond (time-windows ''node-tw)
-				     (demands ''node-c)
-				     (t ''node))
-			      :id ,i
-			      :xcor (caar ,coords-list)
-			      :ycor (cdar ,coords-list)
-			      ,@(when demands `(:demand (car ,demand-list)))
-			      ,@(when time-windows `(:start (caar ,tw-list)
-						     :end (cdar ,tw-list)))
-			      ,@(when durations `(:duration (car ,dur-list))))
-	       ,nodes))
-       (nreverse ,nodes))))
-    
-(defmacro create-network (node-coords &optional node-demands node-time-windows node-durations)
-  "Given a coord-list, return an instance of class 'network, with nodes and dist-table initialised. Dist-table is a precalculated Cartesian distance matrix, for quick table-lookup. The nodes are created and numbered starting from 0, which is the base node. By default creates normal nodes. When node-demands are provided, it creates node-C (nodes with demand). With time-windows and durations, creates node-TW."
-  `(let ((nodes (create-nodes ,node-coords
-			      ,@(when node-demands `(,node-demands))
-			      ,@(when node-time-windows `(,node-time-windows ,node-durations))))
-	 (dist-table (generate-dist-array ,node-coords)))
-     (make-instance 'network :dist-table dist-table :nodes nodes)))
+	 (vector-push (make-instance ,(cond (time-windows ''node-tw)
+					    (demands ''node-c)
+					    (t ''node))
+				     :id ,i
+				     :xcor (caar ,coords-list)
+				     :ycor (cdar ,coords-list)
+				     ,@(when demands `(:demand (car ,demand-list)))
+				     ,@(when time-windows `(:start (caar ,tw-list)
+								   :end (cdar ,tw-list)))
+				     ,@(when durations `(:duration (car ,dur-list))))
+		      ,nodes))
+       ,nodes)))

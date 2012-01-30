@@ -10,7 +10,7 @@
 	 (pos (position node-id route :key #'node-id)) ;check if we do intra-route insertion
 	 (moves '()))
     (do ((index 1 (1+ index)))
-	((> index (if (fleet-to-depot (problem-fleet sol)) (1- (length route)) (length route))))
+	((> index (if (problem-to-depot sol) (1- (length route)) (length route))))
       (unless (and pos (or (= index pos) (= index (1+ pos)))) ;useless moves avoided
 	(push (make-instance 'insertion-move
 			     :index index
@@ -24,7 +24,7 @@
 ;; otherwise it is the distance to the nodes before and after, minus their direct connection
 (defmethod assess-move ((sol problem) (m insertion-move))
   (let* ((route (vehicle-route (vehicle sol (move-vehicle-id m))))
-	 (dist-array (network-dist-table (problem-network sol)))
+	 (dist-array (problem-dist-array sol))
 	 (index (move-index m))
 	 (node (move-node-id m))
 	 (node-before (node-id (nth (1- index) route))))

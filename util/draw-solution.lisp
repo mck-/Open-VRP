@@ -65,18 +65,20 @@
 
 ;; Node drawing
 ;; ---------------------------------
-(defgeneric draw-nodes (drawer network)
-  (:method (drawer network))
-  (:documentation "Given the drawer and network objects, plot the nodes only. Usage only with-canvas!"))
+(defgeneric draw-nodes (tsp)
+  (:method (tsp)
+  (:documentation "Given the <Problem> object, plot the nodes only. Usage only with-canvas!")))
 
-(defmethod draw-nodes ((dr drawer) (net network))
-  (dolist (node (network-nodes net))
-    (use-node dr node
-      (set-rgb-fill 1.0 0.65 0.3)
-      (centered-circle-path pix-x pix-y 10)
-      (fill-path)
-      (set-rgb-fill 0 0 0)
-      (draw-centered-string pix-x (- pix-y 5) (write-to-string (node-id node))))))
+(defmethod draw-nodes ((prob tsp))
+  (map0-n #'(lambda (x)
+	      (let ((node (node prob x)))
+		(use-node dr node
+		  (set-rgb-fill 1.0 0.65 0.3)
+		  (centered-circle-path pix-x pix-y 10)
+		  (fill-path)
+		  (set-rgb-fill 0 0 0)
+		  (draw-centered-string pix-x (- pix-y 5) (write-to-string (node-id node))))))
+	  (length (problem-network prob))))
 ;; ----------------------------
 
 ;; Legend drawing
@@ -135,7 +137,7 @@
 	  (stroke))
 
 	(setf (drawer-legend-y dr) temp-y) ;reset to original value       
-	(draw-nodes dr (problem-network sol)) ;drawing nodes
+	(draw-nodes sol) ;drawing nodes
 	(draw-string (* 0.1 (drawer-max-pix dr)) (* 0.1 (drawer-max-pix dr)) (write-to-string (fitness sol)))
 	; save file
 	(if output-file
@@ -150,8 +152,7 @@
   (:documentation "Draws only the nodes in output file."))
 
 (defmethod plot-nodes ((prob problem))
-  (let ((dr (problem-drawer prob))
-	(net (problem-network prob)))
+  (let ((dr (problem-drawer prob)))
     (with-canvas (:width (drawer-max-pix dr) :height (drawer-max-pix dr))
       (let ((font (get-font "FreeSerif.ttf")))
 					;settings
@@ -159,7 +160,7 @@
 	(set-rgb-fill 1.0 1.0 1.0)
 	(clear-canvas)
       (set-line-width 3)
-      (draw-nodes dr net)
+      (draw-nodes prob)
       (save-png (drawer-filename dr))))))
 
 ;; ----------------------------------------------

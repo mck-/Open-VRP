@@ -8,11 +8,8 @@
 
 (defmethod run-algo ((p tsp) (a greedy-NN))
   "While there exists unchosen nodes, keep appending it. Returns the <Algo> object when done. Also prints the fitness and solution (run-algo :after method)."
-  (let ((net (problem-network p))
-	(v (vehicle p 0)))
-    (awhile (closest-node v
-			  net
-			  (route-indices v))
+  (let ((v (vehicle p 0)))
+    (awhile (closest-node p 0 (route-indices v))
       (append-node v it)))
   (setf (algo-best-sol a) p
 	(algo-current-sol a) p

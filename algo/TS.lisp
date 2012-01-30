@@ -37,11 +37,11 @@
 (defmethod generate-moves ((ts tabu-search))
   "Generates a list of <move> instances (depending on what was defined in the ts slot) for all nodes and vehicles."
   (let* ((prob (algo-current-sol ts))
-	 (num-nodes (1- (length (network-nodes (problem-network prob))))) ;1- for base
+	 (num-nodes (1- (length (problem-network prob)))) ;1- for base
 	 ;ignore empty vehicles, except for one (if available! capped at fleet-size)
 	 (num-vehicles (min
-			(1+ (vehicle-id (car (last (get-busy-vehicles (problem-fleet prob))))))
-			(1- (length (fleet-vehicles (problem-fleet prob))))))
+			(1+ (vehicle-id (car (last (get-busy-vehicles prob)))))
+			(1- (length (problem-fleet prob)))))
 	 (move-type (tabu-search-moves ts)))
     ;remove unnecessary moves that don't do anything, e.g. when vehicle 2's route is (0 1), then the move of best-inserting node 1 into vehicle 2 has no meaning (but causes trouble!) 
     (remove-if #'(lambda (mv)
@@ -62,7 +62,7 @@
 ;; cost of inserting is calculated by (get-best-insertion-move)
 ;; saving by removing the connecting arcs before and after, and connecting them directly
 (defmethod assess-move ((sol problem) (mv TS-best-insertion-move))
-  (let* ((dist-array (network-dist-table (problem-network sol)))
+  (let* ((dist-array (problem-dist-array sol))
 	 (node (move-node-id mv))
 	 (best-move (get-best-insertion-move sol (move-vehicle-ID mv) node))
 	 (route (vehicle-route (vehicle sol (vehicle-with-node sol node))))

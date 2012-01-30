@@ -17,7 +17,7 @@
 
 (defmethod run-algo ((p tsp) (a greedy-append))
   "Randomly append <Nodes> one by one to the closest <Vehicle>. Returns <Algo> object when done. Also prints the fitness and solution."
-  (loop for id in (random-list-permutation (1- (length (network-nodes (problem-network p)))))
+  (loop for id in (random-list-permutation (1- (length (problem-network p))))
      do (append-node (get-closest-feasible-vehicle (node p id) p) ; closest vehicle
 		     (node p id))
      finally (setf (algo-best-sol a) p

@@ -38,9 +38,9 @@
 ;; Capacity Constraints
 ;; ------------------------
 
-(defgeneric in-capacityp (veh/fleet/problem)
-  (:method (obj) "Expects a <Vehicle>/<Fleet>/<Problem> object!")
-  (:documentation "Tests weather the route on <vehicle> is complying with the capacity constraint. Returns T and the remaining capacity if it does. When <Fleet> is provided, test all vehicles."))
+(defgeneric in-capacityp (veh/problem)
+  (:method (obj) "Expects a <Vehicle>/<Problem> object!")
+  (:documentation "Tests weather the route on <vehicle> is complying with the capacity constraint. Returns T and the remaining capacity if it does. When <Problem> is provided, test all vehicles."))
 
  (defmethod in-capacityp ((v vehicle))
    (constraints-check
@@ -50,16 +50,13 @@
     (<= (node-demand (car route)))
     (null route)))
 
-(defmethod in-capacityp ((f fleet))
+(defmethod in-capacityp ((pr problem))
   (constraints-check
    (flt)
-   ((fleet-vehicles f))
+   ((problem-fleet pr))
    ((cdr flt))
    (in-capacityp (car flt))
    (null flt)))
-		  
-(defmethod in-capacityp ((pr problem))
-  (in-capacityp (problem-fleet pr)))
 	   
 (defun node-fit-in-vehiclep (sol node-id vehicle-id)
   "Helper function for assessing constraints. Used by assess-move :around."
@@ -83,8 +80,8 @@
 	((< arrival-time (node-start node)) (+ (node-start node) (node-duration node))) ;wait
 	(t (+ arrival-time (node-duration node)))))
 
-(defgeneric in-timep (veh/fleet)
-  (:method (veh/fleet) "in-timep: Expects <Vehicle-TW>/<Fleet>!")
+(defgeneric in-timep (veh/vrptw)
+  (:method (veh/vrptw) "in-timep: Expects <Vehicle-TW>/<Problem>!")
   (:documentation "Tests weather the route on <Vehicle> is complying with the time-window constraints. Returns T and the time of finishing its last task. When <Fleet> is provided, test all vehicles."))
 
 ;; check for each node
@@ -105,10 +102,10 @@
      (null route))))
     
 ;; check for whole fleet
-(defmethod in-timep ((f fleet))
+(defmethod in-timep ((pr VRPTW))
   (constraints-check
    (veh)
-   ((fleet-vehicles f))
+   ((problem-fleet pr))
    ((cdr veh))
    (in-timep (car veh))
    (null veh)))

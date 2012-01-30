@@ -1,18 +1,10 @@
-;;; Thu Nov 10, 2011 (c) Marc Kuo
-;;; -------------------
 ;;; All class definitions for CLOS VRP
 ;;; Node, Vehicle, Algo, Problem objects are all designed to be extensible
 (in-package :open-vrp.classess)
 
-;; Thu Oct 27, 2011
-;; The network object
-;; ----------------------
-;; 1. An object that encapsulates the nodes (starting with ID 0, which is the base)
-;; 2. Holds a distance-matrix variable for easy distance lookup between the nodes
 
-(defclass network ()
-  ((nodes :accessor network-nodes :initarg :nodes)
-   (dist-table :accessor network-dist-table :initarg :dist-table)))
+;; The node object
+;; ----------------------
 
 (defclass node ()
   ((id :reader node-id :initarg :id)
@@ -28,13 +20,8 @@
    (duration :reader node-duration :initarg :duration)))
 ;; --------------------------
 
-;; The fleet object
+;; The vehicle object
 ;; ---------------------------
-;; 1. An object that holds all vehicles (starting with ID 0)
-
-(defclass fleet ()
-  ((vehicles :accessor fleet-vehicles :initarg :vehicles)
-   (to-depot :accessor fleet-to-depot :initarg :to-depot :initform T)))  
 
 (defclass vehicle ()
   ((id :reader vehicle-id :initarg :id)
@@ -46,9 +33,6 @@
 (defclass vehicle-TW (vehicle-C)
   ((speed :accessor vehicle-speed :initarg :speed :initform 1)))
 
-;; Not required in simple fleets.
-;   (from-depot :accessor fleet-from-depot :initarg :from-depot :initform T)
-
 ;; ----------------------------
 
 ;; The problem object class
@@ -59,7 +43,9 @@
   ((name :reader problem-name :initarg :name)
    (desc :reader problem-desc :initarg :desc)
    (network :reader problem-network :initarg :network)
+   (dist-array :accessor problem-dist-array :initarg :dist-array)
    (fleet :reader problem-fleet :initarg :fleet)
+   (to-depot :accessor problem-to-depot :initarg :to-depot :initform T)
    (drawer :accessor problem-drawer :initarg :drawer)))
 
 (defclass TSP (problem)

@@ -1,5 +1,4 @@
-;;; Thu Oct 27, 2011 (YYZ to AMS) (c) Marc Kuo
-;;; Utilities for vehicles/fleets
+;;; for vehicles/fleets
 ;;; ---------------------------
 ;;; 1. create-fleet generates/initializes the <fleet> object
 ;;; 2. total-dist returns the total distance given the fleet/vehicle object
@@ -7,59 +6,45 @@
 (in-package :open-vrp.util)
 
 (defgeneric route-indices (obj)
-  (:method (vehicle) "Input is not a <vehicle>/<fleet>/<problem> object!")
+  (:method (vehicle) "Input is not a <vehicle>/<problem> object!")
   (:documentation "When input is a <vehicle>, returns its route as a list of node IDs. When input is <fleet>/<problem>, list all routes."))
 
 (defmethod route-indices ((v vehicle))
   (mapcar #'node-ID (vehicle-route v)))
 
-(defmethod route-indices ((f fleet))
-  (mapcar #'route-indices (fleet-vehicles f)))
-
 (defmethod route-indices ((p problem))
-  (route-indices (problem-fleet p)))
+  (mapcar #'route-indices (problem-fleet p)))
 
 (defgeneric vehicle-with-node (obj node-id)
-  (:method (obj node) "Expects <problem>/<fleet> and int as inputs!")
+  (:method (obj node) "Expects <problem> and int as inputs!")
   (:documentation "Given a node-ID, return the vehicle-ID that has the node in its route. The function for the input of the base-node 0 is undefined. Returns NIL if node-ID cannot be found."))
 
-(defmethod vehicle-with-node ((f fleet) node-ID)
-  (position-if #'(lambda (route) (member node-ID route)) (route-indices f)))
-
 (defmethod vehicle-with-node ((p problem) node-ID)
-  (vehicle-with-node (problem-fleet p) node-ID))
+  (position-if #'(lambda (route) (member node-ID route)) (route-indices p)))
 
-(defgeneric total-dist (obj net)
-  (:method (obj net) "Expects <vehicle>/<fleet> and <network> as inputs!")
+(defgeneric total-dist (veh/prob dist-array)
+  (:method (veh/prob dist-array) "Expects <problem> as input!")
   (:documentation "Returns total distance of the route(s) given a vehicle or a fleet."))
 
-(defmethod total-dist ((v vehicle) (net network))
-  (let ((route (vehicle-route v)) ;A list of node ID's..
-	(dist-table (network-dist-table net)))       ;..to be used for quick lookup
+(defmethod total-dist ((v vehicle) dist-array)
+  (let ((route (vehicle-route v)))
     (labels ((iter (togo sum)
 	       (if (null (cdr togo)) sum
 		   (iter (cdr togo)
 			 (+ sum
 			    (distance (node-id (car togo))
 				      (node-id (cadr togo))
-				      dist-table))))))
+				      dist-array))))))
       (iter route 0))))
 	       
 
-(defmethod total-dist ((f fleet) (net network))
-  (sum (mapcar #'(lambda (v) (total-dist v net)) (get-busy-vehicles f))))
+(defmethod total-dist ((p problem) dist-array)
+  (sum (mapcar #'(lambda (v) (total-dist v dist-array)) (get-busy-vehicles p))))
 
 ;; Accessor functions
 ;; ------------------
-(defgeneric vehicle (obj id)
-  (:method (obj id) "Expects <fleet>/<problem> and int as inputs!")
-  (:documentation "A simple accessor method, for quick id lookup of a <vehicle>"))
-
-(defmethod vehicle ((f fleet) id)
-  (nth id (fleet-vehicles f)))
-
 (defmethod vehicle ((p problem) id)
-  (vehicle (problem-fleet p) id))
+  (nth id (problem-fleet p)))
 ;; ------------------
 
 ;; Initializing functions 
@@ -69,12 +54,10 @@
 
 (defmacro create-vehicles (fleet-size network to-depot &optional capacities speeds)
   "Returns a list of vehicles, starting with ID 0. The starting location of their routes are all initialized at 0. When to-depot is set to T, initialize their routes with 2 base nodes (departure and destination)."
-  (let ((fleet (gensym))
-	(i (gensym))
-	(route (gensym)))
+  (with-gensyms (fleet i route)
     `(let ((,fleet nil)
-	   (,route ,(if to-depot `(list (node ,network 0) (node ,network 0))
-			`(list (node ,network 0)))))
+	   (,route ,(if to-depot `(list (aref ,network 0) (aref ,network 0))
+			`(list (aref ,network 0)))))
        (do ((,i 0 (1+ ,i)))
 	   ((= ,i ,fleet-size) (nreverse ,fleet))
 	 (push (make-instance ,(cond (speeds ''vehicle-tw)
@@ -85,10 +68,3 @@
 			      ,@(when capacities `(:capacity ,capacities))
 			      ,@(when speeds `(:speed ,speeds)))
 	       ,fleet)))))
-  
-(defmacro create-fleet (fleet-size network to-depot &optional capacities speeds)
-  "Returns a fleet object, with the <vehicle> objects of type initialised in the vehicles slot. Requires a <network> object for base node initialisation. When capacities is provided, capacitated <vehicles-c> will be created."
-  `(let ((fleet (create-vehicles ,fleet-size ,network ,to-depot
-				 ,@(when capacities `(,capacities))
-				 ,@(when speeds `(,speeds)))))
-     (make-instance 'fleet :vehicles fleet :to-depot ,to-depot)))

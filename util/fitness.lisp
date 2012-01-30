@@ -8,7 +8,7 @@
   (:documentation "The generic fitness function. To be defined for each class of <problem> specifically. This function allows for custom fitness-functions for your own defined <problem> classess. The default fitness function is total distance."))
 
 (defmethod fitness ((prob problem))
-  (total-dist (problem-fleet prob) (problem-network prob)))
+  (total-dist prob (problem-dist-array prob)))
 
 (defmethod fitness ((cvrp CVRP))
   (values

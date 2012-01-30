@@ -14,13 +14,13 @@
 
 ;; 0. Route utils
 ;; ---------------------
-(defmethod empty-routep ((v vehicle))
+(defun empty-routep (veh)
   "Given a <vehicle>, return T if the route only has base-nodes."
-  (not (member 0 (vehicle-route v) :key #'node-id :test-not #'=)))
+  (not (member 0 (vehicle-route veh) :key #'node-id :test-not #'=)))
 
-(defmethod get-busy-vehicles ((f fleet))
-  "Returns a list of <Vehicles> that are not empty."
-  (remove-if #'empty-routep (fleet-vehicles f)))
+(defun get-busy-vehicles (problem)
+  "Returns a list of <Vehicles> that are not empty, given a <TSP> object."
+  (remove-if #'empty-routep (problem-fleet problem)))
 
 (defun one-destinationp (route)
   "Return T if there is only one destination on route, excluding base nodes. Used by generate-moves in TS.lisp."
@@ -103,21 +103,13 @@
   "Returns index of the first next closest, that is not in chosen (which is a list)."
   (with-tabu-indices tabu #'get-min-index distances))
 
-(defgeneric closest-node (vehicle network &optional tabu)
-; It's not allowing &optional parameter in :method expression below.
-;  (:method (vehicle network &optional tabu) "Expects <vehicle>, <network> or <problem> veh-id.")
-  (:documentation "Returns the closest node from the current location of vehicle v. Requires <vehicle> and <network>. A tabu list of node-IDs is optional. Also accepts <problem> and veh-id as first two arguments."))
-
-(defmethod closest-node ((v vehicle) (net network) &optional tabu)
-  (let* ((loc (last-node v))                                  ;binds list of distances..
-	 (dists (get-array-row (network-dist-table net) (node-id loc))));..from the location..
-    (aif (get-min-index-with-tabu dists tabu)
-	 (node net it)
-	 nil)))
+(defgeneric closest-node (problem veh-id &optional tabu)
+  (:documentation "Returns the closest node from the current location of vehicle. Requires <problem> and vehicle-ID. A tabu list of node-IDs is optional."))
 
 (defmethod closest-node ((prob problem) veh-id &optional tabu)
-  (let ((veh (vehicle prob veh-id))
-	(net (problem-network prob)))
-    (closest-node veh net tabu)))
-
+  (let* ((loc (last-node (vehicle prob veh-id)))
+	 (dists (get-array-row (problem-dist-array prob) (node-id loc))))
+    (aif (get-min-index-with-tabu dists tabu)
+	 (node prob it)
+	 nil)))
   

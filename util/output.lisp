@@ -8,17 +8,12 @@
   (:method (solution) "Expects <fleet> or <problem> object!")
   (:documentation "Prints solution given a <fleet>/<problem>/<algo> object. Also prints the total distance when the input is a <problem>/<algo> object."))
 
-;; ignore empty vehicles
-(defmethod print-routes ((f fleet))
-  (let ((vehs (get-busy-vehicles f)))
-    (format t "~&~{Route: ~A~^~%~}" (mapcar #'route-indices vehs))
-    (format t "~&---------------")))
-
 (defmethod print-routes ((prob problem))
   (format t "~&---------------")
   (format t "~&Fitness: ~A" (fitness prob))
   (format t "~&---------------")
-  (print-routes (problem-fleet prob)))
+  (format t "~&~{Route: ~A~^~%~}" (mapcar #'route-indices (get-busy-vehicles prob)))
+  (format t "~&---------------"))
 
 (defmethod print-routes ((a algo))
   (print-routes (algo-best-sol a)))

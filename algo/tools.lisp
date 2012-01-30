@@ -16,9 +16,8 @@
   (:documentation "Returns the closest <vehicle> to <node>. Used by insertion heuristic. When multiple <vehicle> are on equal distance, choose first one (i.e. lowest ID)."))
  
 (defmethod get-closest-vehicle ((n node) (prob TSP))
-  (let ((distances (mapcar #'(lambda (x) (node-distance (last-node x) n))
-			   (fleet-vehicles (problem-fleet prob))))) ;all distances
-    (vehicle prob (get-min-index distances))))
+  (let ((dists (mapcar #'(lambda (x) (node-distance (last-node x) n)) (problem-fleet prob))))
+    (vehicle prob (get-min-index dists))))
 
 
 ;; allow only feasible vehicles to be selected
@@ -26,7 +25,7 @@
   (get-closest-vehicle n prob))
 
 (defmethod get-closest-feasible-vehicle ((n node) (prob CVRP))
-  (let* ((vehicles (fleet-vehicles (problem-fleet prob)))
+  (let* ((vehicles (problem-fleet prob))
 	 (dists (mapcar #'(lambda (x) (node-distance (last-node x) n)) vehicles))
 	 (caps (mapcar #'(lambda (x)
 			   (multiple-value-bind (c cap)
@@ -39,7 +38,7 @@
 
 ;; for VRPTW, consider both capacity and time. Feasiblility of appending at the end only.
 (defmethod get-closest-feasible-vehicle ((n node) (prob VRPTW))
-  (let* ((vehicles (fleet-vehicles (problem-fleet prob)))
+  (let* ((vehicles (problem-fleet prob))
 	 (dists (mapcar #'(lambda (x) (node-distance (last-node x) n)) vehicles))
 	 (times (mapcar #'(lambda (x)
 			    (multiple-value-bind (c time)
@@ -64,7 +63,7 @@
 ;; ---------------------
 
 (defgeneric optimal-insertion (prob node)
-  (:method (prob node) "optimal-insertionL: Expects <Problem> and <Node>.")
+  (:method (prob node) "optimal-insertion: Expects <Problem> and <Node>.")
   (:documentation "Given a node and a solution (that does not have this node yet), insert the node in the best possible and feasible location."))
 
 (defmethod optimal-insertion ((sol tsp) (n node))
@@ -79,4 +78,4 @@
 				      (< (move-fitness new) (move-fitness best-move)))) ;better?
 			     new
 			     best-move))))))
-    (iter (fleet-vehicles (problem-fleet sol)) nil)))
+    (iter (problem-fleet sol) nil)))

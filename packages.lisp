@@ -4,14 +4,12 @@
  
 (defpackage :open-vrp.classess
   (:use :common-lisp)
-  (:export :network
-	   :node
+  (:export :node
 	   :node-C
 	   :node-TW
 	   :vehicle
 	   :vehicle-C
 	   :vehicle-TW
-	   :fleet
 	   :problem
 	   :TSP
 	   :VRP
@@ -29,8 +27,6 @@
 	   :drawer
 	   
 	   ;; accessor functions
-	   :network-nodes
-	   :network-dist-table
 	   :node-id
 	   :node-xcor
 	   :node-ycor
@@ -42,13 +38,12 @@
 	   :vehicle-route
 	   :vehicle-capacity
 	   :vehicle-speed
-	   :fleet-vehicles
-	   :fleet-from-depot
-	   :fleet-to-depot
 	   :problem-name
 	   :problem-desc
 	   :problem-network
+	   :problem-dist-array
 	   :problem-fleet
+	   :problem-to-depot
 	   :problem-drawer
 	   :algo-name
 	   :algo-desc
@@ -91,6 +86,7 @@
 	   :while
 	   :aif
 	   :awhile
+	   :with-gensyms
 	   :it
 	   :sum
 	   :max-car
@@ -128,14 +124,14 @@
 	   :generate-dist-array
 	   :get-array-row
 	   :node
-	   :create-network
+	   :create-nodes
 
 	   ;; fleet utils
 	   :route-indices
 	   :vehicle-with-node
 	   :total-dist
 	   :vehicle
-	   :create-fleet
+	   :create-vehicles
 
 	   ;; constraint utils
 	   :constraintsp
