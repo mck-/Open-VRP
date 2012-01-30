@@ -11,7 +11,6 @@
 	   :vehicle-C
 	   :vehicle-TW
 	   :problem
-	   :TSP
 	   :VRP
 	   :CVRP
 	   :VRPTW

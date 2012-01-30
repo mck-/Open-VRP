@@ -65,11 +65,8 @@
 
 ;; Node drawing
 ;; ---------------------------------
-(defgeneric draw-nodes (tsp)
-  (:method (tsp)
-  (:documentation "Given the <Problem> object, plot the nodes only. Usage only with-canvas!")))
-
-(defmethod draw-nodes ((prob tsp))
+(defun draw-nodes (prob)
+  "Given the <Problem> object, plot the nodes only. Usage only with-canvas!"
   (map0-n #'(lambda (x)
 	      (let ((node (node prob x)))
 		(use-node dr node

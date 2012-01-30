@@ -8,14 +8,9 @@
 (in-package :open-vrp.algo)
 
 ;; 1. Generate random insertion sequence
-;; (random-list-permutation #nodes)
-;; (node <tsp> int)
-
 ;; 2. For each node, append to closest vessel feasible
-;; (get-closest-vehicle <node> <tsp>)
-;; (append-node <vehicle> <node>)
 
-(defmethod run-algo ((p tsp) (a greedy-append))
+(defmethod run-algo ((p problem) (a greedy-append))
   "Randomly append <Nodes> one by one to the closest <Vehicle>. Returns <Algo> object when done. Also prints the fitness and solution."
   (loop for id in (random-list-permutation (1- (length (problem-network p))))
      do (append-node (get-closest-feasible-vehicle (node p id) p) ; closest vehicle

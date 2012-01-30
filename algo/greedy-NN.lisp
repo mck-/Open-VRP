@@ -6,7 +6,7 @@
 
 ;; Greedy NN algo for TSP problem (no fleet)
 
-(defmethod run-algo ((p tsp) (a greedy-NN))
+(defmethod run-algo ((p problem) (a greedy-NN))
   "While there exists unchosen nodes, keep appending it. Returns the <Algo> object when done. Also prints the fitness and solution (run-algo :after method)."
   (let ((v (vehicle p 0)))
     (awhile (get-closest-node p 0 (route-indices v))

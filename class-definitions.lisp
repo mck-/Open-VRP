@@ -48,11 +48,7 @@
    (to-depot :accessor problem-to-depot :initarg :to-depot :initform T)
    (drawer :accessor problem-drawer :initarg :drawer)))
 
-(defclass TSP (problem)
-  ((name :initform "TSP")
-   (desc :initform "Simple Traveling Salesman Problem")))
-
-(defclass VRP (TSP)
+(defclass VRP (Problem)
   ((name :initform "VRP")
    (desc :initform "Vehicle Routing Problem")))
 
