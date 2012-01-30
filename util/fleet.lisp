@@ -1,7 +1,9 @@
-;;; for vehicles/fleets
+;;; Fleet related functions
 ;;; ---------------------------
-;;; 1. create-fleet generates/initializes the <fleet> object
-;;; 2. total-dist returns the total distance given the fleet/vehicle object
+;;; - route-indices returns list of node IDs, given <vehicle>/<problem>
+;;; - vehicle-with-node returns <vehicle> that has the node-ID
+;;; - create-vehicles generates a list of <Vehicle> objects
+;;; - total-dist returns the total distance given a <vehicle>/<problem> object
 
 (in-package :open-vrp.util)
 
@@ -15,11 +17,11 @@
 (defmethod route-indices ((p problem))
   (mapcar #'route-indices (problem-fleet p)))
 
-(defgeneric vehicle-with-node (obj node-id)
+(defgeneric vehicle-with-node-ID (obj node-id)
   (:method (obj node) "Expects <problem> and int as inputs!")
   (:documentation "Given a node-ID, return the vehicle-ID that has the node in its route. The function for the input of the base-node 0 is undefined. Returns NIL if node-ID cannot be found."))
 
-(defmethod vehicle-with-node ((p problem) node-ID)
+(defmethod vehicle-with-node-ID ((p problem) node-ID)
   (position-if #'(lambda (route) (member node-ID route)) (route-indices p)))
 
 (defgeneric total-dist (veh/prob dist-array)
