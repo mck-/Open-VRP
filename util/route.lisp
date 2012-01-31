@@ -31,23 +31,19 @@
 
 ;; 1. Insert Node
 ;; -------------------
-(defgeneric insert-node (vehicle node index)
-  (:method (vehicle node index) "Expecting <vehicle>, <node> and int as input!")
-  (:documentation "Adds the <Node> object before the index of the route of <vehicle>. An index of 0 implies inserting in front, length of list implies at the end."))
 
-(defmethod insert-node ((v vehicle) (n node) index)
-  (change-route v
-    (insert-before n index r)))
+(defun insert-node (veh node index)
+  "Adds the <Node> object before the index of the route of <vehicle>. An index of 0 implies inserting in front, length of list implies at the end."
+  (change-route veh
+    (insert-before node index r)))
 
-(defgeneric append-node (vehicle node)
-  (:method (vehicle node) "Expects <vehicle> and <node>!")
-  (:documentation "Appends <Node> to the end of the route of <vehicle>. Wrapper of insert-node."))
-
-(defmethod append-node ((v vehicle) (n node))
-  (change-route v
-    (if (= 0 (node-id (car (last (vehicle-route v))))) ; if last node is 0, insert before that
-	(reverse (insert-before n 1 (reverse r)))
-	(insert-at-end n r))))
+(defun append-node (veh node)
+  "Appends <Node> to the end of the route of <vehicle>. Wrapper of insert-node. If the route includes returning to-depot, then append before the last return to depot."
+  (change-route veh
+    (if (and (cdr (vehicle-route veh))
+	     (= 0 (node-id (car (last (vehicle-route veh))))))
+	(reverse (insert-before node 1 (reverse r)))
+	(insert-at-end node r))))
 
 ;; -------------------------
 
