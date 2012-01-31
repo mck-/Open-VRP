@@ -14,7 +14,7 @@ The solutions are drawn using [vecto](http://www.xach.com/lisp/vecto/) in a .png
 
 ## Vision
 
-Too often have I found myself having to build a VRP model from scratch, just to experiment with some meta-heuristics for a school paper. Academics/students with a background/interest in Mathematics/Operations Research WITHOUT the skills/passion for coding, have no choice but to spend their valuable time stuck in the debug/test/debug cycle.
+Too often have I found myself having to build a VRP model from scratch, just to experiment with some meta-heuristics for a school paper. Academics/students with a background/interest in Mathematics/Operations Research without the skills/patience for die-hard coding (in C++/Java), have no choice but to spend their valuable time stuck in the debug/test/debug cycle. [Here](https://kuomarc.wordpress.com/2012/01/27/why-i-love-common-lisp-and-hate-java/) is why those in OR should consider Common Lisp as an option.
 
 With this framework, I hope to catalyze the research and application of routing solutions. Researchers in innovative new algorithms should not need to fiddle in the Eclipse debugger screen, frustratingly looking for a missing semi-colon. They should be able to focus all their energy and effort in devising their heuristics. OR should be kept fun and clean.
 
@@ -36,10 +36,11 @@ The ultimate vision for Open VRP is a simple intuitive embedded language for the
 
 ```
 (solve-plot test-vrp (make-instance 'tabu-search :animate T))
-(solve-plot solomon100 (make-instance 'tabu-search :iterations 100))
+(solve-plot solomon100 (make-instance 'tabu-search :iterations 100 :runs 10))
 ```
 
-When :animate is set to T, each iteration will produce a plot in run-frames/Iteration x.png (much slower).
+When :animate is set to T, each iteration will produce a plot in run-frames/Iteration x.png (much slower). 
+Tabu-search supports a simple multi-start heuristic with the keyword :runs. In the above example, we will solve the problem 10 times with 100 iterations and return the best solution.
 
 You can define your own problem objects with:
 
@@ -49,7 +50,7 @@ You can define your own problem objects with:
 (define-problem name node-coords n "plots/vrptw.png" demands-list capacity time-windows durations)
 ```
 
-where *node-coords* is a list of pairs, *demands-list* a list of associated demands, and n is the number of vehicles. When n is 1, the resulting problem is a TSP. When n is larger than 1, the resulting problem is a VRP. When a *demands-list* and vehicle *capacity* are provided, the resulting problem is a CVRP. If in addition *time-windows* (list of pairs) and *durations* are given, the resulting problem object is a VRPTW.
+where *node-coords* is a list of pairs, *demands-list* a list of associated demands, and n is the number of vehicles. When a *demands-list* and vehicle *capacity* are provided, the resulting problem is a CVRP. If in addition *time-windows* (list of pairs) and *durations* are given, the resulting problem object is a VRPTW.
 
 Or to load from a text-file [Solomon-format](http://neo.lcc.uma.es/radi-aeb/WebVRP/index.html?/Problem_Instances/CVRPTWInstances.html):
 
