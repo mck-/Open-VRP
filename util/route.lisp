@@ -48,13 +48,10 @@
 ;; -------------------------
 
 ;; 2. Remove Node
-;; -------------------------
-(defgeneric remove-node-at (vehicle index)
-  (:method (vehicle index) "Expects <vehicle> and int as inputs!")
-  (:documentation "Removes the <node> from the route of <vehicle> at index"))
-
-(defmethod remove-node-at ((v vehicle) index)
-  (change-route v
+;; ------------------------- 
+(defun remove-node-at (veh index)
+  "Removes the <node> from the route of <vehicle> at index"
+  (change-route veh
     (remove-index index r)))
 
 (defgeneric remove-node-ID (veh/prob node-ID)
