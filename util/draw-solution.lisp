@@ -6,7 +6,9 @@
 
 (in-package :open-vrp.output)
 
-
+(defparameter *r* 0)
+(defparameter *g* 0)
+(defparameter *b* 0)
 
 ;; Helper functions 
 ;; -----------------------------
@@ -69,13 +71,13 @@
   "Given the <Problem> object, plot the nodes only. Usage only with-canvas!"
   (map0-n #'(lambda (x)
 	      (let ((node (node prob x)))
-		(use-node dr node
+		(use-node (problem-drawer prob) node
 		  (set-rgb-fill 1.0 0.65 0.3)
 		  (centered-circle-path pix-x pix-y 10)
 		  (fill-path)
 		  (set-rgb-fill 0 0 0)
 		  (draw-centered-string pix-x (- pix-y 5) (write-to-string (node-id node))))))
-	  (length (problem-network prob))))
+	  (1- (length (problem-network prob)))))
 ;; ----------------------------
 
 ;; Legend drawing
@@ -102,9 +104,9 @@
  
 (defmethod plot-solution ((sol problem) &optional output-file)
   ;; initial color (determined after trial and error)
-  (defparameter *r* 0.3)
-  (defparameter *g* 0.28)
-  (defparameter *b* 0.62)
+  (setf *r* 0.3)
+  (setf *g* 0.28)
+  (setf *b* 0.62)
 
   (let ((dr (problem-drawer sol)))
     (with-canvas (:width (drawer-max-pix dr) :height (drawer-max-pix dr))
@@ -116,7 +118,7 @@
 	(clear-canvas)
 	(set-line-width 3)
 				        ;iterate over fleet - draw routes & legend together
-	(dolist (veh (get-busy-vehicles (problem-fleet sol)))
+	(dolist (veh (get-busy-vehicles sol))
 	  (multiple-value-bind (r g b) (get-color)
 	    (when (drawer-legend dr)
 	      (draw-legend-item dr veh r g b)) ; draw legend item
@@ -133,9 +135,10 @@
 		(store-pix dr pix-x pix-y))))
 	  (stroke))
 
-	(setf (drawer-legend-y dr) temp-y) ;reset to original value       
+	(setf (drawer-legend-y dr) temp-y) ;reset to original value
 	(draw-nodes sol) ;drawing nodes
-	(draw-string (* 0.1 (drawer-max-pix dr)) (* 0.1 (drawer-max-pix dr)) (write-to-string (fitness sol)))
+	(draw-string (* 0.1 (drawer-max-pix dr)) (* 0.1 (drawer-max-pix dr)) (write-to-string (fitness sol))) ;solution fitness
+
 	; save file
 	(if output-file
 	    (save-png output-file)
