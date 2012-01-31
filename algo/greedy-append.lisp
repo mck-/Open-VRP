@@ -7,6 +7,10 @@
 
 (in-package :open-vrp.algo)
 
+(defclass greedy-append (algo)
+  ((name :initform "Greedy Appending heuristic")
+   (desc :initform "Random greedy insertion heuristic; append nodes to closest vehicle successively. Used as initial solution for search algos.")))
+
 ;; 1. Generate random insertion sequence
 ;; 2. For each node, append to closest vessel feasible
 

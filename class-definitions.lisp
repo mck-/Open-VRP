@@ -1,6 +1,6 @@
 ;;; All class definitions for CLOS VRP
 ;;; Node, Vehicle, Algo, Problem objects are all designed to be extensible
-(in-package :open-vrp.classess)
+(in-package :open-vrp.classes)
 
 
 ;; The node object
@@ -88,40 +88,6 @@
    (best-fitness :accessor algo-best-fitness :initform nil)
    (current-sol :accessor algo-current-sol :initform nil)
    (iterations :accessor algo-iterations :initarg :iterations)))
-
-(defclass greedy-NN (algo)
-  ((name :initform "Greedy NN-algo")
-   (desc :initform "Nearest Neighborhood algo; from base/random, select next closest one")))
-
-(defclass greedy-append (algo)
-  ((name :initform "Greedy Appending heuristic")
-   (desc :initform "Random greedy insertion heuristic; append nodes to closest vehicle successively. Used as initial solution for search algos.")))
-
-(defclass greedy-best-insertion (algo)
-  ((name :initform "Greedy Best Insertion heuristic")
-   (desc :initform "Randomly insert nodes one by one to best vehicle at best location. Used as initial solution for search algos.")))
-
-;; Tabu Search - added Mon Dec 12, 2011
-;; ---------------------------------------
-;; - it is possible to define your own moves and initial solution heuristic.
-
-(defclass tabu-search (algo)
-  ((name :initform "Tabu Search")
-   (desc :initform "Simple Tabu Search heuristic, see (Kuo 2011) for details.")
-   (moves :accessor tabu-search-moves :initarg :moves :initform 'TS-best-insertion-move)
-   (init-heur :accessor tabu-search-init-heur :initarg :init-heur :initform 'greedy-best-insertion)
-   (iterations :initform 5)
-   (animate :accessor tabu-search-animate :initarg :animate :initform nil)
-   (tabu-list :accessor tabu-search-tabu-list :initarg :tabu-list :initform (make-instance 'tabu-list))
-   (candidate-list :accessor tabu-search-candidate-list :initarg :candidate-list :initform nil)
-   (runs :accessor tabu-search-runs :initarg :runs :initform 1)))
-
-(defclass tabu-list ()
-  ((tabu :accessor tabu-list-tabu :initarg :tabu :initform nil)
-   (tenure :accessor tabu-list-tenure :initarg :tenure :initform 25)
-   (aspiration :accessor tabu-list-aspiration :initarg :aspiratoin :initform T)))
-
-;; -------------------------------
 
 ;; The Move class
 ;; -------------------------

@@ -2,7 +2,7 @@
 ;;; CLOS package descriptions
 ;;; -----------------------------
  
-(defpackage :open-vrp.classess
+(defpackage :open-vrp.classes
   (:use :common-lisp)
   (:export :node
 	   :node-C
@@ -14,12 +14,13 @@
 	   :VRP
 	   :CVRP
 	   :VRPTW
+
+	   ;; algo
 	   :algo
-	   :greedy-NN
-	   :greedy-append
-	   :greedy-best-insertion
-	   :tabu-list
-	   :tabu-search
+	   :name
+	   :desc
+	   :iterations
+	   
 	   :move
 	   :TS-best-insertion-move
 	   :insertion-move
@@ -74,7 +75,7 @@
 
 (defpackage :open-vrp.util
   (:use :common-lisp
-	:open-vrp.classess)
+	:open-vrp.classes)
   (:import-from	:alexandria :shuffle :flatten)
   (:export ;; simple utils
            :single
@@ -146,7 +147,7 @@
 
 (defpackage :open-vrp.output
   (:use :common-lisp
-	:open-vrp.classess
+	:open-vrp.classes
 	:open-vrp.util
    	:vecto)
   (:import-from :alexandria :mean :standard-deviation)
@@ -158,7 +159,7 @@
 
 (defpackage :open-vrp.algo
   (:use :common-lisp
-	:open-vrp.classess
+	:open-vrp.classes
 	:open-vrp.util
 	:open-vrp.output)
   (:import-from :alexandria :shuffle :flatten)  
@@ -187,6 +188,13 @@
 	   :assess-moves
 	   :sort-moves
 	   :select-move
+
+	   ;; algo-objects
+	   :greedy-NN
+	   :greedy-append
+	   :greedy-best-insertion
+	   :tabu-list
+	   :tabu-search
 	   
 	   ;; Tabu Search
 	   :add-to-tabu
@@ -195,7 +203,7 @@
 
 (defpackage :open-vrp
   (:use :common-lisp
-	:open-vrp.classess
+	:open-vrp.classes
 	:open-vrp.util
 	:open-vrp.algo
 	:open-vrp.output

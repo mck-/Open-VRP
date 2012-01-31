@@ -2,7 +2,7 @@
 ;; Tabu Search utilities
 ;; ---------------------
 
-(in-package open-vrp.algo)
+(in-package :open-vrp.algo)
 
 ;; Tabu List
 ;; -----------------------------

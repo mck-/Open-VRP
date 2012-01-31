@@ -4,6 +4,10 @@
 ;;; Start at base, and keep choosing the next closest one
 (in-package :open-vrp.algo)    
 
+(defclass greedy-NN (algo)
+  ((name :initform "Greedy NN-algo")
+   (desc :initform "Nearest Neighborhood algo; from base/random, select next closest one")))
+
 ;; Greedy NN algo for TSP problem (no fleet)
 
 (defmethod run-algo ((p problem) (a greedy-NN))

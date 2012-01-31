@@ -28,6 +28,7 @@
 	       (:file "algo/greedy-NN")
 	       (:file "algo/greedy-append")
 	       (:file "algo/greedy-best-insertion")
+	       (:file "algo/TS-classdef")
 	       (:file "algo/TS-utils")
 	       (:file "algo/TS")	       
 	       ;; test data
