@@ -14,18 +14,14 @@
 	   :VRP
 	   :CVRP
 	   :VRPTW
-
+	   :drawer
+	   
 	   ;; algo
 	   :algo
 	   :name
 	   :desc
 	   :iterations
-	   
-	   :move
-	   :TS-best-insertion-move
-	   :insertion-move
-	   :drawer
-	   
+	   	   
 	   ;; accessor functions
 	   :node-id
 	   :node-xcor
@@ -59,10 +55,6 @@
 	   :tabu-search-animate
 	   :tabu-search-candidate-list
 	   :tabu-search-runs
-	   :move-node-ID
-	   :move-vehicle-ID
-	   :move-index
-	   :move-fitness
 	   :drawer-min-coord
 	   :drawer-max-coord
 	   :drawer-legend
@@ -134,12 +126,13 @@
 	   :create-vehicles
 
 	   ;; constraint utils
+	   :constraints-check
 	   :constraintsp
 	   :in-capacityp
 	   :node-fit-in-vehiclep
 	   :travel-time
+	   :time-after-serving-node
 	   :in-timep
-	   :feasible-insertionp
 
 	   :fitness
 	   ))
@@ -175,6 +168,7 @@
 	   :get-closest-feasible-vehicle
 	   :optimal-insertion
 	   :fitness-before-after
+	   :insertion-move
 	   :get-best-insertion-move
 	   :get-closest-node
 
@@ -189,15 +183,23 @@
 	   :sort-moves
 	   :select-move
 
+	   ;; move
+	   :move
+	   :move-node-ID
+	   :move-vehicle-ID
+	   :move-index
+	   :move-fitness	   
+
 	   ;; algo-objects
 	   :greedy-NN
 	   :greedy-append
 	   :greedy-best-insertion
 	   :tabu-list
-	   :tabu-search
+	   :tabu-search	   
 	   
 	   ;; Tabu Search
 	   :add-to-tabu
+	   :TS-best-insertion-move		   
 	   :is-tabup
 	   :create-candidate-list))
 

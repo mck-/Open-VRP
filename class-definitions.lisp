@@ -2,7 +2,6 @@
 ;;; Node, Vehicle, Algo, Problem objects are all designed to be extensible
 (in-package :open-vrp.classes)
 
-
 ;; The node object
 ;; ----------------------
 
@@ -88,21 +87,3 @@
    (best-fitness :accessor algo-best-fitness :initform nil)
    (current-sol :accessor algo-current-sol :initform nil)
    (iterations :accessor algo-iterations :initarg :iterations)))
-
-;; The Move class
-;; -------------------------
-
-;; added Thu Dec 15, 2011
-(defclass move ()
-  ((fitness :accessor move-fitness :initarg :fitness)))
-
-;; Given a node and a vehicle, TS-best-insertion inserts it in the best possible position
-(defclass TS-best-insertion-move (move)
-  ((node-ID :accessor move-node-ID :initarg :node-ID)
-   (vehicle-ID :accessor move-vehicle-ID :initarg :vehicle-ID)))
-
-;; For intra-move insertion (algo/tools.lisp)
-(defclass insertion-move (move) 
-  ((node-ID :accessor move-node-ID :initarg :node-ID)
-   (vehicle-ID :accessor move-vehicle-ID :initarg :vehicle-ID)
-   (index :accessor move-index :initarg :index)))

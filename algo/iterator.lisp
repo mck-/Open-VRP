@@ -4,6 +4,13 @@
 ;; --------------------------------------------
 (in-package :open-vrp.algo)
 
+;; The Move class
+;; -------------------------
+
+;; added Thu Dec 15, 2011
+(defclass move ()
+  ((fitness :accessor move-fitness :initarg :fitness)))
+
 ;; initializer
 ;; -----------
 (defgeneric initialize (problem algo)

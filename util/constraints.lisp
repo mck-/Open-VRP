@@ -116,25 +116,3 @@
 		  
 		 
 ;; -------------------------
-
-;; Move feasibility check
-;; ------------------------
-
-;; check if move is feasible
-;; check if on time. If so, check if routes afterward still on time.
-(defmethod feasible-insertionp ((m insertion-move) (sol VRPTW))
-  (symbol-macrolet ((full-route (vehicle-route (vehicle sol (move-vehicle-ID m))))
-		    (ins-node (node sol (move-node-ID m)))
-		    (to (if (= 1 i) ins-node (car route)))
-		    (arr-time (+ time (travel-time loc to))))		    
-    (constraints-check
-     (route time loc i)
-     ((cdr full-route) 0 (car full-route) (move-index m))
-     ((if (= 1 i) route (cdr route)) ;don't skip after inserting new node
-      (time-after-serving-node to arr-time) ;set time after new node
-      to (1- i))   
-     (<= arr-time (node-end to))
-     (and (null route) (< i 1))))) ; case of append, need to check once more
-
-;; for debugging
-;       (format t "Route: ~A~% Loc: ~A~% To: ~A~% Time: ~A~% Arr-time: ~A~% Node-start: ~A~% Node-end: ~A~% Duration: ~A~% ins-node-end: ~A~% i: ~A~%" (mapcar #'node-id route) (node-id loc) (node-id to) time arr-time (node-start to) (node-end to) (node-duration to) (node-end ins-node) i)

@@ -14,9 +14,21 @@
    (candidate-list :accessor tabu-search-candidate-list :initarg :candidate-list :initform nil)
    (runs :accessor tabu-search-runs :initarg :runs :initform 1)))
 
+;; ----------------------------
+
 ;; Tabu List
 ;; -----------------------------
 (defclass tabu-list ()
   ((tabu :accessor tabu-list-tabu :initarg :tabu :initform nil)
    (tenure :accessor tabu-list-tenure :initarg :tenure :initform 25)
    (aspiration :accessor tabu-list-aspiration :initarg :aspiration :initform T)))
+
+;; ---------------------------
+
+;; Tabu search move
+;; ---------------------------
+
+;; Given a node and a vehicle, TS-best-insertion inserts it in the best possible position
+(defclass TS-best-insertion-move (move)
+  ((node-ID :accessor move-node-ID :initarg :node-ID)
+   (vehicle-ID :accessor move-vehicle-ID :initarg :vehicle-ID)))
