@@ -1,28 +1,25 @@
-;; Mon Dec 12, 2011 
-;; Search framework
-;; Iterator on <Algo> object. Used by TS (or even GA and other metaheuristics).
+;; Iterator framework -- Search-heuristic framework used by Tabu-Search
 ;; --------------------------------------------
 (in-package :open-vrp.algo)
 
 ;; The Move class
+;; 
 ;; -------------------------
-
-;; added Thu Dec 15, 2011
 (defclass move ()
   ((fitness :accessor move-fitness :initarg :fitness)))
+
+;; -------------------------
 
 ;; initializer
 ;; -----------
 (defgeneric initialize (problem algo)
-  (:method (problem algo)
-    "initialize: Requires <Problem> and <Algo> as inputs.")
+  (:method (problem algo) "initialize: Requires <Problem> and <Algo> as inputs.")
   (:documentation "Initializes the initial solution for the algo object. For Tabu Search, the default heuristic for generating an initial solution is 'greedy-insertion, which is read from the slot :init-heur."))
 
 ;; iterator
 ;; ------------
 (defgeneric iterate (algo)
-  (:method (algo)
-    "iterate: This algo is not defined.")
+  (:method (algo) "iterate: This algo is not defined.")
   (:documentation "Runs the algo one iteration. Uses the algo's slot current-sol as current solution on which the algo runs one iteration. When algo's slot iterations is 0, then print the best solution found by this algo object. Returns the <algo> object when finished, otherwise returns <problem> solution object."))
 
 ;; when no more iterations, print solution and return the <Algo> object.
@@ -70,13 +67,6 @@
   (:method (sol move)
     "perform-move: This move is not defined.")
   (:documentation "Performs the move defined in <move> on the solution. Returns the new solution (which is a class of <Problem>)"))
-
-;; logging
-(defmethod perform-move :after ((prob problem) (mv move))
-  (format t "~&Performing ~A with Node ~A and Vehicle ~A" (type-of mv) (move-node-ID mv) (move-vehicle-ID mv))
-  (when (eq (type-of mv) 'insertion-move)
-    (format t " and Index ~A" (move-index mv))))
-    
 
 ;; Assess move(s)
 ;; ------------------------

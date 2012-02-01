@@ -59,6 +59,10 @@
 	       (move-index m))
   sol)
 
+;; logging
+(defmethod perform-move :after ((prob problem) (mv insertion-move))
+  (format t "~&Performing ~A with Node ~A and Vehicle ~A and Index ~A" (type-of mv) (move-node-ID mv) (move-vehicle-ID mv) (move-index mv)))
+
 (defun get-best-insertion-move (sol vehicle-id node-id)
   "Given the <solution> object, vehicle-id and node-id (integers), return the best <insertion-move> (i.e. with the lowest fitness)."
   (let* ((moves (assess-moves sol (generate-insertion-moves sol vehicle-id node-id)))
