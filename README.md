@@ -4,9 +4,9 @@
 
 Open VRP is a framework to model and solve [VRP-like](http://neo.lcc.uma.es/radi-aeb/WebVRP/) problems for students, academics, businesses and hobbyist alike. This framework allows for quick implementation of simple TSP/VRP problems to more complicated VRPTW, PDPTW, MDCPVRPPDTW, or however cool you want to sound. The library is extensibly written in Common Lisp's CLOS. Depending on your interest/purpose, an algorithm can be:
 
-* written from scratch
-* build using the toolkit of shared operators
-* or tweaked from existing implementations - (currently only Tabu Search implemented)
+* [written from scratch](https://github.com/mck-/Open-VRP/wiki/Using-Open-VRP:-writing-your-algo-from-scratch)
+* build using the toolkit of shared operators or the [Iterator framework](https://github.com/mck-/Open-VRP/wiki/Using-Open-VRP:-build-your-algo-with-the-Iterator)
+* or tweaked from existing implementations - (currently only [Tabu Search implemented](https://github.com/mck-/Open-VRP/wiki/Description-of-the-Tabu-Search-implementation))
 
 The Problem object (e.g. VRP) and the Algorithm object (e.g. Genetic Algorithm) are modelled seperately and combined with the generic method (solve-prob problem algo). Different solution algorithms can be tested and compared against each other on the same problem (which you only model once).
 
