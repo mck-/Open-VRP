@@ -14,3 +14,8 @@
   (values
    (call-next-method)
    (constraintsp cvrp)))
+
+(defmethod fitness ((vrptw VRPTW))
+  (values
+   (call-next-method)
+   (constraintsp vrptw)))
