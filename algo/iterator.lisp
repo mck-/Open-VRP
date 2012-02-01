@@ -3,24 +3,31 @@
 (in-package :open-vrp.algo)
 
 ;; The Move class
-;; 
-;; -------------------------
+;; -----------------
 (defclass move ()
   ((fitness :accessor move-fitness :initarg :fitness)))
 
-;; -------------------------
+;; -----------------
 
 ;; initializer
-;; -----------
+;; -----------------
 (defgeneric initialize (problem algo)
   (:method (problem algo) "initialize: Requires <Problem> and <Algo> as inputs.")
   (:documentation "Initializes the initial solution for the algo object. For Tabu Search, the default heuristic for generating an initial solution is 'greedy-insertion, which is read from the slot :init-heur."))
+;; ----------------
 
-;; iterator
-;; ------------
+;; Iterator
+;; ----------------
 (defgeneric iterate (algo)
   (:method (algo) "iterate: This algo is not defined.")
   (:documentation "Runs the algo one iteration. Uses the algo's slot current-sol as current solution on which the algo runs one iteration. When algo's slot iterations is 0, then print the best solution found by this algo object. Returns the <algo> object when finished, otherwise returns <problem> solution object."))
+
+(defmethod iterate ((a algo))
+  (let ((sol (algo-current-sol a)))
+    (perform-move sol
+		  (select-move a
+			       (assess-moves sol
+					     (generate-moves a))))))
 
 ;; when no more iterations, print solution and return the <Algo> object.
 (defmethod iterate :around ((a algo))
@@ -52,7 +59,7 @@
 (defmethod iterate-more ((a algo) int)
   (setf (algo-iterations a) int)
   (run-algo (algo-current-sol a) a))
-
+;; ---------------------
 
 ;; Generate-moves
 ;; -------------------
@@ -61,12 +68,16 @@
     "generate-moves: This algo is not defined; cannot generate moves.")
   (:documentation "Given the algo object, that contains the current solution, generate potential <moves> for next iteration as defined by the algo. e.g. insertion moves for TS and chromosome pool for GA."))
 
+;; --------------------
+
 ;; Perform move
 ;; ---------------------
 (defgeneric perform-move (sol move)
   (:method (sol move)
     "perform-move: This move is not defined.")
   (:documentation "Performs the move defined in <move> on the solution. Returns the new solution (which is a class of <Problem>)"))
+
+;; -----------------------
 
 ;; Assess move(s)
 ;; ------------------------
@@ -91,6 +102,8 @@
   "Given a list of <Move> objects, assess them all on the solution (uses assess-move), and setf the move's :fitness slots. Returns the list of moves."
   (mapcar #'(lambda (move) (assess-move solution move)) moves)
   moves)
+
+;; -------------------
 
 ;; Select move
 ;; -------------------
