@@ -4,15 +4,18 @@
 
 ;; Simple list utils
 ;; --------------------
-(defun get-from-list (list pred &optional ans)
+(defun get-from-list (list pred)
   "Gets from list the value (max or min) while ignoring NIL's. Returns NIL if the whole list is nil. Use get-min or get-max!"
-  (if (null list) (if (numberp ans) ans nil)
-      (get-from-list (cdr list)
-		     pred
-		     (cond ((null ans) (car list))
-			   ((not (numberp (car list))) ans)
-			   ((funcall pred (car list) ans) (car list))
-			   (t ans)))))
+  (labels ((iter (ls ans)
+	     (if (null ls) ans
+		 (iter (cdr ls)
+		       (let ((x (car ls)))
+			 (cond ((null ans) x)
+			       ((null x) ans)
+			       ((funcall pred x ans) x)
+			       (t ans)))))))
+    (iter (cdr list) (car list))))
+
 (defun get-min (list)
   "Gets the minimum value from a list, while ignoring the NIL values."
   (get-from-list list #'<))
