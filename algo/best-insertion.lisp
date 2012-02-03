@@ -27,25 +27,25 @@
 ;; when appending to the end, it's just the distance from last location to the node
 ;; otherwise it is the distance to the nodes before and after, minus their direct connection
 (defmethod assess-move ((sol problem) (m insertion-move))
-  (let* ((route (vehicle-route (vehicle sol (move-vehicle-id m))))
-	 (dist-array (problem-dist-array sol))
-	 (index (move-index m))
-	 (node (move-node-id m))
-	 (node-before (node-id (nth (1- index) route))))
-    (setf (move-fitness m)
-	  (if (= index (length route)) ;if appending to end of route
-	      (distance node (node-id (last-node route)) dist-array)
-	      (let ((node-after (node-id (nth index route))))
-		(-
-		 (+ (distance node node-before dist-array)
-		    (distance node node-after dist-array)) 
-		 (or (distance node-before node-after dist-array) 0))))))) ; NIL -> 0
+  (with-slots (node-ID vehicle-ID index) m
+    (let* ((route (vehicle-route (vehicle sol vehicle-ID)))
+	   (dist-array (problem-dist-array sol))
+	   (node-before (node-id (nth (1- index) route))))
+      (setf (move-fitness m)
+	    (if (= index (length route)) ;if appending to end of route
+		(distance node-ID (node-id (last-node route)) dist-array)
+		(let ((node-after (node-id (nth index route))))
+		  (-
+		   (+ (distance node-ID node-before dist-array)
+		      (distance node-ID node-after dist-array)) 
+		   (or (distance node-before node-after dist-array) 0)))))))) ; NIL -> 0
 
 ;; around method for checking constraints. If move is infeasible, return NIL.
 (defmethod assess-move :around ((sol CVRP) (m insertion-move))
-  (if (node-fit-in-vehiclep sol (move-node-id m) (move-vehicle-id m))      
-      (call-next-method)
-      (setf (move-fitness m) nil)))
+  (with-slots (node-ID vehicle-ID fitness) m
+    (if (node-fit-in-vehiclep sol node-ID vehicle-ID)
+	(call-next-method)
+	(setf fitness nil))))
 
 (defmethod assess-move :around ((sol VRPTW) (m insertion-move))
   (if (feasible-insertionp m sol)
@@ -54,10 +54,11 @@
 					     
 (defmethod perform-move ((sol problem) (m insertion-move))
   "Performs the <move> on <problem>."
-  (insert-node (vehicle sol (move-vehicle-id m))
-	       (node sol (move-node-id m))
-	       (move-index m))
-  sol)
+  (with-slots (node-ID vehicle-ID index) m
+    (insert-node (vehicle sol vehicle-ID)
+		 (node sol node-ID)
+		 index)
+    sol))
 
 ;; logging
 (defmethod perform-move :after ((prob problem) (mv insertion-move))
@@ -77,18 +78,19 @@
 ;; check if move is feasible
 ;; check if on time. If so, check if routes afterward still on time.
 (defmethod feasible-insertionp ((m insertion-move) (sol VRPTW))
-  (symbol-macrolet ((full-route (vehicle-route (vehicle sol (move-vehicle-ID m))))
-		    (ins-node (node sol (move-node-ID m)))
-		    (to (if (= 1 i) ins-node (car route)))
-		    (arr-time (+ time (travel-time loc to))))
-    (constraints-check
-     (route time loc i)
-     ((cdr full-route) 0 (car full-route) (move-index m))
-     ((if (= 1 i) route (cdr route)) ;don't skip after inserting new node
-      (time-after-serving-node to arr-time) ;set time after new node
-      to (1- i))   
-     (<= arr-time (node-end to))
-     (and (null route) (< i 1))))) ; case of append, need to check once more
+  (with-slots (node-ID vehicle-ID index) m
+    (symbol-macrolet ((full-route (vehicle-route (vehicle sol vehicle-ID)))
+		      (ins-node (node sol node-ID))
+		      (to (if (= 1 i) ins-node (car route)))
+		      (arr-time (+ time (travel-time loc to))))
+      (constraints-check
+       (route time loc i)
+       ((cdr full-route) 0 (car full-route) index)
+       ((if (= 1 i) route (cdr route)) ;don't skip after inserting new node
+	(time-after-serving-node to arr-time) ;set time after new node
+	to (1- i))   
+       (<= arr-time (node-end to))
+       (and (null route) (< i 1)))))) ; case of append, need to check once more
 
 ;; for debugging
 ;       (format t "Route: ~A~% Loc: ~A~% To: ~A~% Time: ~A~% Arr-time: ~A~% Node-start: ~A~% Node-end: ~A~% Duration: ~A~% ins-node-end: ~A~% i: ~A~%" (mapcar #'node-id route) (node-id loc) (node-id to) time arr-time (node-start to) (node-end to) (node-duration to) (node-end ins-node) i)
