@@ -40,13 +40,6 @@
        ((not it))
      ,@body))
 
-;; Usage on first line of defmacro: (with-gensyms (a b c d) ...)
-(defmacro with-gensyms (syms &body body)
-  `(let ,(mapcar #'(lambda (s)
-		     `(,s (gensym)))
-		 syms)
-     ,@body))
-
 ;; ----------------------------------------------------------
 (defun sum (list)
   "A quick list summer, 4 times as fast as (reduce #'+ list)"
