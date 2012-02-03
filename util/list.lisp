@@ -4,52 +4,51 @@
 
 ;; Simple list utils
 ;; --------------------
-(defun get-from-list (list pred)
+(defun get-from-list (list pred &key key)
   "Gets from list the value (max or min) while ignoring NIL's. Returns NIL if the whole list is nil. Use get-min or get-max!"
-  (labels ((iter (ls ans)
-	     (if (null ls) ans
-		 (iter (cdr ls)
-		       (let ((x (car ls)))
-			 (cond ((null ans) x)
-			       ((null x) ans)
-			       ((funcall pred x ans) x)
-			       (t ans)))))))
-    (iter (cdr list) (car list))))
+  (let ((in-list (if key (mapcar key list) list)))
+    (labels ((iter (ls ans)
+	       (if (null ls) ans
+		   (iter (cdr ls)
+			 (let ((x (car ls)))
+			   (cond ((null ans) x)
+				 ((null x) ans)
+				 ((funcall pred x ans) x)
+				 (t ans)))))))
+      (iter (cdr in-list) (car in-list)))))
 
-(defun get-min (list)
+(defun get-min (list &key key)
   "Gets the minimum value from a list, while ignoring the NIL values."
-  (get-from-list list #'<))
+  (get-from-list list #'< :key key))
 
-(defun get-max (list)
+(defun get-max (list &key key)
   "Gets the maximum value from a list, while ignoring the NIL values."
-  (get-from-list list #'>))
+  (get-from-list list #'> :key key))
 
-(defun get-index-of (list fn)
+(defun get-index-of (list fn &key key)
   "Helper function of the below. Use get-min-index or get-max-index!"
-  (aif (funcall fn list)
-       (values (position it list) it)
+  (aif (funcall fn list :key key)
+       (values (position it list :key key) it)
        nil))
   
-(defun get-min-index (list)
+(defun get-min-index (list &key key)
   "Returns index of the smallest value on list, while ignoring NIL. Returns index and its value (closest node and value)."
-  (get-index-of list #'get-min))
+  (get-index-of list #'get-min :key key))
 
-(defun get-max-index (list)
+(defun get-max-index (list &key key)
   "Returns index of the largest value on list, while ignoring NIL. Returns index and its value (closest node and value)."
-  (get-index-of list #'get-max))
+  (get-index-of list #'get-max :key key))
 
-(defmacro sort-ignore-nil (sequence predicate &key key)
+(defun sort-ignore-nil (list predicate &key key)
   "Sorts the sequence with #'< or #'> while passing all NIL values towards the end of result."
-  (let ((list (gensym))
-	(ignore (gensym)))
-    `(let* ((,list ,(if key `(mapcar ,key ,sequence) sequence))
-	    (,ignore (if (eq ,predicate #'<)
-			  (1+ (or (get-max ,list) 0))
-			  (1- (or (get-min ,list) 0)))))
-       (sort (copy-list ,sequence)
-	     ,predicate
-	     :key #'(lambda (x) (or ,(if key `(funcall ,key x) `x)
-				    ,ignore))))))
+  (if (find-if-not #'null list)
+      (let ((ignore (cond ((eq predicate #'<) (1+ (get-max list)))
+			  ((eq predicate #'>) (1- (get-min list)))
+			  (t (error 'unaccepted-predicate :pred predicate)))))
+	(sort (copy-list list) predicate
+	      :key #'(lambda (x) (or (if key (funcall key x) x)
+				     ignore))))
+      list))
 
 ;; --------------------------
   
