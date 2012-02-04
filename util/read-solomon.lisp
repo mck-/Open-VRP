@@ -5,13 +5,8 @@
 (in-package :open-vrp)
 
 (defun couple-lists (list1 list2)
-  "Given a list of x and y-coords, return a list of pairs usable for the program (*node-coords*)."
-  (labels ((iter (rest-x rest-y ans)
-	     (if (null rest-x) (nreverse ans)
-		 (iter (cdr rest-x)
-		       (cdr rest-y)
-		       (cons (cons (car rest-x) (car rest-y)) ans)))))
-    (iter list1 list2 nil)))
+  "Given a list of x and y-coords, return a list of pairs usable. Used for node-coords or time-windows."
+  (loop for x in list1 and y in list2 collect (cons x y)))
 		       
 (defun load-testcase-Solomon (file)
   "Load testcase from file, which should be Solomon style."
