@@ -64,23 +64,24 @@
 
 (defmacro create-nodes (node-coords &optional demands time-windows durations)
   "Given a coord-list, return a vector of nodes. The nodes are created and numbered starting from 0, which is the base node. By default creates normal nodes. When node-demands are provided, it creates node-C (nodes with demand). With time-windows and durations, creates node-TW."
-  (with-gensyms (nodes i coords-list demand-list tw-list dur-list)
-    `(let ((,nodes (make-array (length ,node-coords) :fill-pointer 0))) ;vector of nodes
-       (do ((,i 0 (1+ ,i))
-	    (,coords-list ,node-coords (cdr ,coords-list))
-	    ,@(when demands `((,demand-list ,demands (cdr ,demand-list))))
-	    ,@(when time-windows `((,tw-list ,time-windows (cdr ,tw-list))))
-	    ,@(when durations `((,dur-list ,durations (cdr ,dur-list)))))
-	   ((null (car ,coords-list)))
-	 (vector-push (make-instance ,(cond (time-windows ''node-tw)
-					    (demands ''node-c)
-					    (t ''node))
-				     :id ,i
-				     :xcor (caar ,coords-list)
-				     :ycor (cdar ,coords-list)
-				     ,@(when demands `(:demand (car ,demand-list)))
-				     ,@(when time-windows `(:start (caar ,tw-list)
-								   :end (cdar ,tw-list)))
-				     ,@(when durations `(:duration (car ,dur-list))))
-		      ,nodes))
-       ,nodes)))
+  (with-gensyms (nodes id coords demand tw dur)
+    `(loop with ,nodes = (make-array (length ,node-coords) :fill-pointer 0) ;vector of nodes
+	for
+	  ,coords in ,node-coords
+	  and ,id from 0
+	  ,@(when demands `(and ,demand in ,demands))
+	  ,@(when time-windows `(and ,tw in ,time-windows))
+	  ,@(when durations `(and ,dur in ,durations))
+	do
+	  (vector-push
+	   (make-instance ,(cond (time-windows ''node-tw)
+				 (demands ''node-c)
+				 (t ''node))
+			  :id ,id
+			  :xcor (car ,coords)
+			  :ycor (cdr ,coords)
+			  ,@(when demands `(:demand ,demand))
+			  ,@(when time-windows `(:start (car ,tw) :end (cdr ,tw)))
+			  ,@(when durations `(:duration ,dur)))
+	   ,nodes)
+	finally (return ,nodes))))
