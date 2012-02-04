@@ -41,9 +41,9 @@
 
 (defun sort-ignore-nil (list predicate &key key)
   "Sorts the sequence with #'< or #'> while passing all NIL values towards the end of result."
-  (if (find-if-not #'null list)
-      (let ((ignore (cond ((eq predicate #'<) (1+ (get-max list)))
-			  ((eq predicate #'>) (1- (get-min list)))
+  (if (find-if-not #'null list :key key)
+      (let ((ignore (cond ((eq predicate #'<) (1+ (get-max list :key key)))
+			  ((eq predicate #'>) (1- (get-min list :key key)))
 			  (t (error 'unaccepted-predicate :pred predicate)))))
 	(sort (copy-list list) predicate
 	      :key #'(lambda (x) (or (if key (funcall key x) x)
@@ -64,8 +64,8 @@
 		       (insert-before obj
 				      (1- i)
 				      (cdr ls))))))
-    (if (> index (length list))
-	(error "Index out of bounds! Cannot insert-before at index larger than length of list")
+    (if (or (> index (length list)) (< index 0))
+	(error 'index-out-of-bounds :index index :ls list)
 	(iter object index list))))
 
 (defun insert-at-end (object list)
@@ -74,7 +74,8 @@
 
 (defun remove-index (index list)
   "Given a list, remove the object on index. Does not accept index out of bounds. Returns the new list AND the object that was removed."
-  (if (>= index (length list)) (error "Index is out of bound of list, cannot remove nil")
+  (if (or (>= index (length list)) (< index 0))
+      (error 'index-out-of-bounds :index index :ls list)
       (let ((item))
 	(labels ((iter (n lst)
 		   (if (= 0 n) (progn (setf item (car lst))

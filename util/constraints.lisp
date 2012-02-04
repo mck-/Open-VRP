@@ -64,7 +64,7 @@
 (defun node-fit-in-vehiclep (sol node-id vehicle-id)
   "Helper function for assessing constraints. Used by assess-move :around."
   (multiple-value-bind (comply cap-left) (in-capacityp (vehicle sol vehicle-id))
-    (if (not comply) (error "node-fit-in-vehiclep: The solution was infeasible to begin with!")
+    (if (not comply) (error 'infeasible-solution :sol sol :func #'in-capacityp)
 	(<= (node-demand (node sol node-id)) cap-left))))
 
 ;; ------------------------------
@@ -80,7 +80,7 @@
 
 (defun time-after-serving-node (node arrival-time)
   "Given a node to serve and the current time, return the new time (if on-time to begin with). When arrival-time is too early, wait till earliest start time."
-  (cond ((> arrival-time (node-end node)) (error "time-after-serving-node - too late!"))
+  (cond ((> arrival-time (node-end node)) (error 'infeasible-solution :sol node :func arrival-time :msg "Arrival time is later than latest start-time of node"))
 	((< arrival-time (node-start node)) (+ (node-start node) (node-duration node))) ;wait
 	(t (+ arrival-time (node-duration node)))))
 

@@ -133,6 +133,9 @@
 	   :time-after-serving-node
 	   :in-timep
 
+	   ;; conditions
+	   :all-moves-tabu
+
 	   :fitness
 	   ))
 

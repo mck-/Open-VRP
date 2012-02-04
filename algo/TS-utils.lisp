@@ -38,6 +38,10 @@
 (defmethod is-tabup ((ts tabu-search) (mv ts-best-insertion-move))
   (is-tabup (tabu-search-tabu-list ts) mv))
 
+(defmethod tabu-list ((ts tabu-search))
+  "Returns the tabu-list currently held in the ts-algo object."
+  (tabu-list-tabu (tabu-search-tabu-list ts)))
+
 ;; Candidate Lists
 ;; -----------------------------
 

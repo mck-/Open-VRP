@@ -108,17 +108,18 @@
 	(progn (remove-node-ID prob node-ID) (perform-move prob best-move))))
   prob)
 
-(defmethod select-move ((ts tabu-search) moves)
+(defmethod select-move ((ts tabu-search) all-moves)
   "This function selects a move from a sorted list of moves, while considering the tabu-list. If by performing the move we get a new best solution, circumvent the tabu-list."
   (if (<
-       (+ (fitness (algo-current-sol ts)) (move-fitness (car moves)))
+       (+ (fitness (algo-current-sol ts)) (move-fitness (car all-moves)))
        (algo-best-fitness ts))
-      (car moves)
+      (car all-moves)
       (labels ((iter (moves)
-		 (cond ((null moves) (error "No more moves! All are tabu! Reduce tenure!"))
+		 (cond ((null moves)
+			(error 'all-moves-tabu :moves all-moves :tabu-list (tabu-list ts)))
 		       ((is-tabup ts (car moves)) (iter (cdr moves)))
 		       (t (car moves)))))
-	(iter moves))))
+	(iter all-moves))))
 
 ;; --------------------
 ;; If there is no candidate-list
