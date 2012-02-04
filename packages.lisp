@@ -68,7 +68,7 @@
 (defpackage :open-vrp.util
   (:use :common-lisp
 	:open-vrp.classes)
-  (:import-from	:alexandria :shuffle :flatten)
+  (:import-from	:alexandria :shuffle :flatten :with-gensyms)
   (:export ;; simple utils
            :single
            :mac
@@ -78,7 +78,6 @@
 	   :while
 	   :aif
 	   :awhile
-	   :with-gensyms
 	   :it
 	   :sum
 	   :max-car
@@ -210,7 +209,7 @@
 	:open-vrp.algo
 	:open-vrp.output
 	:fiveam)
-  (:import-from	:alexandria :shuffle :flatten)
+  (:import-from	:alexandria :shuffle :flatten :with-gensyms)
   (:export :define-problem
 	   :load-testcase-Solomon
 	   :solve-prob
