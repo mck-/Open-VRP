@@ -56,17 +56,14 @@
 
 (defmacro create-vehicles (fleet-size network to-depot &optional capacities speeds)
   "Returns a list of vehicles, starting with ID 0. The starting location of their routes are all initialized at 0. When to-depot is set to T, initialize their routes with 2 base nodes (departure and destination)."
-  (with-gensyms (fleet i route)
-    `(let ((,fleet nil)
-	   (,route ,(if to-depot `(list (aref ,network 0) (aref ,network 0))
-			`(list (aref ,network 0)))))
-       (do ((,i 0 (1+ ,i)))
-	   ((= ,i ,fleet-size) (nreverse ,fleet))
-	 (push (make-instance ,(cond (speeds ''vehicle-tw)
-				     (capacities ''vehicle-c)
-				     (t ''vehicle))
-			      :id ,i
-			      :route ,route
-			      ,@(when capacities `(:capacity ,capacities))
-			      ,@(when speeds `(:speed ,speeds)))
-	       ,fleet)))))
+  (with-gensyms (route id)
+    `(let* ((base (aref ,network 0))
+	    (,route ,(if to-depot `(list base base) `(list base))))
+       (loop for ,id from 0 to (1- ,fleet-size) collect
+	    (make-instance ,(cond (speeds ''vehicle-tw)
+				  (capacities ''vehicle-c)
+				  (t ''vehicle))
+			   :id ,id
+			   :route ,route
+			   ,@(when capacities `(:capacity ,capacities))
+			   ,@(when speeds `(:speed ,speeds)))))))
