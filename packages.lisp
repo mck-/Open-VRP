@@ -135,6 +135,7 @@
 
 	   ;; conditions
 	   :all-moves-tabu
+	   :same-origin-destination
 
 	   :fitness
 	   ))

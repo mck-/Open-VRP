@@ -38,7 +38,8 @@
 		  (-
 		   (+ (distance node-ID node-before dist-array)
 		      (distance node-ID node-after dist-array)) 
-		   (or (distance node-before node-after dist-array) 0)))))))) ; NIL -> 0
+		   (handler-case (distance node-before node-after dist-array)
+		     (same-origin-destination () 0)))))))))
 
 ;; around method for checking constraints. If move is infeasible, return NIL.
 (defmethod assess-move :around ((sol CVRP) (m insertion-move))
