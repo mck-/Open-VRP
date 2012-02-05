@@ -30,7 +30,7 @@
 				   :filename ,plot-filename)))
        (make-instance ,@(cond (time-windows-list '('vrptw))
 			      (capacity '('cvrp))
-			      (t '('vrp)))
+			      (t '('problem)))
 		      :name ,name :fleet ,fleet :network ,network :dist-array (generate-dist-array ,node-coords-list) :to-depot ,to-depot :drawer ,drawer))))
 	  
 	   
