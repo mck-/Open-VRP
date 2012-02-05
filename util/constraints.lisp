@@ -42,18 +42,19 @@
 ;; ------------------------
 
 (defgeneric in-capacityp (veh/problem)
-  (:method (obj) "Expects a <Vehicle>/<Problem> object!")
-  (:documentation "Tests weather the route on <vehicle> is complying with the capacity constraint. Returns T and the remaining capacity if it does. When <Problem> is provided, test all vehicles."))
+  (:method (obj) "Expects a <Vehicle>/<CVRP> object!")
+  (:documentation "Tests weather the route on <vehicle> is complying with the capacity constraint. Returns T and the remaining capacity if it does. When <CVRP> is provided, test all vehicles."))
 
- (defmethod in-capacityp ((v vehicle))
-   (constraints-check
-    (route cap)
-    ((vehicle-route v) (vehicle-capacity v))
-    ((cdr route) (- cap (node-demand (car route))))
-    (<= (node-demand (car route)))
-    (null route)))
+(defmethod in-capacityp ((v vehicle))
+  (unless (vehicle-capacity v) (error 'no-capacities-vehicle :veh v))
+  (constraints-check
+   (route cap)
+   ((vehicle-route v) (vehicle-capacity v))
+   ((cdr route) (- cap (node-demand (car route))))
+   (<= (node-demand (car route)))
+   (null route)))
 
-(defmethod in-capacityp ((pr problem))
+(defmethod in-capacityp ((pr CVRP))
   (constraints-check
    (flt)
    ((problem-fleet pr))
@@ -95,7 +96,8 @@
 ;;   if arrival after begin-time -> set time to arrival + duration
 
 ;; check for one vehicle
-(defmethod in-timep ((v vehicle-TW))
+(defmethod in-timep ((v vehicle))
+  (unless (vehicle-speed v) (error 'no-speed-vehicle :veh v))
   (symbol-macrolet ((to (car route))
 		    (arr-time (+ time (travel-time loc to))))
     (constraints-check
