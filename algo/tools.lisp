@@ -4,6 +4,7 @@
 ;;; - get-closest-vehicle
 ;;; - get-closest-feasible-vehicle
 ;;; - optimal-insertion
+;;; - init-algo
 
 (in-package :open-vrp.algo)
 
@@ -21,51 +22,60 @@
     (aif (get-min-index-with-tabu dists tabu)
 	 (node prob it)
 	 nil)))
+;; --------------------------
 
 ;; Closest Vehicle
 ;; ---------------------------
+(defun dists-to-vehicles (node prob)
+  "Given a <Node> and a <Problem>, return the list of all the distances from the <Node> to the current positions of the fleet. Used by get-closest-(feasible)-vehicle."
+  (mapcar #'(lambda (x) (node-distance (last-node x) node)) (problem-fleet prob)))
+
 ;; challenge: what if the vehicle is located on the node n - use only for initial insertion?
 (defun get-closest-vehicle (n prob)
   "Returns the closest <vehicle> to <node>. Used by insertion heuristic. When multiple <vehicle> are on equal distance, choose first one (i.e. lowest ID)."
-  (let ((dists (mapcar #'(lambda (x) (node-distance (last-node x) n)) (problem-fleet prob))))
-    (vehicle prob (get-min-index dists))))
+  (vehicle prob (get-min-index (dists-to-vehicles n prob))))
+;; -------------------------
 
-;; challenge: below code can be improved by re-using constraints checker funcs in some way.
+;; Closest Feasible Vehicle
+;; ----------------------------
 (defmethod get-closest-feasible-vehicle ((n node) (prob problem))
   (get-closest-vehicle n prob))
 
+;; Capacity check
+(defun capacities-left (prob)
+  "Returns a list of all capacities left on the vehicles given the present solution."
+  (mapcar #'(lambda (x) (multiple-value-bind (c cap)
+			    (in-capacityp x) (when c cap)))
+	  (problem-fleet prob)))
+
 (defmethod get-closest-feasible-vehicle ((n node) (prob CVRP))
-  (let* ((vehicles (problem-fleet prob))
-	 (dists (mapcar #'(lambda (x) (node-distance (last-node x) n)) vehicles))
-	 (caps (mapcar #'(lambda (x)
-			   (multiple-value-bind (c cap)
-			       (in-capacityp x) (when c cap)))
-		       vehicles))
-	 (filtered (mapcar #'(lambda (dist cap)
-			       (if (> (node-demand n) cap) nil dist))
-			   dists caps)))
-    (vehicle prob (get-min-index filtered))))	   
+  "Returns the vehicle closest to the node and has enough capacity." 
+  (vehicle prob (get-min-index
+		 (mapcar #'(lambda (dist cap)
+			     (unless (> (node-demand n) cap) dist))
+			 (dists-to-vehicles n prob)
+			 (capacities-left prob)))))
+
+;; Time-window check
+(defun times-of-arriving (node prob)
+  "Returns a list of arrival times of the vehicles to node given the present solution."
+  (mapcar #'(lambda (x)
+	      (multiple-value-bind (c time)
+		  (in-timep x) (when c (+ time (travel-time (last-node x) node)))))
+	  (problem-fleet prob)))
 
 ;; for VRPTW, consider both capacity and time. Feasiblility of appending at the end only.
+;; use get-best-insertion instead for inserting feasibly into routes.
 (defmethod get-closest-feasible-vehicle ((n node) (prob VRPTW))
-  (let* ((vehicles (problem-fleet prob))
-	 (dists (mapcar #'(lambda (x) (node-distance (last-node x) n)) vehicles))
-	 (times (mapcar #'(lambda (x)
-			    (multiple-value-bind (c time)
-				(in-timep x) (when c time)))
-			vehicles))
-	 (caps (mapcar #'(lambda (x)
-			   (multiple-value-bind (c cap)
-			       (in-capacityp x) (when c cap)))
-		       vehicles))
-	 (filtered (mapcar #'(lambda (veh dist time cap)
-			       (if (or (> (node-demand n) cap)
-				       (> (+ time (travel-time (last-node veh) n))
-					  (node-end n)))
-				   nil
-				   dist))
-			   vehicles dists times caps)))
-    (vehicle prob (get-min-index filtered))))	   
+  "Returns the vehicle closest to the node and has enough capacity and time."
+  (vehicle prob (get-min-index 
+		 (mapcar #'(lambda (dist arr-time cap)
+			     (unless (or (> (node-demand n) cap)
+					 (> arr-time (node-end n)))
+			       dist))
+			 (dists-to-vehicles n prob)
+			 (times-of-arriving n prob)
+			 (capacities-left prob)))))
 
 ;; ----------------------
 
