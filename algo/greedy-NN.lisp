@@ -15,7 +15,5 @@
   (let ((v (vehicle p 0)))
     (awhile (get-closest-node p 0 (route-indices v))
       (append-node v it)))
-  (setf (algo-best-sol a) p
-	(algo-current-sol a) p
-	(algo-best-fitness a) (fitness p))
+  (init-algo p a)
   a)

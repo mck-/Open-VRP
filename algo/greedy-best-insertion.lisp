@@ -15,9 +15,7 @@
   "Randomly insert <Nodes> one by one to best <vehicle> in best location. Returns <Algo> object when done."
   (loop for node in (shuffle (cdr (map 'list #'(lambda (n) n) (problem-network p))))
      do (perform-move p (optimal-insertion p node))
-       finally (setf (algo-best-sol a) p
-		     (algo-current-sol a) p
-		     (algo-best-fitness a) (fitness p)))
-  a)
+     finally (init-algo p a)
+     (return a)))
 			
   

@@ -27,9 +27,7 @@
   "Creates inital solution and sets it to :algo-current-sol. Returns the <tabu-search> object."
   (let ((init-sol (algo-current-sol
 		   (solve-prob prob (make-instance (tabu-search-init-heur ts))))))
-    (setf (algo-current-sol ts) init-sol
-	  (algo-best-sol ts) (copy-object init-sol)
-	  (algo-best-fitness ts) (fitness init-sol)))	
+    (init-algo init-sol ts))
   ts)
 
 ;; Original attempt was to make generate-moves a general method - using the move-type slot of ts - which can be used to generate all sorts of moves e.g. swap moves.. but the method below enumerates only along node-id (excluding 0) and vehicle-id. This may only be useful for TS-best-insertion-move?? For other moves, we need to define other defmethods?

@@ -89,3 +89,12 @@
 			     new
 			     best-move))))))
     (iter (problem-fleet sol) nil)))
+
+;; -------------------------
+
+;; Algo object initializing macro
+;; -------------------------
+(defmacro init-algo (prob algo)
+  `(setf (algo-current-sol ,algo) ,prob
+	 (algo-best-sol ,algo) (copy-object ,prob)
+	 (algo-best-fitness ,algo) (fitness ,prob)))

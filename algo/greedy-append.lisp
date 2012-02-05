@@ -19,8 +19,6 @@
   (loop for id in (random-list-permutation (1- (length (problem-network p))))
      do (append-node (get-closest-feasible-vehicle (node p id) p) ; closest vehicle
 		     (node p id))
-     finally (setf (algo-best-sol a) p
-		   (algo-current-sol a) p
-		   (algo-best-fitness a) (fitness p))
+     finally (init-algo p a)
        (return a)))
        
