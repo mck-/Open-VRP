@@ -34,9 +34,10 @@
 	       (if (null (cdr togo)) sum
 		   (iter (cdr togo)
 			 (+ sum
-			    (distance (node-id (car togo))
-				      (node-id (cadr togo))
-				      dist-array))))))
+			    (handler-case (distance (node-id (car togo))
+						    (node-id (cadr togo))
+						    dist-array)
+			      (same-origin-destination () 0)))))))
       (iter route 0))))
 	       
 
