@@ -18,6 +18,7 @@
 	       (:file "util/draw-solution")
 	       (:file "util/solver")
 	       (:file "util/constraints")
+	       (:file "conditions")
 	       ;; data
 	       (:file "init-macros")
 	       (:file "util/read-solomon")
