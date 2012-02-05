@@ -12,6 +12,12 @@
   ((index :initarg :index :reader index)
    (ls :initarg :ls :reader ls)))
 
+;; util/network.lisp
+(define-condition same-origin-destination (error)
+  ((from :initarg :from :reader from)
+   (to :initarg :to :reader to))
+  (:report "Trying to lookup distance for same origin and destination - NIL"))
+
 ;; constraints.lisp
 (define-condition infeasible-solution (error)
   ((sol :initarg :sol :reader sol)
