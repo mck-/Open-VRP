@@ -1,5 +1,5 @@
 ;;; All class definitions for CLOS VRP
-;;; Node, Vehicle, Algo, Problem objects are all designed to be extensible
+;;; Node, Vehicle, Problem, Drawer and Algo objects
 (in-package :open-vrp.classes)
 
 ;; The node object
@@ -8,15 +8,11 @@
 (defclass node ()
   ((id :reader node-id :initarg :id)
    (xcor :reader node-xcor :initarg :xcor)
-   (ycor :reader node-ycor :initarg :ycor)))
-
-(defclass node-C (node)
-  ((demand :reader node-demand :initarg :demand)))
-
-(defclass node-TW (node-C)
-  ((start :reader node-start :initarg :start)
+   (ycor :reader node-ycor :initarg :ycor)
+   (demand :reader node-demand :initarg :demand)
+   (start :reader node-start :initarg :start)
    (end :reader node-end :initarg :end)
-   (duration :reader node-duration :initarg :duration)))
+   (duration :reader node-duration :initarg :duration :initform 0)))
 ;; --------------------------
 
 ;; The vehicle object
@@ -24,14 +20,9 @@
 
 (defclass vehicle ()
   ((id :reader vehicle-id :initarg :id)
-   (route :accessor vehicle-route :initarg :route :initform nil)))
-
-(defclass vehicle-C (vehicle)
-  ((capacity :reader vehicle-capacity :initarg :capacity)))
-
-(defclass vehicle-TW (vehicle-C)
-  ((speed :accessor vehicle-speed :initarg :speed :initform 1)))
-
+   (route :accessor vehicle-route :initarg :route)
+   (capacity :reader vehicle-capacity :initarg :capacity)
+   (speed :accessor vehicle-speed :initarg :speed)))
 ;; ----------------------------
 
 ;; The problem object class
@@ -39,19 +30,15 @@
 ;; NOTE: The <Problem> object is also a <Solution> object interchangably.
 
 (defclass problem ()
-  ((name :reader problem-name :initarg :name)
-   (desc :reader problem-desc :initarg :desc)
+  ((name :reader problem-name :initarg :name :initform "VRP")
+   (desc :reader problem-desc :initarg :desc :initform "Vehicle Routing Problem")
    (network :reader problem-network :initarg :network)
    (dist-array :accessor problem-dist-array :initarg :dist-array)
    (fleet :reader problem-fleet :initarg :fleet)
    (to-depot :accessor problem-to-depot :initarg :to-depot :initform T)
    (drawer :accessor problem-drawer :initarg :drawer)))
 
-(defclass VRP (Problem)
-  ((name :initform "VRP")
-   (desc :initform "Vehicle Routing Problem")))
-
-(defclass CVRP (VRP)
+(defclass CVRP (problem)
   ((name :initform "CVRP")
    (desc :initform "Capacitated Vehicle Routing Problem")))
 
