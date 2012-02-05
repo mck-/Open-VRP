@@ -75,9 +75,10 @@
 
 (defun travel-time (n1 n2 &optional (speed 1))
   "Given two <nodes> and optional speed, return the travel-time."
-  (if (= (node-id n1) (node-id n2)) 0
-      (/ (node-distance n1 n2)
-	 speed)))
+  (handler-case
+      (/ (node-distance n1 n2) speed)
+    (same-origin-destination () 0)))
+	 
 
 (defun time-after-serving-node (node arrival-time)
   "Given a node to serve and the current time, return the new time (if on-time to begin with). When arrival-time is too early, wait till earliest start time."

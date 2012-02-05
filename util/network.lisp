@@ -27,6 +27,7 @@
   (:documentation "Given two node objects, calculate and return their distance (Cartesian)."))
 
 (defmethod node-distance ((n1 node) (n2 node))
+  (when (= (node-id n1) (node-id n2)) (error 'same-origin-destination :from n1 :to n2))
   (let ((x1 (node-xcor n1)) (y1 (node-ycor n1))
 	(x2 (node-xcor n2)) (y2 (node-ycor n2)))
     (distance-coords x1 y1 x2 y2)))
