@@ -7,6 +7,7 @@
 
 (defun distance (i j dist-array)
   "Read from the distance-table with two indices."
+  (when (= i j) (error 'same-origin-destination :from i :to j))
   (aref dist-array i j))
 
 (defun distance-coords (x1 y1 x2 y2)
@@ -75,9 +76,7 @@
 	  ,@(when durations `(and ,dur in ,durations))
 	do
 	  (vector-push
-	   (make-instance ,(cond (time-windows ''node-tw)
-				 (demands ''node-c)
-				 (t ''node))
+	   (make-instance 'node
 			  :id ,id
 			  :xcor (car ,coords)
 			  :ycor (cdr ,coords)

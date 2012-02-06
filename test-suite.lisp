@@ -31,14 +31,14 @@
 
 ;; capacity constraint tests
 ;; Could not use symbol-macro-let, since FiveAM's test macro won't allow lexical scoping
-(define-symbol-macro full-v (make-instance 'vehicle-c
+(define-symbol-macro full-v (make-instance 'vehicle
 					   :capacity 2
-					   :route (list (make-instance 'node-c :demand 1)
-							(make-instance 'node-c :demand 1))))
-(define-symbol-macro overfull-v (make-instance 'vehicle-c
+					   :route (list (make-instance 'node :demand 1)
+							(make-instance 'node :demand 1))))
+(define-symbol-macro overfull-v (make-instance 'vehicle
 					       :capacity 2
-					       :route (list (make-instance 'node-c :demand 1)
-							    (make-instance 'node-c :demand 2))))
+					       :route (list (make-instance 'node :demand 1)
+							    (make-instance 'node :demand 2))))
 (test capacity-veh-in
   (is (in-capacityp full-v)))
 
@@ -53,11 +53,12 @@
 
 ;; time window tests
 (defmacro make-node-tw (id x y start end duration)
-  `(make-instance 'node-tw :id ,id :xcor ,x :ycor ,y :start ,start :end ,end :duration ,duration))
+  `(make-instance 'node :id ,id :xcor ,x :ycor ,y :start ,start :end ,end :duration ,duration))
 
 (define-symbol-macro on-time-v
     (make-instance
-     'vehicle-tw
+     'vehicle
+     :speed 1
      :route (list
 	     (make-node-tw 1 1 0 0 2 1)
 	     (make-node-tw 2 2 0 0 2 1) 
@@ -66,7 +67,8 @@
 
 (define-symbol-macro late-v-duration
     (make-instance
-     'vehicle-tw
+     'vehicle
+     :speed 1
      :route (list
 	     (make-node-tw 1 1 0 0 2 10)
 	     (make-node-tw 2 2 0 0 2 1)
@@ -75,7 +77,7 @@
 
 (define-symbol-macro late-v-speed
     (make-instance
-     'vehicle-tw
+     'vehicle
      :speed 0.5
      :route (list
 	     (make-node-tw 1 1 0 0 2 1)

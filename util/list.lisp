@@ -83,7 +83,7 @@
 		   (cons (car lst)
 			 (iter (1- n)
 			       (cdr lst))))))
-      (values (iter index list) item)))))
+      (values (iter index list) item))))
 
 (defun mark-nill (list indices)
   "Marks the indices on list with NIL. DESTRUCTIVE."

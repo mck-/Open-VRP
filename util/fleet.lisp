@@ -61,9 +61,7 @@
     `(let* ((base (aref ,network 0))
 	    (,route ,(if to-depot `(list base base) `(list base))))
        (loop for ,id from 0 to (1- ,fleet-size) collect
-	    (make-instance ,(cond (speeds ''vehicle-tw)
-				  (capacities ''vehicle-c)
-				  (t ''vehicle))
+	    (make-instance 'vehicle
 			   :id ,id
 			   :route ,route
 			   ,@(when capacities `(:capacity ,capacities))
