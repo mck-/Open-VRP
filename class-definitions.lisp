@@ -42,9 +42,13 @@
   ((name :initform "CVRP")
    (desc :initform "Capacitated Vehicle Routing Problem")))
 
-(defclass VRPTW (CVRP)
+(defclass VRPTW (problem)
   ((name :initform "VRPTW")
-   (desc :initform "(Capacitated) Vehicle Routing Problem with Time Windows")))
+   (desc :initform "Vehicle Routing Problem with Time Windows")))
+
+(defclass CVRPTW (CVRP VRPTW)
+  ((name :initform "CVRPTW")
+   (desc :initform "Capacitated Vehicle Routing Problem with Time Windows")))
 
 ;; ----------------------
 
