@@ -6,7 +6,7 @@
 ;;; - multi-run (int algo-call)          - Run algo int times - collect all results
 ;;; - get-best-solution-from-multi-run   - returns the best solution from collection
 ;;; ----------------------------
-(in-package :open-vrp.algo)
+(in-package :open-vrp.util)
 
 ;; Run Algo
 ;; -------------------------

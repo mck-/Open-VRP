@@ -133,6 +133,15 @@
 	   :time-after-serving-node
 	   :in-timep
 
+	   ;; solver
+	   :run-algo
+	   :*algo-backup*
+	   :solve-prob
+	   :solve-plot
+	   :multi-run
+	   :get-best-solution-from-multi-run
+	   :multi-run-algo
+
 	   ;; conditions
 	   :all-moves-tabu
 	   :same-origin-destination
@@ -159,14 +168,7 @@
 	:open-vrp.util
 	:open-vrp.output)
   (:import-from :alexandria :shuffle :flatten)  
-  (:export :run-algo
-	   :*algo-backup*
-	   :solve-prob
-	   :solve-plot
-	   :multi-run
-	   :get-best-solution-from-multi-run
-	   
-	   ;; tools
+  (:export ;; tools
 	   :get-closest-vehicle
 	   :get-closest-feasible-vehicle
 	   :optimal-insertion
