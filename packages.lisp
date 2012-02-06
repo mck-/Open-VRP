@@ -63,8 +63,9 @@
 
 (defpackage :open-vrp.util
   (:use :common-lisp
-	:open-vrp.classes)
-  (:import-from	:alexandria :shuffle :flatten :with-gensyms)
+	:open-vrp.classes
+	:vecto)
+  (:import-from	:alexandria :shuffle :flatten :with-gensyms :mean :standard-deviation)
   (:export ;; simple utils
            :single
            :mac
@@ -138,6 +139,13 @@
 	   :get-best-solution-from-multi-run
 	   :multi-run-algo
 
+	   ;; output
+	   :print-routes
+	   :print-multi-run-stats
+	   :plot-solution
+	   :plot-nodes
+	   :toggle-legend
+	   
 	   ;; conditions
 	   :all-moves-tabu
 	   :same-origin-destination
@@ -145,24 +153,10 @@
 	   :fitness
 	   ))
 
-
-(defpackage :open-vrp.output
-  (:use :common-lisp
-	:open-vrp.classes
-	:open-vrp.util
-   	:vecto)
-  (:import-from :alexandria :mean :standard-deviation)
-  (:export :print-routes
-	   :print-multi-run-stats
-	   :plot-solution
-	   :plot-nodes
-	   :toggle-legend))
-
 (defpackage :open-vrp.algo
   (:use :common-lisp
 	:open-vrp.classes
-	:open-vrp.util
-	:open-vrp.output)
+	:open-vrp.util)
   (:import-from :alexandria :shuffle :flatten)  
   (:export ;; tools
 	   :get-closest-vehicle
@@ -209,7 +203,6 @@
 	:open-vrp.classes
 	:open-vrp.util
 	:open-vrp.algo
-	:open-vrp.output
 	:fiveam)
   (:import-from	:alexandria :shuffle :flatten :with-gensyms)
   (:export :define-problem

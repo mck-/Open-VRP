@@ -4,7 +4,7 @@
 ;;; Use (plot-solution <problem>)
 ;;; (plot-nodes <problem>) for just the nodes.
 
-(in-package :open-vrp.output)
+(in-package :open-vrp.util)
 
 (defparameter *r* 0)
 (defparameter *g* 0)

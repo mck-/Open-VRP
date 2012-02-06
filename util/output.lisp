@@ -1,7 +1,7 @@
 ;;; Thu 29 Dec, 2011 (c) Marc Kuo
 ;;; Output functions
 ;;; --------------------------
-(in-package :open-vrp.output)
+(in-package :open-vrp.util)
 
 ;; Print solution
 (defgeneric print-routes (solution)
