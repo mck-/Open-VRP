@@ -43,13 +43,13 @@
   (is (in-capacityp full-v)))
 
 (test capacity-veh-out
-  (is (null (not (in-capacityp overfull-v)))))
+  (is (not (in-capacityp overfull-v))))
 
 (test capacity-fleet-in
   (is (in-capacityp (make-instance 'cvrp :fleet (list full-v full-v full-v)))))
 
 (test capacity-fleet-out
-  (is (null (not (in-capacityp (make-instance 'cvrp :fleet (list overfull-v full-v)))))))
+  (is (not (in-capacityp (make-instance 'cvrp :fleet (list overfull-v full-v))))))
 
 ;; time window tests
 (defmacro make-node-tw (id x y start end duration &optional demand)
@@ -128,4 +128,4 @@
   (is (constraintsp (make-instance 'cvrptw :fleet (list on-time-and-in-cap-v on-time-and-in-cap-v)))))
 
 (test tw-and-cap-test-fail
-  (is (constraintsp (make-instance 'cvrptw :fleet (list on-time-and-in-cap-v on-time-but-overfull-v)))))
+  (is (not (constraintsp (make-instance 'cvrptw :fleet (list on-time-and-in-cap-v on-time-but-overfull-v))))))
