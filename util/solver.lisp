@@ -63,10 +63,10 @@
 ;; Multi-run
 ;; ---------------------------
 
-(defmacro multi-run (times algo-call)
+(defmacro multi-run (times &body algo-call)
   "Run algo x times and collect all resulting solution objects in a list."
   `(loop for ,(gensym) below ,times
-	collect ,algo-call into solutions
+	collect ,@algo-call into solutions
 	finally (return solutions)))
 
 (defun get-best-solution-from-multi-run (solutions)
@@ -79,4 +79,11 @@
 			   best))
 		 best)))
     (iter (cdr solutions) (car solutions))))
-	
+
+(defmacro multi-run-algo (times &body algo-call)
+  `(let* ((results (multi-run ,times ,@algo-call))
+	  (best (get-best-solution-from-multi-run results)))
+     (print-multi-run-stats results)
+     (print-routes best)
+     best))
+
