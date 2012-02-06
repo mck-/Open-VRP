@@ -5,11 +5,7 @@
 (defpackage :open-vrp.classes
   (:use :common-lisp)
   (:export :node
-	   :node-C
-	   :node-TW
 	   :vehicle
-	   :vehicle-C
-	   :vehicle-TW
 	   :problem
 	   :VRP
 	   :CVRP
