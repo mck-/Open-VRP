@@ -57,6 +57,8 @@
 
 (defun insert-before (object index list)
   "Insert object before index of list. 0 implies inserting in front, length of list implies appending at the end. Throws index out of bounds when index is larger."
+  (unless (<= 0 index (length list))
+    (error 'index-out-of-bounds :index index :ls list))
   (labels ((iter (obj i ls)
 	     (if (= 0 i)
 		 (cons obj ls)
@@ -64,9 +66,7 @@
 		       (insert-before obj
 				      (1- i)
 				      (cdr ls))))))
-    (if (or (> index (length list)) (< index 0))
-	(error 'index-out-of-bounds :index index :ls list)
-	(iter object index list))))
+    (iter object index list)))
 
 (defun insert-at-end (object list)
   "Appends the object at the end of the list"
@@ -74,16 +74,16 @@
 
 (defun remove-index (index list)
   "Given a list, remove the object on index. Does not accept index out of bounds. Returns the new list AND the object that was removed."
-  (if (or (>= index (length list)) (< index 0))
-      (error 'index-out-of-bounds :index index :ls list)
-      (let ((item))
-	(labels ((iter (n lst)
-		   (if (= 0 n) (progn (setf item (car lst))
-				      (cdr lst))
-		       (cons (car lst)
-			     (iter (1- n)
-				   (cdr lst))))))
-	  (values (iter index list) item)))))
+  (unless (< -1 index (length list))
+    (error 'index-out-of-bounds :index index :ls list))
+  (let ((item))
+    (labels ((iter (n lst)
+	       (if (= 0 n) (progn (setf item (car lst))
+				  (cdr lst))
+		   (cons (car lst)
+			 (iter (1- n)
+			       (cdr lst))))))
+      (values (iter index list) item)))))
 
 (defun mark-nill (list indices)
   "Marks the indices on list with NIL. DESTRUCTIVE."
