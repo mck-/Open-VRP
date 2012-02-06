@@ -52,8 +52,9 @@
   (is (null (not (in-capacityp (make-instance 'cvrp :fleet (list overfull-v full-v)))))))
 
 ;; time window tests
-(defmacro make-node-tw (id x y start end duration)
-  `(make-instance 'node :id ,id :xcor ,x :ycor ,y :start ,start :end ,end :duration ,duration))
+(defmacro make-node-tw (id x y start end duration &optional demand)
+  `(make-instance 'node :id ,id :xcor ,x :ycor ,y :start ,start :end ,end :duration ,duration
+		  ,@(when demand `(:demand ,demand))))
 
 (define-symbol-macro on-time-v
     (make-instance
@@ -100,3 +101,31 @@
 
 (test time-window-test-fleet-late
   (is (in-timep (make-instance 'vrptw :fleet (list on-time-v late-v-speed on-time-v)))))
+
+(define-symbol-macro on-time-and-in-cap-v
+    (make-instance
+     'vehicle
+     :speed 1
+     :capacity 10
+     :route (list
+	     (make-node-tw 1 1 0 0 2 1 3)
+	     (make-node-tw 2 2 0 0 2 1 1) 
+	     (make-node-tw 3 3 0 5 8 2 1)
+	     (make-node-tw 4 4 0 0 10 1 1))))
+
+(define-symbol-macro on-time-but-overfull-v
+    (make-instance
+     'vehicle
+     :speed 1
+     :capacity 2
+     :route (list
+	     (make-node-tw 1 1 0 0 2 1 3)
+	     (make-node-tw 2 2 0 0 2 1 1) 
+	     (make-node-tw 3 3 0 5 8 2 1)
+	     (make-node-tw 4 4 0 0 10 1 1))))
+
+(test tw-and-cap-test-ok
+  (is (constraintsp (make-instance 'cvrptw :fleet (list on-time-and-in-cap-v on-time-and-in-cap-v)))))
+
+(test tw-and-cap-test-fail
+  (is (constraintsp (make-instance 'cvrptw :fleet (list on-time-and-in-cap-v on-time-but-overfull-v)))))
