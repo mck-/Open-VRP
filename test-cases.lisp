@@ -1,4 +1,3 @@
-;; Thu Nov 10, 2011 (c) Marc Kuo
 ;; Some test instances
 ;; -----------------------
 (in-package :open-vrp)
@@ -16,7 +15,7 @@
 	(cons -2 -2)))
 
 ;; Initialization of objects
-(defvar test-tsp (define-problem "test-case-TSP" *node-coords* 1 "plots/test-tsp.png" nil))
-(defvar test-vrp (define-problem "test-case-VRP" *node-coords* 2 "plots/test-vrp.png" T))
-(defvar solomon25 (load-testcase-solomon "/home/mck/CL/Open-VRP/test-cases/25-cust.txt"))
-(defvar solomon100 (load-testcase-solomon "/home/mck/CL/Open-VRP/test-cases/100-cust.txt"))
+(defvar test-tsp (define-problem "test-case-TSP" *node-coords* 1 nil))
+(defvar test-vrp (define-problem "test-case-VRP" *node-coords* 2 T))
+(defvar solomon25 (load-testcase-solomon "test-cases/25-cust.txt"))
+(defvar solomon100 (load-testcase-solomon "test-cases/100-cust.txt"))

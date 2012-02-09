@@ -113,6 +113,7 @@
 	   :generate-dist-array
 	   :get-array-row
 	   :node
+	   :new-node
 	   :create-nodes
 
 	   ;; fleet utils
@@ -120,13 +121,13 @@
 	   :vehicle-with-node-ID
 	   :total-dist
 	   :vehicle
+	   :new-vehicle
 	   :create-vehicles
 
 	   ;; constraint utils
 	   :constraints-check
 	   :constraintsp
 	   :in-capacityp
-	   :node-fit-in-vehiclep
 	   :travel-time
 	   :time-after-serving-node
 	   :in-timep
@@ -212,4 +213,17 @@
 	   :iterate-more
 	   :solve-plot
 	   :plot-solution
-	   :run!))
+	   :run!
+	   :print-routes
+
+	   ;; algos
+	   :tabu-search
+	   :greedy-NN
+	   :greedy-append
+	   :greedy-best-insertion
+	   
+	   ;; demos
+	   :test-tsp
+	   :test-vrp
+	   :solomon25
+	   :solomon100))

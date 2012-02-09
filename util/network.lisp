@@ -63,25 +63,28 @@
 
 ;; Initializing functions
 ;; ------------------
+(defmacro new-node (id xcor ycor &key demand start end duration)
+  `(make-instance 'node :id ,id :xcor ,xcor :ycor ,ycor
+		  ,@(when demand `(:demand ,demand))
+		  ,@(when start `(:start ,start))
+		  ,@(when end `(:end ,end))
+		  ,@(when duration `(:duration ,duration))))
 
-(defmacro create-nodes (node-coords &optional demands time-windows durations)
-  "Given a coord-list, return a vector of nodes. The nodes are created and numbered starting from 0, which is the base node. By default creates normal nodes. When node-demands are provided, it creates node-C (nodes with demand). With time-windows and durations, creates node-TW."
+(defmacro create-nodes (node-coords &key demands time-windows durations)
+  "Given a coord-list, return a vector of nodes. The nodes are created and numbered starting from 0, which is the base node. For additional parameters demands and durations, may accept a single value which would apply to all the nodes. Otherwise, accept a list with the same length as node-coords, in which each element specifies the node attributes."
   (with-gensyms (nodes id coords demand tw dur)
     `(loop with ,nodes = (make-array (length ,node-coords) :fill-pointer 0) ;vector of nodes
 	for
 	  ,coords in ,node-coords
 	  and ,id from 0
-	  ,@(when demands `(and ,demand in ,demands))
+	  ,@(when (consp demands) `(and ,demand in ,demands))
 	  ,@(when time-windows `(and ,tw in ,time-windows))
-	  ,@(when durations `(and ,dur in ,durations))
+	  ,@(when (consp durations) `(and ,dur in ,durations))
 	do
 	  (vector-push
-	   (make-instance 'node
-			  :id ,id
-			  :xcor (car ,coords)
-			  :ycor (cdr ,coords)
-			  ,@(when demands `(:demand ,demand))
-			  ,@(when time-windows `(:start (car ,tw) :end (cdr ,tw)))
-			  ,@(when durations `(:duration ,dur)))
+	   (new-node ,id (car ,coords) (cdr ,coords)
+		     ,@(when demands `(:demand ,(if (consp demands) demand demands)))
+		     ,@(when time-windows `(:start (car ,tw) :end (cdr ,tw)))
+		     ,@(when durations `(:duration ,(if (consp durations) dur durations))))
 	   ,nodes)
 	finally (return ,nodes))))

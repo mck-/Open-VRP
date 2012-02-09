@@ -24,4 +24,7 @@
 	 collect (read in) into max-times
 	 collect (read in) into service-duration
 	 finally
-	   (return (define-problem name (couple-lists x-coords y-coords) fleet-size (concatenate 'string "plots/" (string name) ".png") T demands capacities (couple-lists min-times max-times) service-duration))))))
+	   (return (define-problem name (couple-lists x-coords y-coords) fleet-size T
+				   :demands demands :capacities capacities
+				   :time-windows-list (couple-lists min-times max-times)
+				   :durations service-duration))))))

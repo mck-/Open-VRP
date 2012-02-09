@@ -54,15 +54,20 @@
 ;; (added Wed Nov 9,2011)
 ;; --------------------
 ;; Requires a network object to initialize the base locations
+(defmacro new-vehicle (id base-node to-depot &key capacity speed)
+  `(make-instance 'vehicle
+		  :id ,id
+		  :route ,(if to-depot `(list ,base-node ,base-node) `(list ,base-node))
+		  ,@(when capacity `(:capacity ,capacity))
+		  ,@(when speed `(:speed ,speed))))
 
-(defmacro create-vehicles (fleet-size network to-depot &optional capacities speeds)
-  "Returns a list of vehicles, starting with ID 0. The starting location of their routes are all initialized at 0. When to-depot is set to T, initialize their routes with 2 base nodes (departure and destination)."
-  (with-gensyms (route id)
-    `(let* ((base (aref ,network 0))
-	    (,route ,(if to-depot `(list base base) `(list base))))
-       (loop for ,id from 0 to (1- ,fleet-size) collect
-	    (make-instance 'vehicle
-			   :id ,id
-			   :route ,route
-			   ,@(when capacities `(:capacity ,capacities))
-			   ,@(when speeds `(:speed ,speeds)))))))
+(defmacro create-vehicles (fleet-size base-node to-depot &key capacities speeds)
+  "Returns a list of vehicles, starting with ID 0. The starting location of their routes are all initialized at base-node. When to-depot is set to T, initialize their routes with 2 base nodes (departure and destination). When capacities or speeds is a number, create a homogenous fleet. When lists are provided, creates a heterogenous fleet."
+  (with-gensyms (id capacity speed)
+  `(loop for ,id from 0 to (1- ,fleet-size)
+	,@(when (consp capacities) `(and ,capacity in ,capacities))
+	,@(when (consp speeds) `(and ,speed in ,speeds))
+      collect
+	(new-vehicle ,id ,base-node ,to-depot
+		     ,@(when capacities `(:capacity ,(if (consp capacities) capacity capacities)))
+		     ,@(when speeds `(:speed ,(if (consp speeds) speed speeds)))))))
