@@ -18,6 +18,6 @@
 
 (defun print-multi-run-stats (algo-objects)
   "Given a list of algo-objects returned by multi-run, print run-stats."
-  (let ((results (mapcar #'algo-best-fitness solutions)))    
+  (let ((results (mapcar #'algo-best-fitness algo-objects)))    
     (format t "~&Runs: ~8a~%Max: ~8a~%Min: ~8a~%Avg: ~8a~%Std: ~8a~%"
 	    (length results) (get-max results) (get-min results) (mean results) (standard-deviation results))))
