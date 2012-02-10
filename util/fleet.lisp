@@ -62,12 +62,12 @@
 		  ,@(when speed `(:speed ,speed))))
 
 (defmacro create-vehicles (fleet-size base-node to-depot &key capacities speeds)
-  "Returns a list of vehicles, starting with ID 0. The starting location of their routes are all initialized at base-node. When to-depot is set to T, initialize their routes with 2 base nodes (departure and destination). When capacities or speeds is a number, create a homogenous fleet. When lists are provided, creates a heterogenous fleet."
+  "Returns a list of vehicles, starting with ID 0. The starting location of their routes are all initialized at base-node. When to-depot is set to T, initialize their routes with 2 base nodes (departure and destination). For capacities and speeds, accepts a list that is of equal lenght to fleet-size. A shorter list will return a smaller fleet."
   (with-gensyms (id capacity speed)
   `(loop for ,id from 0 to (1- ,fleet-size)
-	,@(when (consp capacities) `(and ,capacity in ,capacities))
-	,@(when (consp speeds) `(and ,speed in ,speeds))
+	,@(when capacities `(and ,capacity in ,capacities))
+	,@(when speeds `(and ,speed in ,speeds))
       collect
 	(new-vehicle ,id ,base-node ,to-depot
-		     ,@(when capacities `(:capacity ,(if (consp capacities) capacity capacities)))
-		     ,@(when speeds `(:speed ,(if (consp speeds) speed speeds)))))))
+		     ,@(when capacities `(:capacity ,capacity))
+		     ,@(when speeds `(:speed ,speed))))))

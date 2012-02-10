@@ -13,7 +13,7 @@
   
 ;; 
 (defmacro define-problem (name node-coords-list fleet-size to-depot &key demands capacities time-windows-list durations speeds plot-filename)
-  "Creates the appropriate <Problem> object from the inputs. When fleet-size is 1 (and no optional arguments), creates a TSP problem. When fleet-size is more than 1, creates a VRP problem. With only the demands-list and capacity, creates a CVRP problem. With time-windows and durations, creates a VRPTW problem. When plot-filename is not given, it will plot in \"plots/name.png\""
+  "Creates the appropriate <Problem> object from the inputs. Extra key attributes only accept lists that are of equal length to node-coords-list or fleet-size (depending on what attributes it sets). With only the demands-list and capacities, creates a CVRP problem. With time-windows, creates a VRPTW problem. When durations and speeds are not provided, defaults to 0 and 1.  When plot-filename is not given, it will plot in \"plots/name.png\"."
   (with-gensyms (network fleet drawer)
     `(let* ((,network (create-nodes ,node-coords-list
 				    ,@(when demands `(:demands ,demands))
@@ -29,8 +29,6 @@
 						   (concatenate 'string "plots/" (string name) ".png")))))
        (make-instance ,@(cond ((and time-windows-list capacities) '('cvrptw))
 			      (time-windows-list '('vrptw))
-			      (capacities '('cvrp))
+			      ((and demands capacities) '('cvrp))
 			      (t '('problem)))
 		      :name ,name :fleet ,fleet :network ,network :dist-array (generate-dist-array ,node-coords-list) :to-depot ,to-depot :drawer ,drawer))))
-	  
-	   
