@@ -53,35 +53,27 @@
 ;; cost of inserting is calculated by (get-best-insertion-move)
 ;; saving by removing the connecting arcs before and after, and connecting them directly
 (defmethod assess-move ((sol problem) (mv TS-best-insertion-move))
-  (let* ((dist-array (problem-dist-array sol))
-	 (node (move-node-id mv))
-	 (best-move (get-best-insertion-move sol (move-vehicle-ID mv) node))
-	 (route (vehicle-route (vehicle sol (vehicle-with-node-ID sol node))))
-	 (pos (position node route :key #'node-id))
-	 (node-before (node-id (nth (1- pos) route)))
-	 (dist1 (distance node-before node dist-array)))
-    (setf (move-fitness mv)
-	  (- (move-fitness best-move)
-					;how much you save by removing:
-	     (if (= pos (1- (length route))) ;if the node is at end of route
-		 dist1
-		 (let ((node-after (node-id (nth (1+ pos) route))))
-		   (- (+ dist1
-			 (distance node node-after dist-array)) ;dist to next node
-		      (handler-case (distance node-before node-after dist-array)
-			(same-origin-destination () 0))))))))) ;minus direct route, which is 0 if the node-before and node-after are the same.
-
-;; around method for checking constraints. If move is infeasible, return NIL.
-(defmethod assess-move :around ((sol CVRP) (m TS-best-insertion-move))
-  (if (node-fit-in-vehiclep sol (move-node-id m) (move-vehicle-ID m))
-      (call-next-method)
-      (setf (move-fitness m) nil)))
-
-(defmethod assess-move :around ((sol VRPTW) (m TS-best-insertion-move))
-  (if (feasible-insertionp (get-best-insertion-move sol (move-vehicle-ID m) (move-node-id m))
-			   sol)
-      (call-next-method)
-      (setf (move-fitness m) nil)))
+  (with-slots (node-id vehicle-id fitness) mv
+    (handler-case
+	(let* ((dist-array (problem-dist-array sol))
+	       (best-move (get-best-insertion-move sol vehicle-id node-id))
+	       (route (vehicle-route (vehicle sol (vehicle-with-node-ID sol node-id))))
+	       (pos (position node-id route :key #'node-id))
+	       (node-before (node-id (nth (1- pos) route)))
+	       (dist1 (distance node-before node-id dist-array)))
+	  (setf fitness
+		(- (move-fitness best-move)
+		   ;how much you save by removing:
+		   (if (= pos (1- (length route))) ;if the node is at end of route
+		       dist1
+		       (let ((node-after (node-id (nth (1+ pos) route))))
+			 (- (+ dist1
+			       (distance node-id node-after dist-array)) ;dist to next node
+		;minus direct route, which is 0 if the node-before and node-after are the same.
+			    (handler-case (distance node-before node-after dist-array)
+			      (same-origin-destination () 0))))))))
+      (no-feasible-move () (setf fitness nil))))) ;when no feasible-moves exist, set fitness nil
+					
 	  
 (defmethod perform-move ((prob problem) (mv TS-best-insertion-move))
   "Takes <Node> with node-ID and uses get-best-insertion to insert in vehicle-ID. DESTRUCTIVE."
