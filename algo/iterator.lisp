@@ -96,7 +96,7 @@
 (defmethod assess-move :around ((sol problem) (m move))
   (if (feasible-movep sol m)
       (call-next-method)
-      (setf fitness nil)))
+      (setf (move-fitness m) nil)))
 
 (defun assess-moves (solution moves)
   "Given a list of <Move> objects, assess them all on the solution (uses assess-move), and setf the move's :fitness slots. Returns the list of moves."
