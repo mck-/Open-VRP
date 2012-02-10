@@ -22,6 +22,7 @@
 	       (:file "lib/init-macros")
 	       (:file "lib/read-solomon")
 	       ;; algos
+	       (:file "algo/algo-conditions")
 	       (:file "algo/tools")
 	       (:file "algo/iterator")
 	       (:file "algo/best-insertion")

@@ -140,7 +140,6 @@
 	   :toggle-legend
 	   
 	   ;; conditions
-	   :all-moves-tabu
 	   :same-origin-destination
 
 	   ;; init macros

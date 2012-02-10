@@ -36,10 +36,4 @@
 (define-condition not-equal-length (error)
   ((list1 :initarg :list1 :reader list1)
    (list2 :initarg :list2 :reader list2))
-  (:report "Trying to create objects where input lists are of unequal length!"))
-   
-
-;; algo/TS.lisp
-(define-condition all-moves-tabu (error)
-  ((moves :initarg :moves :reader moves)
-   (tabu-list :initarg :tabu-list :reader tabu-list)))
+  (:report "Trying to create objects where input lists are of unequal length!"))  
