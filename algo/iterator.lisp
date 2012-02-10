@@ -2,12 +2,6 @@
 ;; --------------------------------------------
 (in-package :open-vrp.algo)
 
-;; The Move class
-;; -----------------
-(defclass move ()
-  ((fitness :accessor move-fitness :initarg :fitness)))
-
-;; -----------------
 
 ;; initializer
 ;; -----------------
@@ -97,6 +91,12 @@
   "Assesses the effect on fitness when <move> is performed on <problem> (on a clone - undestructive)."
   (setf (move-fitness m)
 	(fitness-before-after sol #'(lambda (x) (perform-move x m)))))
+
+;; feasibility check
+(defmethod assess-move :around ((sol problem) (m move))
+  (if (feasible-movep sol m)
+      (call-next-method)
+      (setf fitness nil)))
 
 (defun assess-moves (solution moves)
   "Given a list of <Move> objects, assess them all on the solution (uses assess-move), and setf the move's :fitness slots. Returns the list of moves."

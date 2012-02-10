@@ -168,6 +168,7 @@
 	   :insertion-move
 	   :get-best-insertion-move
 	   :get-closest-node
+	   :feasible-movep
 
 	   ;; iterator
 	   :initialize

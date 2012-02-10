@@ -23,8 +23,8 @@
 	       (:file "init-macros")
 	       (:file "util/read-solomon")
 	       ;; algos
-	       (:file "algo/iterator")
 	       (:file "algo/tools")
+	       (:file "algo/iterator")
 	       (:file "algo/best-insertion")
 	       (:file "algo/greedy-NN")
 	       (:file "algo/greedy-append")

@@ -1,12 +1,66 @@
 ;;; Tools to be shared among algorithms
 ;;; ---------------------------
-;;; - get-closest-node
-;;; - get-closest-vehicle
-;;; - get-closest-feasible-vehicle
-;;; - optimal-insertion
-;;; - init-algo
+;;; 0. Miscellaneous
+;;; 1. Move feasibility checks
+;;; 2. Heuristical tools
 
 (in-package :open-vrp.algo)
+
+;; 0. Misc
+;; -------------------------
+(defclass move ()
+  ((fitness :accessor move-fitness :initarg :fitness)))
+
+(defclass insertion-move (move) 
+  ((node-ID :accessor move-node-ID :initarg :node-ID)
+   (vehicle-ID :accessor move-vehicle-ID :initarg :vehicle-ID)
+   (index :accessor move-index :initarg :index)))
+
+(defmacro init-algo (prob algo)
+  `(setf (algo-current-sol ,algo) ,prob
+	 (algo-best-sol ,algo) (copy-object ,prob)
+	 (algo-best-fitness ,algo) (fitness ,prob)))
+
+;; --------------------------
+
+;; 1. Feasibility check of moves
+;; ---------------------------
+
+(defgeneric feasible-movep (sol move)
+  (:documentation "Given a current solution, assess feasibility of the <Move>. For CVRP, just check if it fits in the total vehicle capacity. For VRPTW, check for TW feasibility of the whole route. For CVRPTW, checks both by means of multiple-inheritance and method-combination.")
+  (:method-combination and))
+
+(defmethod feasible-movep and ((sol problem) (m move)) T)
+
+(defmethod feasible-movep and ((sol CVRP) (m insertion-move))
+  (with-slots (node-ID vehicle-ID) m
+    (multiple-value-bind (comply cap-left) (in-capacityp (vehicle sol vehicle-ID))
+      (unless comply (error 'infeasible-solution :sol sol :func #'in-capacityp))
+      (<= (node-demand (node sol node-ID)) cap-left))))
+
+(defmethod feasible-movep and ((sol VRPTW) (m insertion-move))
+  (with-slots (node-ID vehicle-ID index) m
+    (symbol-macrolet ((full-route (vehicle-route (vehicle sol vehicle-ID)))
+		      (ins-node (node sol node-ID))
+		      (to (if (= 1 i) ins-node (car route)))
+		      (arr-time (+ time (travel-time loc to))))
+      (constraints-check
+       (route time loc i)
+       ((cdr full-route) 0 (car full-route) index)
+       ((if (= 1 i) route (cdr route)) ;don't skip after inserting new node
+	(time-after-serving-node to arr-time) ;set time after new node
+	to (1- i))   
+       (<= arr-time (node-end to))
+       (and (null route) (< i 1)))))) ; case of append, need to check once more
+
+;; for debugging
+;       (format t "Route: ~A~% Loc: ~A~% To: ~A~% Time: ~A~% Arr-time: ~A~% Node-start: ~A~% Node-end: ~A~% Duration: ~A~% ins-node-end: ~A~% i: ~A~%" (mapcar #'node-id route) (node-id loc) (node-id to) time arr-time (node-start to) (node-end to) (node-duration to) (node-end ins-node) i)
+;; -----------------------------
+	      
+;; ----------------------------
+
+;; 2. Tools for heuristics
+;; ---------------------------
 
 ;; Closest node
 ;; ---------------------------
@@ -101,10 +155,3 @@
     (iter (problem-fleet sol) nil)))
 
 ;; -------------------------
-
-;; Algo object initializing macro
-;; -------------------------
-(defmacro init-algo (prob algo)
-  `(setf (algo-current-sol ,algo) ,prob
-	 (algo-best-sol ,algo) (copy-object ,prob)
-	 (algo-best-fitness ,algo) (fitness ,prob)))
