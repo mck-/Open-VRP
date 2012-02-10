@@ -10,11 +10,15 @@
 
 ;; Run Algo
 ;; -------------------------
+(defun init-algo (prob algo)
+  (setf (algo-current-sol algo) prob
+	 (algo-best-sol algo) (copy-object prob)
+	 (algo-best-fitness algo) (fitness prob)))
 
 (defgeneric run-algo (problem algo)
   (:method (problem algo)
     "run-algo: Either problem or algo is not defined/correct")
-  (:documentation "Runs the algo on the problem. Destructive - will have side-effects on the <problem> and <algo> objects. Use solve-prob to prevent <problem> object being touched. Will return the <Algo> object, which will contain the solution (in the form of a copy of the <problem> object) in the :current-sol slot. When defining your own algorithms, make sure to implement a run-algo method for your algo, which sets the :current-sol slot appropriately, and returns the <algo> object."))
+  (:documentation "Runs the algo on the problem. Destructive - will have side-effects on the <problem> and <algo> objects. Use solve-prob to prevent <problem> object being touched. Will return the <Algo> object, which will contain the solution (in the form of a copy of the <problem> object) in the :current-sol slot. When defining your own algorithms, make sure to implement a run-algo method for your algo, which sets the :current-sol slot appropriately, and returns the <algo> object. You can use init-algo to set :current-sol, :best-sol, :best-fitness simultaneously."))
 
 ;; In case of error or interrupt, bind current state of algo in *algo-backup*.
 (defmethod run-algo :around ((p problem) (a algo))

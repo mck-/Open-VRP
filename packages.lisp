@@ -123,6 +123,7 @@
 	   :in-timep
 
 	   ;; solver
+	   :init-algo
 	   :run-algo
 	   :*algo-backup*
 	   :solve-prob

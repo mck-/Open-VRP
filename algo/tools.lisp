@@ -16,11 +16,6 @@
    (vehicle-ID :accessor move-vehicle-ID :initarg :vehicle-ID)
    (index :accessor move-index :initarg :index)))
 
-(defmacro init-algo (prob algo)
-  `(setf (algo-current-sol ,algo) ,prob
-	 (algo-best-sol ,algo) (copy-object ,prob)
-	 (algo-best-fitness ,algo) (fitness ,prob)))
-
 ;; --------------------------
 
 ;; 1. Feasibility check of moves
@@ -138,7 +133,7 @@
 
 (defgeneric optimal-insertion (prob node)
   (:method (prob node) "optimal-insertion: Expects <Problem> and <Node>.")
-  (:documentation "Given a node and a solution (that does not have this node yet), insert the node in the best possible and feasible location. DESTRUCTIVE."))
+  (:documentation "Given a node and a solution (that does not have this node yet), return the best <insertion-move>."))
 
 (defmethod optimal-insertion ((sol problem) (n node))
   (labels ((iter (flt best-move)
