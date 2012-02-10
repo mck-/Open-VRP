@@ -5,6 +5,7 @@
 ;;; - solve-plot (<problem> <algo>)      - plots the best solution after solving
 ;;; - multi-run (int algo-call)          - Run algo int times - collect all results
 ;;; - get-best-solution-from-multi-run   - returns the best solution from collection
+;;; - multi-run-algo                     - Calls multi-run, prints stats and returns best
 ;;; ----------------------------
 (in-package :open-vrp.util)
 
@@ -28,7 +29,7 @@
 
 ;; After method that makes all algos print the final solution
 (defmethod run-algo :after ((p problem) (a algo))
-  (print (concatenate 'string "Final solution of run with " (string (type-of a))))
+  (print (concatenate 'string "Final solution of run with " (string (type-of a)) " on " (problem-name p)))
   (print "---------------------")
   (print-routes a)
   (print "---------------------"))
@@ -42,7 +43,7 @@
 (defgeneric solve-prob (problem algo)
   (:method (problem algo)
     "solve-prob: Either problem or algo is not defined/correct")
-  (:documentation "Solves the problem with the algo. Uses run-algo, but leaves the <problem> object untouched (<Algo> will suffer side-effects). Works with a clone (clone-problem in clone.lisp). NON-destructive wrapper to the run-algo method."))
+  (:documentation "Solves the problem with the algo. Uses run-algo, but leaves the <problem> object untouched (<Algo> will suffer side-effects). Works with a clone (copy-object in lib/simple-utils.lisp). NON-destructive wrapper to the run-algo method."))
 
 (defmethod solve-prob ((problem problem) (algo algo))
   (let ((clone (copy-object problem)))
@@ -55,7 +56,7 @@
 
 (defgeneric solve-plot (problem algo)
   (:method (problem algo) "solve-plot: Requires two input objects: <problem>, <algo>")
-  (:documentation "Solves and plots. Returns <algo> object. Will have side-effects on <algo> object, which contains the solution. Will leave <problem> object untouched. Calls solve-prob and plot-solution."))
+  (:documentation "Solves and plots. Returns <algo> object. Will have side-effects on <algo> object, which contains the solution. Will leave <problem> object untouched. Calls solve-prob and plot-solution. By default, plots in plots/name.png where name is the :name of <problem>."))
 
 (defmethod solve-plot ((problem problem) (algo algo))
   (let ((algo-obj (solve-prob problem algo)))
