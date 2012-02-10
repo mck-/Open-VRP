@@ -16,17 +16,13 @@ The solutions are drawn using [vecto](http://www.xach.com/lisp/vecto/) in a .png
 
 Too often have I found myself having to build a VRP model from scratch, just to experiment with some meta-heuristics for a school paper. Academics/students with a background/interest in Mathematics/Operations Research without the skills/patience for die-hard coding (in C++/Java), have no choice but to spend their valuable time stuck in the debug/test/debug cycle. [Here](https://kuomarc.wordpress.com/2012/01/27/why-i-love-common-lisp-and-hate-java/) is why those in OR should consider Common Lisp as an option.
 
-With this framework, I hope to catalyze the research and application of routing solutions. Researchers in innovative new algorithms should not need to fiddle in the Eclipse debugger screen, frustratingly looking for a missing semi-colon. They should be able to focus all their energy and effort in devising their heuristics. OR should be kept fun and clean.
+With this framework, I hope to catalyze the research and application of routing solutions. Researchers in innovative new algorithms should not need to fiddle in the Eclipse debugger screen. They should be able to focus all their energy and effort in devising their heuristics. OR should be kept fun and engaging.
 
 The ultimate vision for Open VRP is a simple intuitive embedded language for the OR community, free for anyone.
 
 ## Overview
 
-![alt Open-VRP Class-diagram](https://github.com/mck-/Open-VRP/blob/master/class-diagram.png?raw=true "Open-VRP Class-diagram")
-
----
-
-![alt Iterator](https://github.com/mck-/Open-VRP/blob/master/iterator.png?raw=true "Iterator")
+Check out the [Wiki](https://github.com/mck-/Open-VRP/wiki) for an overview of Open-VRP and get-started!
 
 ## Usage
 
@@ -35,12 +31,11 @@ The ultimate vision for Open VRP is a simple intuitive embedded language for the
 `test-vrp`, `solomon25` and `solomon100` are pre-loaded demo problems. To use Tabu Search:
 
 ```
-(solve-plot test-vrp (make-instance 'tabu-search :animate T))
-(solve-plot solomon100 (make-instance 'tabu-search :iterations 100 :runs 10))
+(solve-plot test-vrp (make-instance 'tabu-search :iterations 10 :animate T))
+(solve-plot solomon100 (make-instance 'tabu-search :iterations 100))
 ```
 
 When :animate is set to T, each iteration will produce a plot in run-frames/Iteration x.png (much slower). 
-Tabu-search supports a simple multi-start heuristic with the keyword :runs. In the above example, we will solve the problem 10 times with 100 iterations and return the best solution.
 
 You can define your own problem objects with:
 
