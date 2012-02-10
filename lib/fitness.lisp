@@ -1,4 +1,3 @@
-;;; Thu 29 Dec, 2011 (c) Marc Kuo
 ;;; Fitness functions for each type of problem
 ;;; -----------------------------------------
 (in-package :open-vrp.util)

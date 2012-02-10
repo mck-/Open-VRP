@@ -1,11 +1,9 @@
-;;; Thu 29 Dec, 2011 (c) Marc Kuo
 ;;; Output functions
 ;;; --------------------------
 (in-package :open-vrp.util)
 
-;; Print solution
 (defgeneric print-routes (solution)
-  (:method (solution) "Expects <fleet> or <problem> object!")
+  (:method (solution) "Expects <fleet>/<problem>/<algo> object!")
   (:documentation "Prints solution given a <fleet>/<problem>/<algo> object. Also prints the total distance when the input is a <problem>/<algo> object."))
 
 (defmethod print-routes ((prob problem))
@@ -18,8 +16,8 @@
 (defmethod print-routes ((a algo))
   (print-routes (algo-best-sol a)))
 
-;; multi-run/batch run stats
-(defun print-multi-run-stats (solutions)
+(defun print-multi-run-stats (algo-objects)
+  "Given a list of algo-objects returned by multi-run, print run-stats."
   (let ((results (mapcar #'algo-best-fitness solutions)))    
     (format t "~&Runs: ~8a~%Max: ~8a~%Min: ~8a~%Avg: ~8a~%Std: ~8a~%"
 	    (length results) (get-max results) (get-min results) (mean results) (standard-deviation results))))

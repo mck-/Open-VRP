@@ -1,8 +1,7 @@
-;;; Sun Jul 3, 2011
 ;;; Interface to read in testcases from files
 ;;; (Solomon style: http://neo.lcc.uma.es/radi-aeb/WebVRP/index.html?/Problem_Instances/CVRPTWInstances.html)
 ;;; ---
-(in-package :open-vrp)
+(in-package :open-vrp.util)
 
 (defun couple-lists (list1 list2)
   "Given a list of x and y-coords, return a list of pairs usable. Used for node-coords or time-windows."

@@ -146,7 +146,8 @@
 	   :create-nodes
 	   :create-vehicles
 	   :define-problem
-
+	  
+	   :load-testcase-Solomon
 	   :fitness
 	   ))
 

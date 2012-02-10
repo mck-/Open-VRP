@@ -1,6 +1,5 @@
 ;;; Functions to operate on routes, which are a list of <node> objects
 ;;; contained in a <vehicle>'s :route slot.
-;;; Uses simple list utilities (list.lisp)
 (in-package :open-vrp.util)
 ;;; -------
 ;;; 0. Route utils
@@ -16,15 +15,15 @@
   (not (member 0 (vehicle-route veh) :key #'node-id :test-not #'=)))
 
 (defun get-busy-vehicles (problem)
-  "Returns a list of <Vehicles> that are not empty, given a <TSP> object."
+  "Returns a list of <Vehicles> that are not empty, given a <Problem> object."
   (remove-if #'empty-routep (problem-fleet problem)))
 
 (defun one-destinationp (route)
-  "Return T if there is only one destination on route, excluding base nodes. Used by generate-moves in TS.lisp."
+  "Return T if there is only one destination on route, excluding base nodes."
   (= 1 (length (remove 0 route :key #'node-id))))
 
 (defmacro change-route (vehicle &body body)
-  "Expands into binding the vehicles route to r and setting it to result of body"
+  "Expands into binding the vehicles route to r and setting it to result of body."
   `(let ((r (vehicle-route ,vehicle)))
      (setf (vehicle-route ,vehicle) ,@body)))
 ;; ------------------

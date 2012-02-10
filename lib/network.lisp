@@ -1,8 +1,10 @@
-;;; Mon Jun 20, 2011 (c) Marc Kuo
 ;;; Utilities for generating a distance table using a list of node coords.
 ;;; -----------------------------------------
-;;; 1. create-network generates/initialises the <network> object (using node-coords)
-;;; 2. read from dist-table with (distance i j)
+;;; - distance (int int array)		- Expects two node-IDs and a dist-array
+;;; - node-distance (<Node> <Node>)	- Calculates distance between two <Node> objects
+;;; - node (<Problem> int)		- Returns <Node> given a <Problem> and a node-id
+;;; - generate-dist-array (coord-list)	- Returns array of distances
+;;; - new-node				- Macro that creates a <Node> according to input
 (in-package :open-vrp.util)
 
 (defun distance (i j dist-array)

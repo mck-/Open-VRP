@@ -1,4 +1,3 @@
-;;; Wed Jun 22, 2011 (c) Marc Kuo
 ;;; Plot the solution given in *solution* using vecto
 ;;; -------
 ;;; Use (plot-solution <problem>)
