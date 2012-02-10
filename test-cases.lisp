@@ -15,7 +15,7 @@
 	(cons -2 -2)))
 
 ;; Initialization of objects
-(defvar test-tsp (define-problem "test-case-TSP" *node-coords* 1 nil))
-(defvar test-vrp (define-problem "test-case-VRP" *node-coords* 2 T))
+(defvar test-tsp (define-problem "test-case-TSP" *node-coords* 1 :to-depot nil))
+(defvar test-vrp (define-problem "test-case-VRP" *node-coords* 2))
 (defvar solomon25 (load-testcase-solomon "test-cases/25-cust.txt"))
 (defvar solomon100 (load-testcase-solomon "test-cases/100-cust.txt"))
