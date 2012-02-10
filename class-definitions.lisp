@@ -22,7 +22,7 @@
   ((id :reader vehicle-id :initarg :id)
    (route :accessor vehicle-route :initarg :route)
    (capacity :reader vehicle-capacity :initarg :capacity)
-   (speed :accessor vehicle-speed :initarg :speed)))
+   (speed :accessor vehicle-speed :initarg :speed :initform 1)))
 ;; ----------------------------
 
 ;; The problem object class
