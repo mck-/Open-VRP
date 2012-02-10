@@ -1,27 +1,26 @@
 (defsystem :open-vrp
   :description "open-vrp"
-  :version "0.1"
+  :version "0.3"
   :author "Marc Kuo"
   :licence "LLGPL"
   :depends-on (vecto alexandria fiveam) 
   :serial t
   :components ((:file "packages")
 	       (:file "class-definitions")
-	       ;; utilities
-	       (:file "util/simple-utils")
-	       (:file "util/list")
-	       (:file "util/network")
-	       (:file "util/fleet")
-	       (:file "util/fitness")
-	       (:file "util/output")
-	       (:file "util/route")
-	       (:file "util/draw-solution")
-	       (:file "util/solver")
-	       (:file "util/constraints")
-	       (:file "conditions")
-	       ;; data
-	       (:file "init-macros")
-	       (:file "util/read-solomon")
+	       ;; library
+	       (:file "lib/simple-utils")
+	       (:file "lib/list")
+	       (:file "lib/network")
+	       (:file "lib/fleet")
+	       (:file "lib/fitness")
+	       (:file "lib/output")
+	       (:file "lib/route")
+	       (:file "lib/draw-solution")
+	       (:file "lib/solver")
+	       (:file "lib/constraints")
+	       (:file "lib/conditions")
+	       (:file "lib/init-macros")
+	       (:file "lib/read-solomon")
 	       ;; algos
 	       (:file "algo/tools")
 	       (:file "algo/iterator")
