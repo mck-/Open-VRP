@@ -44,14 +44,6 @@
 	   :algo-best-fitness
 	   :algo-current-sol
 	   :algo-iterations
-	   :tabu-list-tabu
-	   :tabu-list-tenure
-	   :tabu-search-tabu-list
-	   :tabu-search-moves
-	   :tabu-search-init-heur
-	   :tabu-search-animate
-	   :tabu-search-candidate-list
-	   :tabu-search-runs
 	   :drawer-min-coord
 	   :drawer-max-coord
 	   :drawer-legend
@@ -114,7 +106,6 @@
 	   :get-array-row
 	   :node
 	   :new-node
-	   :create-nodes
 
 	   ;; fleet utils
 	   :route-indices
@@ -122,7 +113,6 @@
 	   :total-dist
 	   :vehicle
 	   :new-vehicle
-	   :create-vehicles
 
 	   ;; constraint utils
 	   :constraints-check
@@ -151,6 +141,11 @@
 	   ;; conditions
 	   :all-moves-tabu
 	   :same-origin-destination
+
+	   ;; init macros
+	   :create-nodes
+	   :create-vehicles
+	   :define-problem
 
 	   :fitness
 	   ))
