@@ -50,31 +50,11 @@
   (nth id (problem-fleet p)))
 ;; ------------------
 
-;; Initializing functions 
-;; (added Wed Nov 9,2011)
-;; --------------------
-;; Requires a network object to initialize the base locations
+;; Create Vehicle macro
+;; ------------------
 (defmacro new-vehicle (id base-node to-depot &key capacity speed)
   `(make-instance 'vehicle
 		  :id ,id
 		  :route ,(if to-depot `(list ,base-node ,base-node) `(list ,base-node))
 		  ,@(when capacity `(:capacity ,capacity))
 		  ,@(when speed `(:speed ,speed))))
-
-(defmacro create-vehicles (fleet-size base-node to-depot &key capacities speeds)
-  "Returns a list of vehicles, starting with ID 0. The starting location of their routes are all initialized at base-node. When to-depot is set to T, initialize their routes with 2 base nodes (departure and destination). For capacities and speeds, accepts a list that is of equal lenght to fleet-size. A shorter list will return a smaller fleet."
-  (with-gensyms (id capacity speed)
-    `(progn
-       ;; Checking if input attributes' length is equal to fleet-size
-       (when (and ,capacities (not (= (length ,capacities) ,fleet-size)))
-	 (error 'not-equal-length :list1 ,fleet-size :list2 ,capacities))
-       (when (and ,speeds (not (= (length ,speeds) ,fleet-size)))
-	 (error 'not-equal-length :list1 ,fleet-size :list2 ,speeds))
-
-       (loop for ,id from 0 to (1- ,fleet-size)
-	    ,@(when capacities `(and ,capacity in ,capacities))
-	    ,@(when speeds `(and ,speed in ,speeds))
-	  collect
-	    (new-vehicle ,id ,base-node ,to-depot
-			 ,@(when capacities `(:capacity ,capacity))
-			 ,@(when speeds `(:speed ,speed)))))))
