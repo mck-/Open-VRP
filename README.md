@@ -1,5 +1,7 @@
 # Open-VRP
 
+Check out the [Wiki](https://github.com/mck-/Open-VRP/wiki) for an overview of Open-VRP and get-started!
+
 ## Synopsis
 
 Open VRP is a framework to model and solve [VRP-like](http://neo.lcc.uma.es/radi-aeb/WebVRP/) problems for students, academics, businesses and hobbyist alike. This framework allows for quick implementation of simple TSP/VRP problems to more complicated VRPTW, PDPTW, MDCPVRPPDTW, or however cool you want to sound. The library is extensibly written in Common Lisp's CLOS. Depending on your interest/purpose, an algorithm can be:
@@ -20,10 +22,6 @@ With this framework, I hope to catalyze the research and application of routing 
 
 The ultimate vision for Open VRP is a simple intuitive embedded language for the OR community, free for anyone.
 
-## Overview
-
-Check out the [Wiki](https://github.com/mck-/Open-VRP/wiki) for an overview of Open-VRP and get-started!
-
 ## Usage
 
 `solve-plot` expects a problem object and an algo object. It calls `solve-prob` and `plot-solution`.
@@ -40,12 +38,12 @@ When :animate is set to T, each iteration will produce a plot in run-frames/Iter
 You can define your own problem objects with:
 
 ```
-(define-problem name node-coords n "plots/vrp.png")
-(define-problem name node-coords n "plots/cvrp.png" demands-list capacity)
-(define-problem name node-coords n "plots/vrptw.png" demands-list capacity time-windows durations)
+(define-problem "VRP" node-coords n)
+(define-problem "CVRP" node-coords n :demands demands-list :capacities capacity-list)
+(define-problem "VRPTW" node-coords n :time-windows time-windows :durations durations)
 ```
 
-where *node-coords* is a list of pairs, *demands-list* a list of associated demands, and n is the number of vehicles. When a *demands-list* and vehicle *capacity* are provided, the resulting problem is a CVRP. If in addition *time-windows* (list of pairs) and *durations* are given, the resulting problem object is a VRPTW.
+where *node-coords* is a list of pairs, *demands-list* a list of associated demands (must be same length), and n is the number of vehicles. When a *demands-list* and vehicle *capacity* are provided, the resulting problem is a CVRP. If *time-windows* (list of pairs) and *durations* are given, the resulting problem object is a VRPTW. When everything is provided, it creates a CVRPTW. Each class of problem has its own specific constraints to check. By default, will plot in plots/name.png.
 
 Or to load from a text-file [Solomon-format](http://neo.lcc.uma.es/radi-aeb/WebVRP/index.html?/Problem_Instances/CVRPTWInstances.html):
 
