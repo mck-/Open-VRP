@@ -72,8 +72,17 @@
 
 (defmacro create-nodes (node-coords &key demands time-windows durations)
   "Given a coord-list, return a vector of nodes. The nodes are created and numbered starting from 0, which is the base node. For additional parameters accept a list with the same length as node-coords, in which each element specifies the node attributes."
-  (with-gensyms (nodes id coords demand tw dur)
-    `(loop with ,nodes = (make-array (length ,node-coords) :fill-pointer 0) ;vector of nodes
+  (with-gensyms (nodes id coords demand tw dur ln)
+    `(let ((,ln (length ,node-coords)))
+       ;; Checking if input attributes' length is equal to node-coords' length
+       (when (and ,demands (not (= (length ,demands) ,ln)))
+	 (error 'not-equal-length :list1 ,node-coords :list2 ,demands))
+       (when (and ,time-windows (not (= (length ,time-windows) ,ln)))
+	 (error 'not-equal-length :list1 ,node-coords :list2 ,time-windows))
+       (when (and ,durations (not (= (length ,durations) ,ln)))
+	 (error 'not-equal-length :list1 ,node-coords :list2 ,durations))
+       
+       (loop with ,nodes = (make-array ,ln :fill-pointer 0) ;vector of nodes
 	for
 	  ,coords in ,node-coords
 	and ,id from 0
@@ -90,5 +99,5 @@
 			  ,@(when time-windows `(:start (car ,tw) :end (cdr ,tw)))
 			  ,@(when durations `(:duration ,dur)))
 	   ,nodes)
-	finally (return ,nodes))))
+	finally (return ,nodes)))))
        

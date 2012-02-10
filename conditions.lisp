@@ -18,7 +18,7 @@
    (to :initarg :to :reader to))
   (:report "Trying to lookup distance for same origin and destination - NIL"))
 
-;; constraints.lisp
+;; util/constraints.lisp
 (define-condition infeasible-solution (error)
   ((sol :initarg :sol :reader sol)
    (func :initarg :func :reader func))
@@ -31,6 +31,12 @@
 (define-condition no-speed-vehicle (error)
   ((veh :initarg :veh :reader veh))
   (:report "Trying to check TW constraints for a vehicle that has no defined speed."))
+
+;; util/network.lisp util/fleet.lisp
+(define-condition not-equal-length (error)
+  ((list1 :initarg :list1 :reader list1)
+   (list2 :initarg :list2 :reader list2))
+  (:report "Trying to create objects where input lists are of unequal length!"))
    
 
 ;; algo/TS.lisp
