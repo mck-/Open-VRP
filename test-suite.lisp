@@ -6,6 +6,8 @@
 (def-suite :suite-open-vrp)
 (in-suite :suite-open-vrp)
 
+;; Generic algo runs
+;; --------------------------------------
 (defmacro on-all-testcases (algo-symbol)
   (labels ((mkstr (&rest args)	   
 	     (with-output-to-string (s)
@@ -29,10 +31,13 @@
 
 (test tabu-100 (is (solve-prob solomon100 (make-instance 'tabu-search :iterations 100))))
 
-;; capacity constraint tests
-;; Could not use symbol-macro-let, since FiveAM's test macro won't allow lexical scoping
-(define-symbol-macro full-v (make-instance 'vehicle
-					   :capacity 2
+;; --------------------------------
+
+;; Constraints checking tests
+;; --------------------------------
+;; Capacity
+(define-symbol-macro space-v (make-instance 'vehicle
+					   :capacity 3
 					   :route (list (make-instance 'node :demand 1)
 							(make-instance 'node :demand 1))))
 (define-symbol-macro overfull-v (make-instance 'vehicle
@@ -40,18 +45,18 @@
 					       :route (list (make-instance 'node :demand 1)
 							    (make-instance 'node :demand 2))))
 (test capacity-veh-in
-  (is (in-capacityp full-v)))
+  (is (in-capacityp space-v)))
 
 (test capacity-veh-out
   (is (not (in-capacityp overfull-v))))
 
 (test capacity-fleet-in
-  (is (in-capacityp (make-instance 'cvrp :fleet (list full-v full-v full-v)))))
+  (is (in-capacityp (make-instance 'cvrp :fleet (list space-v space-v space-v)))))
 
 (test capacity-fleet-out
-  (is (not (in-capacityp (make-instance 'cvrp :fleet (list overfull-v full-v))))))
+  (is (not (in-capacityp (make-instance 'cvrp :fleet (list overfull-v space-v))))))
 
-;; time window tests
+;; Time Windows
 (defmacro make-node-tw (id x y start end duration &optional demand)
   `(make-instance 'node :id ,id :xcor ,x :ycor ,y :start ,start :end ,end :duration ,duration
 		  ,@(when demand `(:demand ,demand))))
@@ -102,6 +107,7 @@
 (test time-window-test-fleet-late
   (is (in-timep (make-instance 'vrptw :fleet (list on-time-v late-v-speed on-time-v)))))
 
+;; Capacity AND Time Windows
 (define-symbol-macro on-time-and-in-cap-v
     (make-instance
      'vehicle
@@ -129,3 +135,16 @@
 
 (test tw-and-cap-test-fail
   (is (not (constraintsp (make-instance 'cvrptw :fleet (list on-time-and-in-cap-v on-time-but-overfull-v))))))
+;; -----------------------
+
+;; Move feasibility checks
+;; -----------------------
+
+(test cap-move-feasible
+  (is (feasible-movep (make-instance 'cvrp :fleet (list space-v space-v) :network (vector (new-node 1 1 1 :demand 1)))
+		      (make-instance 'insertion-move :node-id 0 :vehicle-id 0))))
+
+(test cap-move-infeasible
+  (is (not (feasible-movep (make-instance 'cvrp :fleet (list space-v space-v) :network (vector (new-node 1 1 1 :demand 5)))
+			   (make-instance 'insertion-move :node-id 0 :vehicle-id 0)))))
+				     
