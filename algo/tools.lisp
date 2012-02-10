@@ -131,22 +131,23 @@
 ;; Optimal insertion
 ;; ---------------------
 
-(defgeneric optimal-insertion (prob node)
+(defgeneric get-optimal-insertion (prob node)
   (:method (prob node) "optimal-insertion: Expects <Problem> and <Node>.")
   (:documentation "Given a node and a solution (that does not have this node yet), return the best <insertion-move>."))
 
-(defmethod optimal-insertion ((sol problem) (n node))
+(defmethod get-optimal-insertion ((sol problem) (n node))
   (labels ((iter (flt best-move)
 	     (if (null flt) best-move
 		 (iter (cdr flt)
-		       (let ((new (get-best-insertion-move sol
-							   (vehicle-id (car flt))
-							   (node-id n))))
-			 (if (and (move-fitness new) ;check if new move is feasible
-				  (or (null best-move) ;first move
-				      (< (move-fitness new) (move-fitness best-move)))) ;better?
-			     new
-			     best-move))))))
+		       (handler-case
+			   (let ((new (get-best-insertion-move sol
+							       (vehicle-id (car flt))
+							       (node-id n))))
+			     (if (or (null best-move) ;first move
+				     (< (move-fitness new) (move-fitness best-move))) ;better?
+				 new
+				 best-move))
+			 (no-feasible-move () best-move))))))
     (iter (problem-fleet sol) nil)))
 
 ;; -------------------------

@@ -158,7 +158,7 @@
   (:export ;; tools
 	   :get-closest-vehicle
 	   :get-closest-feasible-vehicle
-	   :optimal-insertion
+	   :get-optimal-insertion
 	   :fitness-before-after
 	   :insertion-move
 	   :get-best-insertion-move
