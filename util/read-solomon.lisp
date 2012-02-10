@@ -24,7 +24,9 @@
 	 collect (read in) into max-times
 	 collect (read in) into service-duration
 	 finally
-	   (return (define-problem name (couple-lists x-coords y-coords) fleet-size T
-				   :demands demands :capacities capacities
-				   :time-windows-list (couple-lists min-times max-times)
-				   :durations service-duration))))))
+	   (return
+	     (define-problem name (couple-lists x-coords y-coords) fleet-size T
+			     :demands demands
+			     :capacities (make-list fleet-size :initial-element capacities)
+			     :time-windows-list (couple-lists min-times max-times)
+			     :durations service-duration))))))
