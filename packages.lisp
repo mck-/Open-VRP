@@ -148,6 +148,7 @@
 	   :define-problem
 	  
 	   :load-testcase-Solomon
+	   :load-tsplib-vrp-file
 	   :fitness
 	   ))
 
@@ -206,6 +207,7 @@
   (:import-from	:alexandria :shuffle :flatten :with-gensyms)
   (:export :define-problem
 	   :load-testcase-Solomon
+	   :load-tsplib-vrp-file
 	   :solve-prob
 	   :iterate-more
 	   :solve-plot

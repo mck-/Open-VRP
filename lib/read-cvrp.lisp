@@ -43,14 +43,11 @@ EDGE_WEIGHT_FORMAT and EDGE_WEIGHT_TYPE are optional"
 	  name
 	  (capacity 0)
 	  (customers 0)
-	  (edge-weight-format 'FUNCTION)
-	  (edge-weight-type 'EXACT_2D)
+	  (edge-weight-format (intern "FUNCTION"))
+	  (edge-weight-type (intern "EXACT_2D"))
 	  x-coords 
 	  y-coords 
 	  demands)
-      (declare (fixnum capacity customers) 
-	       (symbol edge-weight-type edge-weight-format)
-	       (list x-coords y-coords demands))
       ;;;;;;;;;;;;;;;;;;;;;;;;;;;
       ;; specification section ;;
       ;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -60,51 +57,51 @@ EDGE_WEIGHT_FORMAT and EDGE_WEIGHT_TYPE are optional"
 	 (when (string-equal keyword "NODE_COORD_SECTION") (go :down))
 	 (read-string-while-member stream '(#\Space #\: #\Tab))
 	 (cond 
-	   ((string-equal keyword "NAME") (setf name (read stream nil nil)))
-	   ((string-equal keyword "DIMENSION") (setf customers (read stream nil nil)))
-	   ((string-equal keyword "CAPACITY") (setf capacity (read stream nil nil)))
-	   ((string-equal keyword "EDGE_WEIGHT_TYPE") (setf edge-weight-type (read stream nil nil)))
-	   ((string-equal keyword "EDGE_WEIGHT_FORMAT") (setf edge-weight-format (read stream nil nil)))
+	   ((string-equal keyword "NAME") (setf name (string (read stream))))
+	   ((string-equal keyword "DIMENSION") (setf customers (read stream)))
+	   ((string-equal keyword "CAPACITY") (setf capacity (read stream)))
 	   (t (read stream nil nil)))
 	 (read-char stream nil nil)
 	 (go :top)
        :down)
-      (when (not (eq 'FUNCTION edge-weight-format))
-	(error "EDGE_WEIGHT_FORMAT must be FUNCTION"))
-      (when (not (eq 'EXACT_2D edge-weight-type))
-	(error "EDGE_WEIGHT_TYPE must be EXACT_2D"))
-      
+
+      (when (not (eq (intern "FUNCTION") edge-weight-format))
+      	(error "EDGE_WEIGHT_FORMAT must be FUNCTION"))
+      (when (not (eq (intern "EXACT_2D") edge-weight-type))
+      	(error "EDGE_WEIGHT_TYPE must be EXACT_2D"))
+
       ;;;;;;;;;;;;;;;;;;
       ;; data section ;;
       ;;;;;;;;;;;;;;;;;;
       (loop
-	 while (not (eq 'DEMAND_SECTION (read stream)))
+	 while (not (eq  (intern "DEMAND_SECTION") (read stream)))
 	 collect (read stream) into x
 	 collect (read stream) into y
 	 finally (setf x-coords x y-coords y))
       (when (/= (length x-coords) customers)
-	(error "The number of customers is incorrect"))
+      	(error "The number of customers is incorrect"))
       (loop 
-	 while (not (eq 'DEPOT_SECTION (read stream)))
+	 while (not (eq (intern "DEPOT_SECTION") (read stream)))
 	 collect (read stream) into d
 	 finally (setf demands d))
       (when (/= (length demands) customers)
-	(error "The demand size is incorrect"))
+      	(error "The demand size is incorrect"))
       
       ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
       ;; check depot section and eof keyword ;;
       ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
       (when (/= 1 (read stream))
-	(error "The number of depots must be 1"))
+      	(error "The number of depots must be 1"))
       (when (/= -1 (read stream))
-	(error "DEPOT_SECTION must be terminated by a -1"))
-      (when (not (eq 'EOF (read stream)))
-	(error "The file must be terminated by EOF"))
+      	(error "DEPOT_SECTION must be terminated by a -1"))
+      (when (not (eq (intern "EOF") (read stream)))
+      	(error "The file must be terminated by EOF"))
+
       (define-problem  name
-	  (couple-lists x-coords y-coords) 
-	25
-	:demands demands 
-	:capacities (make-list 25 :initial-element capacity)))))
+      	               (couple-lists x-coords y-coords) 
+      	               25 
+      		       :demands demands
+      		       :capacities (make-list 25 :initial-element capacity) ))))
 
 
 

@@ -21,6 +21,7 @@
 	       (:file "lib/conditions")
 	       (:file "lib/init-macros")
 	       (:file "lib/read-solomon")
+	       (:file "lib/read-cvrp")
 	       ;; algos
 	       (:file "algo/algo-conditions")
 	       (:file "algo/tools")
