@@ -84,10 +84,10 @@
 	    (,drawer (make-instance 'drawer
 				    :min-coord (get-min-coord ,node-coords-list)
 				    :max-coord (get-max-coord ,node-coords-list)
-				    :filename ,(if plot-filename plot-filename
-						   (concatenate 'string "plots/" (string name) ".png")))))
+				    :filename (if ,plot-filename ,plot-filename
+						   (concatenate 'string "plots/" (string ,name) ".png")))))
        (make-instance ,@(cond ((and time-windows-list capacities) '('cvrptw))
 			      (time-windows-list '('vrptw))
 			      ((and demands capacities) '('cvrp))
 			      (t '('problem)))
-		      :name ,name :fleet ,fleet :network ,network :dist-array (generate-dist-array ,node-coords-list) :to-depot ,to-depot :drawer ,drawer))))
+		      :name (string ,name) :fleet ,fleet :network ,network :dist-array (generate-dist-array ,node-coords-list) :to-depot ,to-depot :drawer ,drawer))))
