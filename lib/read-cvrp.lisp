@@ -102,11 +102,9 @@ EDGE_WEIGHT_FORMAT and EDGE_WEIGHT_TYPE are optional"
 	(error "The file must be terminated by EOF"))
       (define-problem  name
 	  (couple-lists x-coords y-coords) 
-	customers
-	(concatenate 'string "plots/" (string name) ".png") 
-	t 
-	demands 
-	capacity))))
+	25
+	:demands demands 
+	:capacities (make-list 25 :initial-element capacity)))))
 
 
 
