@@ -19,5 +19,6 @@
 	       (:file "lib/constraints")
 	       (:file "lib/conditions")
 	       (:file "lib/init-macros")
-	       (:file "lib/read-solomon")))
+	       (:file "lib/read-solomon")
+	       (:file "lib/read-cvrp")))
 	       
