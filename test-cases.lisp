@@ -19,3 +19,7 @@
 (defvar test-vrp (define-problem "test-case-VRP" *node-coords* 2))
 (defvar solomon25 (load-testcase-solomon "test-cases/25-cust.txt"))
 (defvar solomon100 (load-testcase-solomon "test-cases/100-cust.txt"))
+(defvar christofides01 (load-tsplib-vrp-file "test-cases/Christofides_01.vrp"))
+(defvar christofides02 (load-tsplib-vrp-file "test-cases/Christofides_02.vrp"))
+
+
