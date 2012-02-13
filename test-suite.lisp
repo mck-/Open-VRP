@@ -1,5 +1,3 @@
-;;; Sun 22 Jan, 2012
-;;; ------------------
 ;;; A test suite for Open-VRP using FiveAM
 (in-package :open-vrp)
 
@@ -148,3 +146,10 @@
   (is (not (feasible-movep (make-instance 'cvrp :fleet (list space-v space-v) :network (vector (new-node 1 1 1 :demand 5)))
 			   (make-instance 'insertion-move :node-id 0 :vehicle-id 0)))))
 				     
+(test tw-move-feasible
+  (is (feasible-movep (make-instance 'vrptw :fleet (list on-time-v on-time-v) :network (vector (make-node-tw 5 2 1 3 5 1)))
+		      (make-instance 'insertion-move :node-id 0 :vehicle-id 0 :index 2))))
+
+(test tw-move-infeasible
+  (is (not (feasible-movep (make-instance 'vrptw :fleet (list on-time-v on-time-v) :network (vector (make-node-tw 5 2 1 3 5 1)))
+			   (make-instance 'insertion-move :node-id 0 :vehicle-id 0 :index 3)))))
