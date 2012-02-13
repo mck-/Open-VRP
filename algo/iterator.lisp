@@ -7,7 +7,7 @@
 ;; -----------------
 (defgeneric initialize (problem algo)
   (:method (problem algo) "initialize: Requires <Problem> and <Algo> as inputs.")
-  (:documentation "Initializes the initial solution for the algo object. For Tabu Search, the default heuristic for generating an initial solution is 'greedy-insertion, which is read from the slot :init-heur."))
+  (:documentation "Initializes the initial solution for the algo object."))
 ;; ----------------
 
 ;; Iterator

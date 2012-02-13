@@ -1,5 +1,4 @@
-;;; Mon Jun 21, 2011 (c) Marc Kuo
-;;; Nearest Neighborhood algorithm (greedy) for TSP (NOT defined for VRP!)
+;;; Nearest Neighborhood algorithm (greedy) for TSP (NOT defined for (C)VRP(TW)!)
 ;;; -----
 ;;; Start at base, and keep choosing the next closest one
 (in-package :open-vrp.algo)    

@@ -54,10 +54,10 @@
 	      
 ;; ----------------------------
 
-;; 2. Tools for heuristics
+;; 2. Tools for solution building heuristics
 ;; ---------------------------
 
-;; Closest node
+;; Closest node (used by Greedy Nearest Neighborhood)
 ;; ---------------------------
 
 (defun get-min-index-with-tabu (distances tabu)
@@ -73,7 +73,7 @@
 	 nil)))
 ;; --------------------------
 
-;; Closest Vehicle
+;; Closest Vehicle (used by Greedy Append)
 ;; ---------------------------
 (defun dists-to-vehicles (node prob)
   "Given a <Node> and a <Problem>, return the list of all the distances from the <Node> to the current positions of the fleet. Used by get-closest-(feasible)-vehicle."
@@ -113,10 +113,9 @@
 		  (in-timep x) (when c (+ time (travel-time (last-node x) node)))))
 	  (problem-fleet prob)))
 
-;; for VRPTW, consider both capacity and time. Feasiblility of appending at the end only.
-;; use get-best-insertion instead for inserting feasibly into routes.
+;; Feasiblility of appending at the end only.
 (defmethod get-closest-feasible-vehicle ((n node) (prob VRPTW))
-  "Returns the vehicle closest to the node and has enough capacity and time."
+  "Returns the vehicle closest to the node that has enough time at the end of its route. Used for appending nodes. Use get-optimal-insertion instead for inserting feasibly into routes."
   (vehicle prob (get-min-index 
 		 (mapcar #'(lambda (dist arr-time cap)
 			     (unless (or (> (node-demand n) cap)
@@ -128,7 +127,7 @@
 
 ;; ----------------------
 
-;; Optimal insertion
+;; Optimal insertion (used by Greedy Best Insertion)
 ;; ---------------------
 
 (defgeneric get-optimal-insertion (prob node)

@@ -1,5 +1,8 @@
 ;; Best Insertion (used by Tabu Search)
-;; The following functions are defined to generate-assess-choose the best insertion of a node into the current route of a vehicle.
+;; -------------
+;; The following functions are defined to generate-assess-choose the best insertion move
+;; for a node into a vehicle's route. Assumes the route does not include the node already.
+;; - get-best-insertion-move expects a <solution> object, a node-id and a vehicle-id. 
 ;; -----------------------------------------------
 (in-package :open-vrp.algo)
 

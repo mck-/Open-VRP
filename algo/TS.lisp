@@ -1,6 +1,5 @@
-;;; Thu Dec 15, 2011 (c) Marc Kuo
+;;; Tabu Search implementation
 ;;; ----------------
-;;; Tabu Search implementation (uses algo/tools.lisp)
 ;;; 0. initialize algo object
 ;;; 1. generate moves
 ;;; 2. perform move
@@ -17,7 +16,7 @@
   ts)
 
 (defmethod initialize ((prob problem) (ts tabu-search))
-  "Creates inital solution and sets it to :algo-current-sol. Returns the <tabu-search> object."
+  "Creates inital solution and sets it to :algo-current-sol. Returns the <tabu-search> object. For Tabu Search, the default heuristic for generating an initial solution is 'greedy-best-insertion, which is read from the slot :init-heur."
   (let ((init-sol (algo-current-sol
 		   (solve-prob prob (make-instance (tabu-search-init-heur ts))))))
     (init-algo init-sol ts))
