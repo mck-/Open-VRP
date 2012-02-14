@@ -26,7 +26,7 @@ The ultimate vision for Open VRP is a simple intuitive embedded language for the
 
 `solve-plot` expects a problem object and an algo object. It calls `solve-prob` and `plot-solution`.
 
-`test-vrp`, `solomon25`, `solomon100`, christofides-1 and christofides-2 are pre-loaded demo problems. To use Tabu Search:
+`test-vrp`, `solomon25`, `solomon100`, `christofides-1` and `christofides-2` are pre-loaded demo problems. To use Tabu Search:
 
 ```
 (solve-plot test-vrp (make-instance 'tabu-search :iterations 10 :animate T))
