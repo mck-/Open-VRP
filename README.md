@@ -50,8 +50,11 @@ where *node-coords* is a list of pairs, *demands-list* a list of associated dema
 Or to load from a text-file [Solomon-format](http://neo.lcc.uma.es/radi-aeb/WebVRP/index.html?/Problem_Instances/CVRPTWInstances.html), [TSPLIB cvrp format](http://neo.lcc.uma.es/radi-aeb/WebVRP/data/Doc.ps) :
 
 ```
-(defvar test-case (load-testcase-solomon "path-to-file.txt"))
-(solve-plot test-case (make-instance 'tabu-search :iterations 100))
+(defvar test-case-solomon (load-testcase-solomon "path-to-solomon-file-format.txt"))
+(defvar test-case-tsplib (load-tsplib-vrp-file "path-to-tsplib-file-format.txt"))
+
+(solve-plot test-case-solomon (make-instance 'tabu-search :iterations 100))
+(solve-plot test-case-tsplib (make-instance 'tabu-search :iterations 100))
 ```
 
 When the algo is finished running, it returns the Algo object, which contains :current-sol and :best-sol. Use `iterate-more` to keep searching:
