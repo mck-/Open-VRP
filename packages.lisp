@@ -225,4 +225,6 @@
 	   :test-tsp
 	   :test-vrp
 	   :solomon25
-	   :solomon100))
+	   :solomon100
+	   :christofides-1
+	   :christofides-2))

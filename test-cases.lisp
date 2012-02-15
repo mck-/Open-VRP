@@ -17,9 +17,17 @@
 ;; Initialization of objects
 (defvar test-tsp (define-problem "test-case-TSP" *node-coords* 1 :to-depot nil))
 (defvar test-vrp (define-problem "test-case-VRP" *node-coords* 2))
-(defvar solomon25 (load-testcase-solomon "test-cases/25-cust.txt"))
-(defvar solomon100 (load-testcase-solomon "test-cases/100-cust.txt"))
-(defvar christofides01 (load-tsplib-vrp-file "test-cases/Christofides_01.vrp"))
-(defvar christofides02 (load-tsplib-vrp-file "test-cases/Christofides_02.vrp"))
+(defvar solomon25 
+  (load-testcase-solomon (merge-pathnames "test-cases/25-cust.txt" 
+					  (asdf:system-source-directory 'open-vrp))))
+(defvar solomon100 
+  (load-testcase-solomon (merge-pathnames "test-cases/100-cust.txt" 
+					  (asdf:system-source-directory 'open-vrp))))
+(defvar christofides-1 
+  (load-tsplib-vrp-file (merge-pathnames "test-cases/Christofides_01.vrp" 
+					 (asdf:system-source-directory 'open-vrp))))
+(defvar christofides-2 
+  (load-tsplib-vrp-file (merge-pathnames "test-cases/Christofides_02.vrp" 
+					 (asdf:system-source-directory 'open-vrp))))
 
 

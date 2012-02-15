@@ -26,11 +26,13 @@ The ultimate vision for Open VRP is a simple intuitive embedded language for the
 
 `solve-plot` expects a problem object and an algo object. It calls `solve-prob` and `plot-solution`.
 
-`test-vrp`, `solomon25` and `solomon100` are pre-loaded demo problems. To use Tabu Search:
+`test-vrp`, `solomon25`, `solomon100`, `christofides-1` and `christofides-2` are pre-loaded demo problems. To use Tabu Search:
 
 ```
 (solve-plot test-vrp (make-instance 'tabu-search :iterations 10 :animate T))
 (solve-plot solomon100 (make-instance 'tabu-search :iterations 100))
+(solve-plot christofides-2 (make-instance 'tabu-search :iterations 50))
+
 ```
 
 When :animate is set to T, each iteration will produce a plot in run-frames/Iteration x.png (much slower). 
@@ -45,11 +47,14 @@ You can define your own problem objects with:
 
 where *node-coords* is a list of pairs, *demands-list* a list of associated demands (must be same length), and n is the number of vehicles. When a *demands-list* and vehicle *capacity* are provided, the resulting problem is a CVRP. If *time-windows* (list of pairs) and *durations* are given, the resulting problem object is a VRPTW. When everything is provided, it creates a CVRPTW. Each class of problem has its own specific constraints to check. By default, will plot in plots/name.png.
 
-Or to load from a text-file [Solomon-format](http://neo.lcc.uma.es/radi-aeb/WebVRP/index.html?/Problem_Instances/CVRPTWInstances.html):
+Or to load from a text-file [Solomon-format](http://neo.lcc.uma.es/radi-aeb/WebVRP/index.html?/Problem_Instances/CVRPTWInstances.html), [TSPLIB cvrp format](http://neo.lcc.uma.es/radi-aeb/WebVRP/data/Doc.ps) :
 
 ```
-(defvar test-case (load-testcase-solomon "path-to-file.txt"))
-(solve-plot test-case (make-instance 'tabu-search :iterations 100))
+(defvar test-case-solomon (load-testcase-solomon "path-to-solomon-file-format.txt"))
+(defvar test-case-tsplib (load-tsplib-vrp-file "path-to-tsplib-file-format.txt"))
+
+(solve-plot test-case-solomon (make-instance 'tabu-search :iterations 100))
+(solve-plot test-case-tsplib (make-instance 'tabu-search :iterations 100))
 ```
 
 When the algo is finished running, it returns the Algo object, which contains :current-sol and :best-sol. Use `iterate-more` to keep searching:

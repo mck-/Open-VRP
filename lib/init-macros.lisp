@@ -84,8 +84,9 @@
 	    (,drawer (make-instance 'drawer
 				    :min-coord (get-min-coord ,node-coords-list)
 				    :max-coord (get-max-coord ,node-coords-list)
-				    :filename (if ,plot-filename ,plot-filename
-						   (concatenate 'string "plots/" (string ,name) ".png")))))
+				    :filename ,(if plot-filename plot-filename
+						   (merge-pathnames (concatenate 'string "plots/" (string name) ".png")
+								    (asdf:system-source-directory 'open-vrp))))))
        (make-instance ,@(cond ((and time-windows-list capacities) '('cvrptw))
 			      (time-windows-list '('vrptw))
 			      ((and demands capacities) '('cvrp))
