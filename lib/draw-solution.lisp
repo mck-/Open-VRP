@@ -109,7 +109,8 @@
 
   (let ((dr (problem-drawer sol)))
     (with-canvas (:width (drawer-max-pix dr) :height (drawer-max-pix dr))
-      (let ((font (get-font "FreeSerif.ttf"))
+      (let ((font (get-font (merge-pathnames "FreeSerif.ttf" 
+					     (asdf:system-source-directory 'open-vrp))))
 	    (temp-y (drawer-legend-y dr))) ;save the original value (draw-legend-item sets it)
 					;settings
 	(set-font font 15)
@@ -153,8 +154,9 @@
 (defmethod plot-nodes ((prob problem))
   (let ((dr (problem-drawer prob)))
     (with-canvas (:width (drawer-max-pix dr) :height (drawer-max-pix dr))
-      (let ((font (get-font "FreeSerif.ttf")))
-					;settings
+      (let ((font (get-font (merge-pathnames "FreeSerif.ttf" 
+					     (asdf:system-source-directory 'open-vrp)))))
+	;settings
 	(set-font font 15)
 	(set-rgb-fill 1.0 1.0 1.0)
 	(clear-canvas)
