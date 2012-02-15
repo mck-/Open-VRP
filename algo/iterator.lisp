@@ -10,51 +10,6 @@
   (:documentation "Initializes the initial solution for the algo object."))
 ;; ----------------
 
-;; Iterator
-;; ----------------
-(defgeneric iterate (algo)
-  (:method (algo) "iterate: This algo is not defined.")
-  (:documentation "Runs the algo one iteration. Uses the algo's slot current-sol as current solution on which the algo runs one iteration. When algo's slot iterations is 0, then print the best solution found by this algo object. Returns the <algo> object when finished, otherwise returns <problem> solution object."))
-
-(defmethod iterate ((a algo))
-  (let ((sol (algo-current-sol a)))
-    (perform-move sol
-		  (select-move a
-			       (assess-moves sol
-					     (generate-moves a))))))
-
-;; when no more iterations, print solution and return the <Algo> object.
-(defmethod iterate :around ((a algo))
-  (if (< (algo-iterations a) 1)
-      (progn	
-	(print-routes (algo-best-sol a))
-	a)
-      (call-next-method))) ; otherwise iterate
-
-;; After each iteration, check to see if a new best solution has been found and save it.
-(defmethod iterate :after ((a algo))
-  (setf (algo-iterations a) (1- (algo-iterations a)))
-  (format t "~&Iterations to go: ~A~%" (algo-iterations a))
-  (let* ((sol (algo-current-sol a))
-	 (new-fitness (fitness sol))
-	 (best-fitness (algo-best-fitness a)))
-    (print-routes sol)
-    (when (or (null best-fitness)
-	      (< new-fitness best-fitness))
-      (setf (algo-best-fitness a) new-fitness)
-      (setf (algo-best-sol a) (copy-object sol)))))
-
-;; Resume run - add some more iterations
-;; ------------------------
-(defgeneric iterate-more (algo int)
-  (:method (algo int) "iterate-more: expects <Algo> and int as inputs")
-  (:documentation "When an algo finished (i.e. iterations = 0) using iterate-more allows you to keep running it x more iterations."))
-
-(defmethod iterate-more ((a algo) int)
-  (setf (algo-iterations a) int)
-  (run-algo (algo-current-sol a) a))
-;; ---------------------
-
 ;; Generate-moves
 ;; -------------------
 (defgeneric generate-moves (algo)

@@ -122,6 +122,8 @@
 	   :time-after-serving-node
 	   :in-timep
 
+	   :fitness
+
 	   ;; solver
 	   :init-algo
 	   :run-algo
@@ -131,6 +133,8 @@
 	   :multi-run
 	   :get-best-solution-from-multi-run
 	   :multi-run-algo
+	   :iterate
+	   :iterate-more
 
 	   ;; output
 	   :print-routes
@@ -146,10 +150,10 @@
 	   :create-nodes
 	   :create-vehicles
 	   :define-problem
-	  
+
+	   ;; input
 	   :load-testcase-Solomon
 	   :load-tsplib-vrp-file
-	   :fitness
 	   ))
 
 (defpackage :open-vrp.algo
@@ -169,8 +173,6 @@
 
 	   ;; iterator
 	   :initialize
-	   :iterate
-	   :iterate-more
 	   :generate-moves
 	   :perform-move
 	   :assess-move
