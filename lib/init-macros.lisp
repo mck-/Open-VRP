@@ -75,12 +75,28 @@
   "Creates the appropriate <Problem> object from the inputs. Extra key attributes only accept lists that are of equal length to node-coords-list or fleet-size (depending on what attributes it sets). With only the demands-list and capacities, creates a CVRP problem. With time-windows, creates a VRPTW problem. When durations and speeds are not provided, defaults to 0 and 1.  When plot-filename is not given, it will plot in \"plots/name.png\"."
   (with-gensyms (network fleet drawer)
     `(let* ((,network (create-nodes ,node-coords-list
-				    ,@(when demands `(:demands ,demands))
+				    ,@(when demands 
+					    `(:demands (if (listp ,demands)
+							   ,demands
+							   (make-list (length ,node-coords-list) 
+								      :initial-element ,demands))))
 				    ,@(when time-windows-list `(:time-windows ,time-windows-list))
-				    ,@(when durations `(:durations ,durations))))
+				    ,@(when durations 
+					    `(:durations (if (listp ,durations)
+							   ,durations
+							   (make-list (length ,node-coords-list) 
+								      :initial-element ,durations))))))
 	    (,fleet (create-vehicles ,fleet-size (aref ,network 0) ,to-depot
-				     ,@(when capacities `(:capacities ,capacities))
-				     ,@(when speeds `(:speeds ,speeds)))) 
+				     ,@(when capacities 
+					    `(:capacities (if (listp ,capacities)
+							   ,capacities
+							   (make-list ,fleet-size 
+								      :initial-element ,capacities))))
+				     ,@(when speeds
+					    `(:speeds (if (listp ,speeds)
+							   ,speeds
+							   (make-list ,fleet-size 
+								      :initial-element ,speeds))))))
 	    (,drawer (make-instance 'drawer
 				    :min-coord (get-min-coord ,node-coords-list)
 				    :max-coord (get-max-coord ,node-coords-list)
