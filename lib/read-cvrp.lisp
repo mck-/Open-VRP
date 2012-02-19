@@ -101,7 +101,7 @@ EDGE_WEIGHT_FORMAT and EDGE_WEIGHT_TYPE are optional"
       	               (couple-lists x-coords y-coords) 
       	               25 
       		       :demands demands
-      		       :capacities (make-list 25 :initial-element capacity) ))))
+      		       :capacities capacity))))
 
 
 
