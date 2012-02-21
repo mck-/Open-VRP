@@ -1,4 +1,3 @@
-;; Mon Jan 9, 2011
 ;; Tabu Search utilities
 ;; ---------------------
 
@@ -8,39 +7,17 @@
 ;; -----------------------------
 
 ;; Add
-(defgeneric add-to-tabu (obj move)
-  (:method (obj move) "add-to-tabu: method for <Algo>/<Tabu-list> or <Move> is not defined!")
-  (:documentation "Put the <Move> on the :tabu-list of <Algo>, which is a <Tabu-list> object."))
-
-(defmethod add-to-tabu ((tl tabu-list) (mv ts-best-insertion-move))
-  (let ((tenure (tabu-list-tenure tl)))
-    (push mv (tabu-list-tabu tl))
-    (when (> (length (tabu-list-tabu tl)) tenure)
-      (setf (tabu-list-tabu tl) (subseq (tabu-list-tabu tl) 0 tenure)))))
-
-(defmethod add-to-tabu ((ts tabu-search) (mv ts-best-insertion-move))
-  (add-to-tabu (tabu-search-tabu-list ts) mv))
+(defun add-to-tabu (ts &rest pars)
+  "Add the <Move> to the tabu-list of <tabu-search>. When tabu-list gets larger than the tenure, will prune away the oldest <Move>s on the list. Destructive."
+  (let ((tenure (ts-tenure ts))
+	(tl (ts-tabu-list ts)))
+    (vector-push-extend pars tl)
+    (when (> (length tl) tenure)
+      (setf (ts-tabu-list ts) (subseq tl 1)))))
 
 ;; Check
-(defgeneric is-tabup (obj move)
-  (:method (obj move) "is-tabup: method for <Algo>/<Tabu-list> or <Move> is not defined!")
-  (:documentation "Returns <Move> if on the :tabu-list, NIL otherwise"))
-
-(defmethod is-tabup ((tl tabu-list) (mv ts-best-insertion-move))
-  (labels ((iter (tlist)	     
-	     (if (null (car tlist)) nil
-		 (or		 
-		  (and (= (move-node-id mv) (move-node-id (car tlist)))
-		       (= (move-vehicle-ID mv) (move-vehicle-ID (car tlist))))
-		  (iter (cdr tlist))))))
-    (iter (tabu-list-tabu tl))))
-
-(defmethod is-tabup ((ts tabu-search) (mv ts-best-insertion-move))
-  (is-tabup (tabu-search-tabu-list ts) mv))
-
-(defmethod tabu-list ((ts tabu-search))
-  "Returns the tabu-list currently held in the ts-algo object."
-  (tabu-list-tabu (tabu-search-tabu-list ts)))
+(defun is-tabup (ts &rest pars)
+  (find pars (ts-tabu-list ts) :test 'equal))
 
 ;; Candidate Lists
 ;; -----------------------------
