@@ -9,17 +9,17 @@
 (in-package :open-vrp.algo)
 
 (defmethod run-algo ((prob problem) (ts tabu-search))
-  "Initialize (if necessary), iterate till finished. Prints run stats and the best solution. Returns (best) <Algo> object."
-  (when (null (algo-current-sol ts)) (initialize prob ts))
+  "Initialize (if necessary), iterate till finished. Returns <Algo> object."
+  (unless (algo-current-sol ts) (initialize prob ts))
   (while (< 0 (algo-iterations ts))
     (iterate ts))
   ts)
 
 (defmethod initialize ((prob problem) (ts tabu-search))
   "Creates inital solution and sets it to :algo-current-sol. Returns the <tabu-search> object. For Tabu Search, the default heuristic for generating an initial solution is 'greedy-best-insertion, which is read from the slot :init-heur."
-  (let ((init-sol (algo-current-sol
-		   (solve-prob prob (make-instance (tabu-search-init-heur ts))))))
-    (init-algo init-sol ts))
+  (init-algo (algo-current-sol
+	      (solve-prob prob (make-instance (tabu-search-init-heur ts))))
+	     ts)
   ts)
 
 ;; Original attempt was to make generate-moves a general method - using the move-type slot of ts - which can be used to generate all sorts of moves e.g. swap moves.. but the method below enumerates only along node-id (excluding 0) and vehicle-id. This may only be useful for TS-best-insertion-move?? For other moves, we need to define other defmethods?
