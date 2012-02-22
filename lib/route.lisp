@@ -10,13 +10,13 @@
 
 ;; 0. Route utils
 ;; ---------------------
-(defun empty-routep (veh)
-  "Given a <vehicle>, return T if the route only has base-nodes."
-  (not (member 0 (vehicle-route veh) :key #'node-id :test-not #'=)))
+(defun empty-routep (route)
+  "Given a route, return T if the route only has base-nodes."
+  (not (member 0 route :key #'node-id :test-not #'=)))
 
 (defun get-busy-vehicles (problem)
   "Returns a list of <Vehicles> that are not empty, given a <Problem> object."
-  (remove-if #'empty-routep (problem-fleet problem)))
+  (remove-if #'empty-routep (problem-fleet problem) :key #'vehicle-route))
 
 (defun one-destinationp (route)
   "Return T if there is only one destination on route, excluding base nodes."
