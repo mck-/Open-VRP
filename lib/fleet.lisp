@@ -18,8 +18,8 @@
 (defmethod route-indices ((p problem))
   (mapcar #'route-indices (problem-fleet p)))
 
-(defgeneric vehicle-with-node-ID (obj node-id)
-  (:method (obj node) "Expects <problem> and int as inputs!")
+(defgeneric vehicle-with-node-ID (prob node-id)
+  (:method (prob node) "Expects <problem> and int as inputs!")
   (:documentation "Given a node-ID, return the vehicle-ID that has the node in its route. The function for the input of the base-node 0 is undefined. Returns NIL if node-ID cannot be found."))
 
 (defmethod vehicle-with-node-ID ((p problem) node-ID)
