@@ -40,8 +40,8 @@
 
 (defmethod remove-affected-moves ((ts tabu-search) move)
   "Given a <Tabu-search> and one <Move> (to be performed), remove all the moves from the candidate-list that do not apply anymore after the selected move is performed."
-  (setf (tabu-search-candidate-list ts)
+  (setf (ts-candidate-list ts)
 	(remove-if #'(lambda (mv) (or (= (move-node-id mv) (move-node-id move))
 				      (= (move-vehicle-ID mv) (move-vehicle-ID move))))
-		   (tabu-search-candidate-list ts))))
+		   (ts-candidate-list ts))))
   
