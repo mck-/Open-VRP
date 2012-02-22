@@ -92,21 +92,22 @@
 	(progn (perform-move sol best-move) (remove-node-ID sol node-ID))
 	;in all other cases, it's okay to remove the node first, then reinsert
 	(progn (remove-node-ID sol node-ID) (perform-move sol best-move))))
-  sol)
+    sol))
 
 (defmethod select-move ((ts tabu-search) all-moves)
-  "This function selects a move from a sorted list of moves, while considering the tabu-list. When aspiration criteria is set to T, then if by performing the move we get a new best solution, circumvent the tabu-list."
-  (if (and (ts-aspiration ts)
-	   (< (+ (fitness (algo-current-sol ts)) (move-fitness (car all-moves)))
+  "This function selects best non-tabu move from a list of assessed moves. When aspiration criteria is set to T, then if by performing the move we get a new best solution, circumvent the tabu-list."
+  (let ((sorted-moves (sort-moves all-moves)))
+    (if (and (ts-aspiration ts)
+	     (< (+ (fitness (algo-current-sol ts)) (move-fitness (car sorted-moves)))
 	      (algo-best-fitness ts)))
-      (car all-moves)
+      (car sorted-moves)
       (labels ((iter (moves)
 		 (cond ((null moves)
 			(error 'all-moves-tabu :moves all-moves :tabu-list (ts-tabu-list ts)))
-		       ((is-tabup ts (funcall (ts-parameter-f ts) (car moves)))
+		       ((is-tabu-movep ts (car moves))
 			(iter (cdr moves)))
 		       (t (car moves)))))
-	(iter all-moves))))
+	(iter sorted-moves)))))
 
 ;; --------------------
 ;; If there is no candidate-list
@@ -118,7 +119,7 @@
   (let ((sol (algo-current-sol ts)))
     (labels ((perform-add-tabu (move)
 	       "add move to tabu-list and perform it"
-	       (add-to-tabu ts (funcall (ts-parameter-f ts) move))
+	       (add-move-to-tabu ts move)
 	       (perform-move sol move))
 	     (select-perform-from-cand (ts)
 	       "select best move from candidate-list, remove all related moves and perform"
