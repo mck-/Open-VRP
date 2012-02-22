@@ -115,7 +115,7 @@
   (let ((sol (algo-current-sol ts)))
     (labels ((perform-add-tabu (move)
 	       "add move to tabu-list if unimproving move and perform it"
-	       (when (< 0 (move-fitness move)) (add-move-to-tabu ts move))
+	       (when (<= 0 (move-fitness move)) (add-move-to-tabu ts move))
 	       (perform-move sol move))
 	     (select-perform-from-cand (ts)
 	       "select best move from candidate-list, remove all related moves and perform"
