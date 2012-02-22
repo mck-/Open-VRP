@@ -3,7 +3,7 @@
 
 (in-package :open-vrp.util)
 
-;; util/lists.lisp
+;; lib/lists.lisp
 (define-condition unaccepted-predicate (error)
   ((pred :initarg :pred :reader pred))
   (:report "Accepts only #'> or #'<."))
@@ -12,13 +12,13 @@
   ((index :initarg :index :reader index)
    (ls :initarg :ls :reader ls)))
 
-;; util/network.lisp
+;; lib/network.lisp
 (define-condition same-origin-destination (error)
   ((from :initarg :from :reader from)
    (to :initarg :to :reader to))
   (:report "Trying to lookup distance for same origin and destination - NIL"))
 
-;; util/constraints.lisp
+;; lib/constraints.lisp
 (define-condition infeasible-solution (error)
   ((sol :initarg :sol :reader sol)
    (func :initarg :func :reader func))
@@ -32,7 +32,7 @@
   ((veh :initarg :veh :reader veh))
   (:report "Trying to check TW constraints for a vehicle that has no defined speed."))
 
-;; util/network.lisp util/fleet.lisp
+;; lib/network.lisp lib/fleet.lisp
 (define-condition not-equal-length (error)
   ((list1 :initarg :list1 :reader list1)
    (list2 :initarg :list2 :reader list2))
