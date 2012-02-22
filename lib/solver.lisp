@@ -14,10 +14,11 @@
 ;; Run Algo
 ;; -------------------------
 (defun init-algo (sol algo)
-  "Given a solution, sets the :current-sol, :best-fitness and :best-sol slots of the <algo> object."
+  "Given a solution, sets the :current-sol, :best-fitness and :best-sol slots of the <algo> object. Returns <algo>."
   (setf (algo-current-sol algo) sol
 	(algo-best-fitness algo) (fitness sol)
-	(algo-best-sol algo) (copy-object sol)))
+	(algo-best-sol algo) (copy-object sol))
+  algo)
 
 
 (defgeneric run-algo (problem algo)
