@@ -121,8 +121,9 @@
     (print-routes sol)
     (when (or (null best-fitness)
 	      (< new-fitness best-fitness))
-      (setf (algo-best-fitness a) new-fitness)
-      (setf (algo-best-sol a) (copy-object sol)))))
+      (setf (algo-best-fitness a) new-fitness
+	    (algo-best-sol a) (copy-object sol)
+	    (algo-best-iteration a) (algo-iterations a)))))
 
 ;; Resume run - add some more iterations
 ;; ------------------------

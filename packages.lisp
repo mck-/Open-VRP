@@ -42,6 +42,7 @@
 	   :algo-desc
 	   :algo-best-sol
 	   :algo-best-fitness
+	   :algo-best-iteration
 	   :algo-current-sol
 	   :algo-iterations
 	   :drawer-min-coord
