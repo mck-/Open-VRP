@@ -18,35 +18,41 @@
 (defmethod initialize ((prob problem) (ts tabu-search))
   "Creates inital solution and sets it to :algo-current-sol. Returns the <tabu-search> object. For Tabu Search, the default heuristic for generating an initial solution is 'greedy-best-insertion, which is read from the slot :init-heur."
   (init-algo (algo-current-sol
-	      (solve-prob prob (make-instance (tabu-search-init-heur ts))))
+	      (solve-prob prob (make-instance (ts-init-heur ts))))
 	     ts)
   ts)
 
 ;; Original attempt was to make generate-moves a general method - using the move-type slot of ts - which can be used to generate all sorts of moves e.g. swap moves.. but the method below enumerates only along node-id (excluding 0) and vehicle-id. This may only be useful for TS-best-insertion-move?? For other moves, we need to define other defmethods?
 
+(defmacro map-node-ID (prob &body body)
+  "Map over all node-IDs, except for base. Anaphoric, will bind node-ID."
+  `(map1-n #'(lambda (node-ID)
+	       ,@body)
+	   (1- (num-nodes ,prob))))
+
+(defmacro map-veh-ID (prob &body body)
+  "Map over all veh-IDs capped at fleet-size. Will consider only busy vehicles and one extra idle vehicle. Anaphoric, will bind veh-ID."
+  `(map0-n #'(lambda (veh-ID)
+	       ,@body)
+	   (min (1+ (vehicle-id (car (last (get-busy-vehicles ,prob)))))
+		(1- (num-veh ,prob)))))
+
+(defun useless-move (mv prob)
+  "Returns T if move concerns a node and vehicle which has the node as only destination."
+  (let ((route (vehicle-route (vehicle prob (move-vehicle-ID mv)))))
+    (and (one-destinationp route)			  
+	 (= (node-id (cadr route)) (move-node-ID mv)))))
+
 (defmethod generate-moves ((ts tabu-search))
   "Generates a list of <move> instances (depending on what was defined in the ts slot) for all nodes and vehicles."
-  (let* ((prob (algo-current-sol ts))
-	 (num-nodes (1- (length (problem-network prob)))) ;1- for base
-	 ;ignore empty vehicles, except for one (if available! capped at fleet-size)
-	 (num-vehicles (min
-			(1+ (vehicle-id (car (last (get-busy-vehicles prob)))))
-			(1- (length (problem-fleet prob)))))
-	 (move-type (tabu-search-moves ts)))
-    ;remove unnecessary moves that don't do anything, e.g. when vehicle 2's route is (0 1), then the move of best-inserting node 1 into vehicle 2 has no meaning (but causes trouble!) 
-    (remove-if #'(lambda (mv)
-		   (let ((route (vehicle-route (vehicle prob (move-vehicle-ID mv)))))
-			  ;route has one destination only
-		     (and (one-destinationp route)			  
-			  (= (node-id (cadr route)) (move-node-ID mv))))) ;and same node
+  (let ((prob (algo-current-sol ts)))
+    (remove-if #'(lambda (mv) (useless-move mv prob))
 	       (flatten
-		(map1-n #'(lambda (node-id)
-			    (map0-n #'(lambda (veh-ID)
-					(make-instance move-type
-						       :node-ID node-id
-						       :vehicle-ID veh-ID))
-				    num-vehicles))
-			num-nodes)))))
+		(map-node-ID prob
+		  (map-veh-ID prob
+		    (make-instance (ts-move-type ts)
+				   :node-ID node-ID
+				   :vehicle-ID veh-ID)))))))		  
 
 ;; the difference between cost (inserting) and saving (removing)
 ;; cost of inserting is calculated by (get-best-insertion-move)
@@ -55,13 +61,12 @@
   (with-slots (node-id vehicle-id fitness) mv
     (handler-case
 	(let* ((dist-array (problem-dist-array sol))
-	       (best-move (get-best-insertion-move sol vehicle-id node-id))
 	       (route (vehicle-route (vehicle sol (vehicle-with-node-ID sol node-id))))
 	       (pos (position node-id route :key #'node-id))
 	       (node-before (node-id (nth (1- pos) route)))
 	       (dist1 (distance node-before node-id dist-array)))
 	  (setf fitness
-		(- (move-fitness best-move)
+		(- (move-fitness (get-best-insertion-move sol vehicle-id node-id))
 		   ;how much you save by removing:
 		   (if (= pos (1- (length route))) ;if the node is at end of route
 		       dist1
@@ -92,14 +97,15 @@
   prob)
 
 (defmethod select-move ((ts tabu-search) all-moves)
-  "This function selects a move from a sorted list of moves, while considering the tabu-list. If by performing the move we get a new best solution, circumvent the tabu-list."
-  (if (<
-       (+ (fitness (algo-current-sol ts)) (move-fitness (car all-moves)))
-       (algo-best-fitness ts))
+  "This function selects a move from a sorted list of moves, while considering the tabu-list. When aspidation criteria is set to T, then if by performing the move we get a new best solution, circumvent the tabu-list."
+  (if (and (ts-aspiration ts)
+	   (<
+	    (+ (fitness (algo-current-sol ts)) (move-fitness (car all-moves)))
+	    (algo-best-fitness ts)))
       (car all-moves)
       (labels ((iter (moves)
 		 (cond ((null moves)
-			(error 'all-moves-tabu :moves all-moves :tabu-list (tabu-list ts)))
+			(error 'all-moves-tabu :moves all-moves :tabu-list (ts-tabu-list ts)))
 		       ((is-tabup ts (car moves)) (iter (cdr moves)))
 		       (t (car moves)))))
 	(iter all-moves))))
@@ -118,19 +124,19 @@
 	       (perform-move sol move))
 	     (select-perform-from-cand (ts)
 	       "select best move from candidate-list, remove all related moves and perform"
-	       (let ((best-move (car (tabu-search-candidate-list ts))))
+	       (let ((best-move (car (ts-candidate-list ts))))
 		 (remove-affected-moves ts best-move) 
 		 (perform-add-tabu best-move))))
-      (if (tabu-search-candidate-list ts) 
+      (if (ts-candidate-list ts) 
 	  (select-perform-from-cand ts)
 	  (let ((sorted-moves (sort-moves (assess-moves sol (generate-moves ts)))))
-	    (setf (tabu-search-candidate-list ts) (create-candidate-list ts sorted-moves))
+	    (setf (ts-candidate-list ts) (create-candidate-list ts sorted-moves))
 	    (select-perform-from-cand ts))))))
 
 ;; Tabu Search animate
 ;; -------------------------
 (defmethod iterate :after ((ts tabu-search))
-  (when (tabu-search-animate ts)
+  (when (ts-animate ts)
     (plot-solution (algo-current-sol ts) (with-output-to-string (s)
 					   (princ "run-frames/Iteration " s)
 					   (princ (algo-iterations ts) s)
