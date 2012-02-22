@@ -3,6 +3,13 @@
 
 (in-package :open-vrp.algo)
 
+;; Misc
+;; ---------------------------
+
+(defun toggle-animate (ts)
+  (setf (ts-animatep ts)
+	(if (ts-animatep ts) nil T)))
+
 ;; Tabu List
 ;; -----------------------------
 

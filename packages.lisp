@@ -206,6 +206,7 @@
 	   :ts-candidate-list
 
 	   ;; Tabu Search utils
+	   :toggle-animate
 	   :add-to-tabu
 	   :add-move-to-tabu
 	   :is-tabup
