@@ -15,9 +15,9 @@
 ;; -------------------------
 (defun init-algo (sol algo)
   "Given a solution, sets the :current-sol, :best-fitness and :best-sol slots of the <algo> object."
-  (setf (algo-current-sol algo) prob
-	(algo-best-fitness algo) (fitness prob)
-	(algo-best-sol algo) (copy-object prob)))
+  (setf (algo-current-sol algo) sol
+	(algo-best-fitness algo) (fitness sol)
+	(algo-best-sol algo) (copy-object sol)))
 
 
 (defgeneric run-algo (problem algo)
