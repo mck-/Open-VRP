@@ -103,7 +103,8 @@
       (labels ((iter (moves)
 		 (cond ((null moves)
 			(error 'all-moves-tabu :moves all-moves :tabu-list (ts-tabu-list ts)))
-		       ((is-tabup ts (car moves)) (iter (cdr moves)))
+		       ((is-tabup ts (funcall (ts-parameter-f ts) (car moves)))
+			(iter (cdr moves)))
 		       (t (car moves)))))
 	(iter all-moves))))
 
@@ -117,7 +118,7 @@
   (let ((sol (algo-current-sol ts)))
     (labels ((perform-add-tabu (move)
 	       "add move to tabu-list and perform it"
-	       (add-to-tabu ts move)
+	       (add-to-tabu ts (funcall (ts-parameter-f ts) move))
 	       (perform-move sol move))
 	     (select-perform-from-cand (ts)
 	       "select best move from candidate-list, remove all related moves and perform"

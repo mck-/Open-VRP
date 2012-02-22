@@ -7,7 +7,7 @@
 ;; -----------------------------
 
 ;; Add
-(defun add-to-tabu (ts &rest pars)
+(defun add-to-tabu (ts pars)
   "Add the <Move> to the tabu-list of <tabu-search>. When tabu-list gets larger than the tenure, will prune away the oldest <Move>s on the list. Destructive."
   (let ((tenure (ts-tenure ts))
 	(tl (ts-tabu-list ts)))
@@ -16,7 +16,7 @@
       (setf (ts-tabu-list ts) (subseq tl 1)))))
 
 ;; Check
-(defun is-tabup (ts &rest pars)
+(defun is-tabup (ts pars)
   (find pars (ts-tabu-list ts) :test 'equal))
 
 ;; Candidate Lists
@@ -32,7 +32,7 @@
 	     (if (or (null moves) (not (improving-movep (car moves))))
 		 (nreverse ans)
 		 (iter (cdr moves)
-		       (if (is-tabup ts (car moves))
+		       (if (is-tabup ts (funcall (ts-parameter-f ts) (car moves)))
 			   ans
 			   (push (car moves) ans)))))) ;only add if move is non-tabu
     (iter (cdr sorted-moves)
