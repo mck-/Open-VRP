@@ -99,15 +99,10 @@
   (let ((sorted-moves (sort-moves all-moves)))
     (if (and (ts-aspirationp ts)
 	     (< (+ (fitness (algo-current-sol ts)) (move-fitness (car sorted-moves)))
-	      (algo-best-fitness ts)))
-      (car sorted-moves)
-      (labels ((iter (moves)
-		 (cond ((null moves)
-			(error 'all-moves-tabu :moves all-moves :tabu-list (ts-tabu-list ts)))
-		       ((is-tabu-movep ts (car moves))
-			(iter (cdr moves)))
-		       (t (car moves)))))
-	(iter sorted-moves)))))
+		(algo-best-fitness ts)))
+	(car sorted-moves)
+	(aif (find-if-not #'(lambda (mv) (is-tabu-movep ts mv)) sorted-moves) it
+	     (error 'all-moves-tabu :moves all-moves :tabu-list (ts-tabu-list ts))))))
 
 ;; --------------------
 ;; If there is no candidate-list
