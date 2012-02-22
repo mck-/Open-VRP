@@ -16,6 +16,14 @@
    (vehicle-ID :accessor move-vehicle-ID :initarg :vehicle-ID)
    (index :accessor move-index :initarg :index)))
 
+(defun route-from (ins-move sol)
+  "Returns the route that contains the node that will be moved."
+  (vehicle-route (vehicle sol (vehicle-with-node-ID sol (move-node-id ins-move)))))
+
+(defun route-to (ins-move sol)
+  "Returns the route that will be affected by the insertion-move."
+  (vehicle-route (vehicle sol (move-vehicle-ID ins-move))))
+
 (defun num-nodes (prob)
   "Given a problem, return the number of nodes in the network."
   (length (problem-network prob)))
