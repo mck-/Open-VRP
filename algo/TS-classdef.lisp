@@ -13,8 +13,8 @@
    (aspirationp :accessor ts-aspirationp :initarg :aspirationp :initform T)
    (elite-listp :accessor ts-elite-listp :initarg :elite-listp :initform T)
    (tabu-list :accessor ts-tabu-list :initarg :tabu-list :initform nil)
-   (tabu-tenure :accessor ts-tenure :initarg :tabu-tenure :initform 5)
-   (tabu-parameter-f :accessor ts-parameter-f :initarg :tabu-parameter-f :initform #'(lambda (mv) (list (move-node-id mv) (move-vehicle-id mv))))
+   (tabu-tenure :accessor ts-tenure :initarg :tabu-tenure :initform 15)
+   (tabu-parameter-f :accessor ts-parameter-f :initarg :tabu-parameter-f :initform #'(lambda (mv) (move-node-id mv)))
    (candidate-list :accessor ts-candidate-list :initarg :candidate-list :initform nil)))
 
 ;; ----------------------------
