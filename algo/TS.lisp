@@ -132,7 +132,7 @@
 ;; Tabu Search animate
 ;; -------------------------
 (defmethod iterate :after ((ts tabu-search))
-  (when (ts-animate ts)
+  (when (ts-animatep ts)
     (plot-solution (algo-current-sol ts) (with-output-to-string (s)
 					   (princ "run-frames/Iteration " s)
 					   (princ (algo-iterations ts) s)

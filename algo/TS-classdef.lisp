@@ -9,7 +9,7 @@
    (move-type :accessor ts-move-type :initarg :move-type :initform 'TS-best-insertion-move)
    (init-heur :accessor ts-init-heur :initarg :init-heur :initform 'greedy-best-insertion)
    (iterations :initform 20)
-   (animatep :accessor ts-animate :initarg :animate :initform nil)
+   (animatep :accessor ts-animatep :initarg :animate :initform nil)
    (aspirationp :accessor ts-aspirationp :initarg :aspirationp :initform T)
    (elite-listp :accessor ts-elite-listp :initarg :elite-listp :initform T)
    (tabu-list :accessor ts-tabu-list :initarg :tabu-list :initform nil)
