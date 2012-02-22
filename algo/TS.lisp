@@ -39,7 +39,7 @@
 
 (defun useless-move (mv prob)
   "Returns T if move concerns a node and vehicle which has the node as only destination."
-  (let ((route (vehicle-route (vehicle prob (move-vehicle-ID mv)))))
+  (let ((route (route-to mv prob)))
     (and (one-destinationp route)			  
 	 (= (node-id (cadr route)) (move-node-ID mv)))))
 
@@ -61,7 +61,7 @@
   (with-slots (node-id vehicle-id fitness) mv
     (handler-case
 	(let* ((dist-array (problem-dist-array sol))
-	       (route (vehicle-route (vehicle sol (vehicle-with-node-ID sol node-id))))
+	       (route (route-from mv sol))
 	       (pos (position node-id route :key #'node-id))
 	       (node-before (node-id (nth (1- pos) route)))
 	       (dist1 (distance node-before node-id dist-array)))
