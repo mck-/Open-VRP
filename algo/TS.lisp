@@ -38,10 +38,11 @@
 		(1- (num-veh ,prob)))))
 
 (defun useless-move (mv prob)
-  "Returns T if move concerns a node and vehicle which has the node as only destination."
+  "Returns T if move is useless. Two options: 1. move concerns node and vehicle that has the node as it's only destination, e.g. (0 2 0). 2. Moving node from one-destination vehicle to empty-vehicle, which becomes another one-destination vehicle."
   (let ((route (route-to mv prob)))
-    (and (one-destinationp route)			  
-	 (= (node-id (cadr route)) (move-node-ID mv)))))
+    (or (and (one-destinationp route)			  
+	     (= (node-id (cadr route)) (move-node-ID mv)))
+	(and (empty-routep route) (one-destinationp (route-from mv prob))))))
 
 (defmethod generate-moves ((ts tabu-search))
   "Generates a list of <move> instances (depending on what was defined in the ts slot) for all nodes and vehicles."
