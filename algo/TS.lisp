@@ -113,8 +113,8 @@
 (defmethod iterate ((ts tabu-search))
   (let ((sol (algo-current-sol ts)))
     (labels ((perform-add-tabu (move)
-	       "add move to tabu-list and perform it"
-	       (add-move-to-tabu ts move)
+	       "add move to tabu-list if unimproving move and perform it"
+	       (when (< 0 (move-fitness move)) (add-move-to-tabu ts move))
 	       (perform-move sol move))
 	     (select-perform-from-cand (ts)
 	       "select best move from candidate-list, remove all related moves and perform"
@@ -133,8 +133,11 @@
 ;; -------------------------
 (defmethod iterate :after ((ts tabu-search))
   (when (ts-animatep ts)
-    (plot-solution (algo-current-sol ts) (with-output-to-string (s)
-					   (princ "run-frames/Iteration " s)
-					   (princ (algo-iterations ts) s)
-					   (princ ".png" s)))))
+    (plot-solution (algo-current-sol ts) (merge-pathnames
+					  (with-output-to-string (s)
+					    (princ "run-frames/Iteration " s)
+					    (princ (algo-iterations ts) s)
+					    (princ ".png" s))
+					  (asdf:system-source-directory 'open-vrp)))))
+					  
 ;; --------------------------
