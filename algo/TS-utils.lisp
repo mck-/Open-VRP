@@ -8,16 +8,25 @@
 
 ;; Add
 (defun add-to-tabu (ts pars)
-  "Add the <Move> to the tabu-list of <tabu-search>. When tabu-list gets larger than the tenure, will prune away the oldest <Move>s on the list. Destructive."
+  "Add pars to the tabu-list of <tabu-search>. Expects pars to be a list when more than one parameter is recorded. When tabu-list gets larger than the tenure, will prune away the oldest pars on the list. Destructive."
   (let ((tenure (ts-tenure ts))
 	(tl (ts-tabu-list ts)))
     (vector-push-extend pars tl)
     (when (> (length tl) tenure)
       (setf (ts-tabu-list ts) (subseq tl 1)))))
 
+(defun add-move-to-tabu (ts mv)
+  "Adds <Move> to tabu-list of <tabu-search>. Calls function held in <ts>'s :tabu-parameter-f slot."
+  (add-to-tabu ts (funcall (ts-parameter-f ts) mv)))
+
 ;; Check
 (defun is-tabup (ts pars)
+  "Given pars, checks if on tabu list of <tabu-search>"
   (find pars (ts-tabu-list ts) :test 'equal))
+
+(defun is-tabu-movep (ts mv)
+  "Given a <Move>, checks if the parameters returned by calling :tabu-parameter-f are recorded on the list."
+  (is-tabup ts (funcall (ts-parameter-f ts) mv)))
 
 ;; Candidate Lists
 ;; -----------------------------
