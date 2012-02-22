@@ -121,11 +121,13 @@
 	       (let ((best-move (car (ts-candidate-list ts))))
 		 (remove-affected-moves ts best-move) 
 		 (perform-add-tabu best-move))))
-      (if (ts-candidate-list ts) 
-	  (select-perform-from-cand ts)
-	  (let ((sorted-moves (sort-moves (assess-moves sol (generate-moves ts)))))
-	    (setf (ts-candidate-list ts) (create-candidate-list ts sorted-moves))
-	    (select-perform-from-cand ts))))))
+      (if (ts-elite-listp ts)
+	  (if (ts-candidate-list ts) 
+	      (select-perform-from-cand ts)
+	      (let ((sorted-moves (sort-moves (assess-moves sol (generate-moves ts)))))
+		(setf (ts-candidate-list ts) (create-candidate-list ts sorted-moves))
+		(select-perform-from-cand ts)))
+	  (perform-add-tabu (select-move ts (assess-moves sol (generate-moves ts))))))))
 
 ;; Tabu Search animate
 ;; -------------------------
