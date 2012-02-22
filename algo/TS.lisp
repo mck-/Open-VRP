@@ -80,29 +80,25 @@
       (no-feasible-move () (setf fitness nil))))) ;when no feasible-moves exist, set fitness nil
 					
 	  
-(defmethod perform-move ((prob problem) (mv TS-best-insertion-move))
+(defmethod perform-move ((sol problem) (mv TS-best-insertion-move))
   "Takes <Node> with node-ID and uses get-best-insertion to insert in vehicle-ID. DESTRUCTIVE."
-  (let* ((node-ID (move-node-id mv))
-	 (veh-ID (move-vehicle-ID mv))
-	 (best-move (get-best-insertion-move prob
-					     veh-ID
-					     node-ID)))
+  (with-slots (node-ID vehicle-ID) mv
+    (let ((best-move (get-best-insertion-move sol vehicle-ID node-ID)))
     ;if the move of node is intra-route, AND the node is being moved forward
-    (if (and (= (vehicle-with-node-ID prob node-ID) veh-ID)
-	     (> (move-index best-move)
-		(position node-id (vehicle-route (vehicle prob veh-ID)) :key #'node-id)))
-	;then perform insertion first, afterward remove the old node, positioned before the new)
-	(progn (perform-move prob best-move) (remove-node-ID prob node-ID))
+      (if (and (= (vehicle-with-node-ID sol node-ID) vehicle-ID)
+	       (> (move-index best-move)
+		  (position node-id (route-to mv sol) :key #'node-id)))
+	;then perform insertion first, afterward remove the old node, positioned before the new
+	(progn (perform-move sol best-move) (remove-node-ID sol node-ID))
 	;in all other cases, it's okay to remove the node first, then reinsert
-	(progn (remove-node-ID prob node-ID) (perform-move prob best-move))))
-  prob)
+	(progn (remove-node-ID sol node-ID) (perform-move sol best-move))))
+  sol)
 
 (defmethod select-move ((ts tabu-search) all-moves)
-  "This function selects a move from a sorted list of moves, while considering the tabu-list. When aspidation criteria is set to T, then if by performing the move we get a new best solution, circumvent the tabu-list."
+  "This function selects a move from a sorted list of moves, while considering the tabu-list. When aspiration criteria is set to T, then if by performing the move we get a new best solution, circumvent the tabu-list."
   (if (and (ts-aspiration ts)
-	   (<
-	    (+ (fitness (algo-current-sol ts)) (move-fitness (car all-moves)))
-	    (algo-best-fitness ts)))
+	   (< (+ (fitness (algo-current-sol ts)) (move-fitness (car all-moves)))
+	      (algo-best-fitness ts)))
       (car all-moves)
       (labels ((iter (moves)
 		 (cond ((null moves)
