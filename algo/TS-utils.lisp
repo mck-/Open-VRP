@@ -9,11 +9,10 @@
 ;; Add
 (defun add-to-tabu (ts pars)
   "Add pars to the tabu-list of <tabu-search>. Expects pars to be a list when more than one parameter is recorded. When tabu-list gets larger than the tenure, will prune away the oldest pars on the list. Destructive."
-  (let ((tenure (ts-tenure ts))
-	(tl (ts-tabu-list ts)))
-    (vector-push-extend pars tl)
-    (when (> (length tl) tenure)
-      (setf (ts-tabu-list ts) (subseq tl 1)))))
+  (let ((tenure (ts-tenure ts)))
+    (push pars (ts-tabu-list ts))
+    (when (> (length (ts-tabu-list ts)) tenure)
+      (setf (ts-tabu-list ts) (subseq (ts-tabu-list ts) 0 tenure)))))
 
 (defun add-move-to-tabu (ts mv)
   "Adds <Move> to tabu-list of <tabu-search>. Calls function held in <ts>'s :tabu-parameter-f slot."
