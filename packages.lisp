@@ -194,10 +194,23 @@
 	   :tabu-list
 	   :tabu-search	   
 	   
-	   ;; Tabu Search
+	   ;; Tabu Search object
+	   :ts-move-type
+	   :ts-init-heur
+	   :ts-animatep
+	   :ts-aspirationp
+	   :ts-elite-listp
+	   :ts-tabu-list
+	   :ts-tenure
+	   :ts-parameter-f
+	   :ts-candidate-list
+
+	   ;; Tabu Search utils
 	   :add-to-tabu
-	   :TS-best-insertion-move		   
+	   :add-move-to-tabu
 	   :is-tabup
+	   :is-tabu-movep
+	   :TS-best-insertion-move
 	   :create-candidate-list))
 
 (defpackage :open-vrp
