@@ -205,6 +205,7 @@
 	   :ts-tenure
 	   :ts-parameter-f
 	   :ts-candidate-list
+	   :ts-stopping-condition
 
 	   ;; Tabu Search utils
 	   :toggle-animate

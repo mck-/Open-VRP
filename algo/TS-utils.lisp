@@ -33,6 +33,7 @@
 (defun is-tabu-movep (ts mv)
   "Given a <Move>, checks if the parameters returned by calling :tabu-parameter-f are recorded on the list."
   (is-tabup ts (funcall (ts-parameter-f ts) mv)))
+;; --------------------------
 
 ;; Candidate Lists
 ;; -----------------------------
@@ -55,8 +56,23 @@
 
 (defmethod remove-affected-moves ((ts tabu-search) move)
   "Given a <Tabu-search> and one <Move> (to be performed), remove all the moves from the candidate-list that do not apply anymore after the selected move is performed."
-  (setf (ts-candidate-list ts)
-	(remove-if #'(lambda (mv) (or (= (move-node-id mv) (move-node-id move))
-				      (= (move-vehicle-ID mv) (move-vehicle-ID move))))
-		   (ts-candidate-list ts))))
+  (let ((sol (algo-current-sol ts)))
+    (setf (ts-candidate-list ts)
+	  (remove-if #'(lambda (mv) (or (= (move-node-id mv) (move-node-id move))
+					(= (move-vehicle-ID mv) (move-vehicle-ID move))
+					(eq (route-from mv sol)
+					    (route-from move sol))
+					(eq (route-to mv sol)
+					    (route-from move sol))))
+		     (ts-candidate-list ts)))))
   
+;; ------------------------
+
+;; Stopping condition
+;; -------------------------
+
+(defun stopping-conditionp (ts)
+  "Given a <tabu-search>, tests whether the number of iterations since the best solution was found is larger than tenure value. This is an indicator of cycling behaviour. Minimum 20 iterations in case tenure is smaller than 10. Usefull for many multi-runs."
+  (let ((iters (- (algo-best-iteration ts) (algo-iterations ts))))
+    (and (> iters 20)
+	 (> iters (* 2 (ts-tenure ts))))))

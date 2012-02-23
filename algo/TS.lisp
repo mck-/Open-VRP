@@ -142,3 +142,16 @@
 					  (asdf:system-source-directory 'open-vrp)))))
 					  
 ;; --------------------------
+
+;; Stopping condition
+;; --------------------------
+;; When there is a stopping-condition, check it on the algo. If met, set iterations to 0.
+
+(defmethod iterate :around ((ts tabu-search))
+  (let ((sc (ts-stopping-condition ts)))
+    (when (and sc (funcall sc ts))
+      (setf (algo-iterations ts) 0)
+      (format t "~&Stopping condition met. Best-sol was found at iteration: ~A. " (algo-best-iteration ts)))
+    (call-next-method)))
+	
+  
