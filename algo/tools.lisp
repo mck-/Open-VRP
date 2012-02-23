@@ -140,29 +140,3 @@
 			 (dists-to-vehicles n prob)
 			 (times-of-arriving n prob)
 			 (capacities-left prob)))))
-
-;; ----------------------
-
-;; Optimal insertion (used by Greedy Best Insertion)
-;; ---------------------
-
-(defgeneric get-optimal-insertion (prob node)
-  (:method (prob node) "optimal-insertion: Expects <Problem> and <Node>.")
-  (:documentation "Given a node and a solution (that does not have this node yet), return the best <insertion-move>."))
-
-(defmethod get-optimal-insertion ((sol problem) (n node))
-  (labels ((iter (flt best-move)
-	     (if (null flt) best-move
-		 (iter (cdr flt)
-		       (handler-case
-			   (let ((new (get-best-insertion-move sol
-							       (vehicle-id (car flt))
-							       (node-id n))))
-			     (if (or (null best-move) ;first move
-				     (< (move-fitness new) (move-fitness best-move))) ;better?
-				 new
-				 best-move))
-			 (no-feasible-move () best-move))))))
-    (iter (problem-fleet sol) nil)))
-
-;; -------------------------

@@ -49,6 +49,12 @@
 (defmethod perform-move :after ((prob problem) (mv insertion-move))
   (format t "~&Performing ~A with Node ~A and Vehicle ~A and Index ~A" (type-of mv) (move-node-ID mv) (move-vehicle-ID mv) (move-index mv)))
 
+;; ----------------------
+
+;; Optimal insertion (used by Greedy Best Insertion)
+;; ---------------------
+
+;; Step 1: find best index, given vehicle-id
 (defun get-best-insertion-move (sol vehicle-id node-id)
   "Given the <solution> object, vehicle-id and node-id (integers), return the best <insertion-move> (i.e. with the lowest fitness) for inserting node-id in vehicle-id. When no move is feasible, throws error."
   (let* ((moves (assess-moves sol (generate-insertion-moves sol vehicle-id node-id)))
@@ -56,4 +62,24 @@
     (unless (move-fitness (car sorted)) (error 'no-feasible-move :moves sorted))
     (car sorted)))
 
-;; -------------------------------------------------
+;; Step 2: find best vehicle, given node
+(defgeneric get-optimal-insertion (prob node)
+  (:method (prob node) "optimal-insertion: Expects <Problem> and <Node>.")
+  (:documentation "Given a node and a solution (that does not have this node yet), return the best <insertion-move>."))
+
+(defmethod get-optimal-insertion ((sol problem) (n node))
+  (labels ((iter (flt best-move)
+	     (if (null flt) best-move
+		 (iter (cdr flt)
+		       (handler-case
+			   (let ((new (get-best-insertion-move sol
+							       (vehicle-id (car flt))
+							       (node-id n))))
+			     (if (or (null best-move) ;first move
+				     (< (move-fitness new) (move-fitness best-move))) ;better?
+				 new
+				 best-move))
+			 (no-feasible-move () best-move))))))
+    (iter (problem-fleet sol) nil)))
+
+;; -------------------------
