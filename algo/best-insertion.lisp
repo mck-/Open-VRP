@@ -26,7 +26,7 @@
 ;; otherwise it is the distance to the nodes before and after, minus their direct connection
 (defmethod assess-move ((sol problem) (m insertion-move))
   (with-slots (node-ID vehicle-ID index) m
-    (let* ((route (vehicle-route (vehicle sol vehicle-ID)))
+    (let* ((route (route-to m sol))
 	   (dist-array (problem-dist-array sol))
 	   (node-before (node-id (nth (1- index) route))))
       (setf (move-fitness m)
