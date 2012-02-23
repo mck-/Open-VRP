@@ -33,6 +33,14 @@
 (defun is-tabu-movep (ts mv)
   "Given a <Move>, checks if the parameters returned by calling :tabu-parameter-f are recorded on the list."
   (is-tabup ts (funcall (ts-parameter-f ts) mv)))
+
+;; Tabu-parameter-f functions
+(defun ts-pars-n (mv)
+  (move-node-id mv))
+
+(defun ts-pars-nv (mv)
+  (list (move-node-id mv) (move-vehicle-ID mv)))
+
 ;; --------------------------
 
 ;; Candidate Lists
