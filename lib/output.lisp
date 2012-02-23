@@ -10,7 +10,8 @@
   (format t "~&---------------")
   (format t "~&Fitness: ~A" (fitness prob))
   (format t "~&---------------")
-  (format t "~&~{Route: ~A~^~%~}" (mapcar #'route-indices (get-busy-vehicles prob)))
+  (dolist (busy-veh (get-busy-vehicles prob))    
+    (format t "~&[~2D]: ~A~%" (vehicle-ID busy-veh) (route-indices busy-veh)))
   (format t "~&---------------"))
 
 (defmethod print-routes ((a algo))
