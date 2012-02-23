@@ -129,9 +129,10 @@
 ;; ------------------------
 (defgeneric iterate-more (algo int)
   (:method (algo int) "iterate-more: expects <Algo> and int as inputs")
-  (:documentation "When an algo finished (i.e. iterations = 0) using iterate-more allows you to keep running it x more iterations. Calls run-algo on the :current-sol of and with <algo>."))
+  (:documentation "When an algo finished (i.e. iterations = 0) using iterate-more allows you to keep running it x more iterations. Also resets :best-iteration, which the stopping condition uses. Calls run-algo on the :current-sol of and with <algo>."))
 
 (defmethod iterate-more ((a algo) int)
-  (setf (algo-iterations a) int)
+  (setf (algo-iterations a) int
+	(algo-best-iteration a) int)
   (run-algo (algo-current-sol a) a))
 ;; ---------------------
