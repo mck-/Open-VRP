@@ -71,6 +71,7 @@
   (sort-ignore-nil moves #'< :key #'move-fitness))
 
 (defmethod select-move ((a algo) moves)
+  (unless (move-fitness (car moves)) (error 'no-feasible-move :moves moves))
   (car (sort-moves moves)))
 
 ;; ------------------------------------------------
