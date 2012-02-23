@@ -13,7 +13,7 @@
 (defmethod run-algo ((p problem) (a greedy-best-insertion))
   "Randomly insert <Nodes> one by one to best <vehicle> in best location. Returns <Algo> object when done."
   (loop for node in (shuffle (cdr (map 'list #'(lambda (n) n) (problem-network p))))
-     do (perform-move p (get-optimal-insertion p node))
+     do (perform-move p (get-best-insertion-move p node))
      finally (init-algo p a)
      (return a)))
 			

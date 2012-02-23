@@ -55,7 +55,7 @@
 ;; ---------------------
 
 ;; Step 1: find best index, given vehicle-id
-(defun get-best-insertion-move (sol vehicle-id node-id)
+(defun get-best-insertion-move-in-vehicle (sol vehicle-id node-id)
   "Given the <solution> object, vehicle-id and node-id (integers), return the best <insertion-move> (i.e. with the lowest fitness) for inserting node-id in vehicle-id. When no move is feasible, throws error."
   (let* ((moves (assess-moves sol (generate-insertion-moves sol vehicle-id node-id)))
 	 (sorted (sort-moves moves)))
@@ -63,16 +63,16 @@
     (car sorted)))
 
 ;; Step 2: find best vehicle, given node
-(defgeneric get-optimal-insertion (prob node)
+(defgeneric get-best-insertion-move (prob node)
   (:method (prob node) "optimal-insertion: Expects <Problem> and <Node>.")
   (:documentation "Given a node and a solution (that does not have this node yet), return the best <insertion-move>."))
 
-(defmethod get-optimal-insertion ((sol problem) (n node))
+(defmethod get-best-insertion-move ((sol problem) (n node))
   (labels ((iter (flt best-move)
 	     (if (null flt) best-move
 		 (iter (cdr flt)
 		       (handler-case
-			   (let ((new (get-best-insertion-move sol
+			   (let ((new (get-best-insertion-move-in-vehicle sol
 							       (vehicle-id (car flt))
 							       (node-id n))))
 			     (if (or (null best-move) ;first move

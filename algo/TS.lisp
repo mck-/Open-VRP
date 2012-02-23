@@ -68,7 +68,7 @@
 	       (dist-before (distance node-before node-id dist-array)))
 	  (setf fitness
 		   ;cost of insertion
-		(- (move-fitness (get-best-insertion-move sol vehicle-id node-id))
+		(- (move-fitness (get-best-insertion-move-in-vehicle sol vehicle-id node-id))
 		   ;save by removing:
 		   (if (= pos (1- (length route))) ;if the node is at end of route
 		       dist-before
@@ -84,7 +84,7 @@
 (defmethod perform-move ((sol problem) (mv TS-best-insertion-move))
   "Takes <Node> with node-ID and uses get-best-insertion to insert in vehicle-ID. DESTRUCTIVE."
   (with-slots (node-ID vehicle-ID) mv
-    (let ((best-move (get-best-insertion-move sol vehicle-ID node-ID)))
+    (let ((best-move (get-best-insertion-move-in-vehicle sol vehicle-ID node-ID)))
     ;if the move of node is intra-route, AND the node is being moved forward
       (if (and (= (vehicle-with-node-ID sol node-ID) vehicle-ID)
 	       (> (move-index best-move)
