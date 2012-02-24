@@ -39,3 +39,25 @@
 		   (equal slot-name (intern "DIST-ARRAY" (find-package 'open-vrp.classes)))
 		   (equal slot-name (intern "FLEET" (find-package 'open-vrp.classes))))))
 	(format stream "~&Slot: ~18a Value: ~a~%" slot-name (slot-value object slot-name))))))
+
+;; -------------------------
+
+;; Timestamp printing
+;; -------------------------
+(defconstant *day-names*
+  '("Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "Sunday"))
+
+(defun print-timestamp (&optional (stream t))
+  "Prints timestamp to stream, source from cl-cookbook."
+  (multiple-value-bind (second minute hour date month year day-of-week dst-p tz)
+      (get-decoded-time)
+    (declare (ignore dst-p))
+    (format stream "~&It is now ~2,'0d:~2,'0d:~2,'0d of ~a, ~d/~2,'0d/~d (GMT~@d)"
+	    hour
+	    minute
+	    second
+	    (nth day-of-week *day-names*)
+	    month
+	    date
+	    year
+	    (- tz))))  
