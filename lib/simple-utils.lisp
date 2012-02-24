@@ -63,8 +63,7 @@
 
 (defun vrp-object (object)
   "Tests if the object is an instance of a VRP object that needs deep copy. (problem, fleet, vehicle)"
-  (let ((type (type-of object)))
-    (member type '(problem fleet vehicle))))
+  (member (type-of object) '(problem fleet vehicle)))
 
 (defun copy-object (object)
   "A deep-cloner for CLOS."
