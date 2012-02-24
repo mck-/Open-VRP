@@ -45,6 +45,7 @@
 	   :algo-best-iteration
 	   :algo-current-sol
 	   :algo-iterations
+	   :algo-log2filep
 	   :drawer-min-coord
 	   :drawer-max-coord
 	   :drawer-legend

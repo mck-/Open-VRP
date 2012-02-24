@@ -78,4 +78,5 @@
    (best-fitness :accessor algo-best-fitness :initarg :best-fitness :initform nil)
    (best-iteration :accessor algo-best-iteration :initform 0)
    (current-sol :accessor algo-current-sol :initarg :current-sol :initform nil)
-   (iterations :accessor algo-iterations :initarg :iterations)))
+   (iterations :accessor algo-iterations :initarg :iterations)
+   (log2filep :accessor algo-log2filep :initarg :log2filep :initform nil)))
