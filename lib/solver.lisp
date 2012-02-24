@@ -53,17 +53,12 @@
     (run-algo clone algo)))
 
 (defmethod solve-prob :around ((problem problem) (algo algo))
-  (if (algo-log2file algo)
-      (with-open-file (stream (merge-pathnames (concatenate 'string
-							    "run-logs/"
-							    (problem-name problem)
-							    "-"
-							    (algo-name algo)
-							    ".txt")
-					       (asdf:system-source-directory 'open-vrp))
-			      :direction :output
-			      :if-exists :supersede)
-	(call-next-method))
+  (aif (problem-log-file problem)
+       (with-open-file (stream (merge-pathnames it
+						(asdf:system-source-directory 'open-vrp))
+			       :direction :output
+			       :if-exists :supersede)
+	 (call-next-method))
       (call-next-method)))
 
 
