@@ -48,9 +48,24 @@
     "solve-prob: Either problem or algo is not defined/correct")
   (:documentation "Solves the problem with the algo. Uses run-algo, but leaves the <problem> object untouched (<Algo> will suffer side-effects). Works with a clone (copy-object in lib/simple-utils.lisp). NON-destructive wrapper to the run-algo method."))
 
-(defmethod solve-prob ((problem problem) (algo algo))
+(defmethod solve-prob ((problem problem) (algo algo))						
   (let ((clone (copy-object problem)))
     (run-algo clone algo)))
+
+(defmethod solve-prob :around ((problem problem) (algo algo))
+  (if (algo-log2file algo)
+      (with-open-file (stream (merge-pathnames (concatenate 'string
+							    "run-logs/"
+							    (problem-name problem)
+							    "-"
+							    (algo-name algo)
+							    ".txt")
+					       (asdf:system-source-directory 'open-vrp))
+			      :direction :output
+			      :if-exists :supersede)
+	(call-next-method))
+      (call-next-method)))
+
 
 ;; ----------------------------
 
