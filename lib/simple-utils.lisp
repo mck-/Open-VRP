@@ -70,8 +70,8 @@
   "A deep-cloner for CLOS."
   (let* ((i-class (class-of object))
 	 (clone (allocate-instance i-class)))
-    (dolist (slot (sb-mop:class-slots i-class))
-      (let ((slot-name (sb-mop:slot-definition-name slot)))
+    (dolist (slot (class-slots i-class))
+      (let ((slot-name (slot-definition-name slot)))
 	(when (slot-boundp object slot-name)
 	  (let ((value (slot-value object slot-name)))
 	    (setf (slot-value clone slot-name)
