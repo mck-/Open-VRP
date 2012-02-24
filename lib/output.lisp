@@ -30,6 +30,9 @@
 
 (defun print-vrp-object (object &optional (stream t))
   "Given object, will print it's object's slots and values"
+  (format stream "---------------------")
+  (format stream "~A object details:" (class-of object))
+  (format stream "---------------------~%~%")
   (dolist (slot (class-slots (class-of object)))
     (let ((slot-name (slot-definition-name slot)))
       (when (and
