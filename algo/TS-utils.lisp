@@ -25,6 +25,11 @@
   "Adds <Move> to tabu-list of <tabu-search>. Calls function held in <ts>'s :tabu-parameter-f slot."
   (add-to-tabu ts (funcall (ts-parameter-f ts) mv)))
 
+;; Clear tabu list
+(defun clear-tabu-list (ts)
+  "Given a <tabu-search>, erase everything that is on the tabu-list. A useful restart in case all moves were declared tabu."
+  (setf (ts-tabu-list ts) nil))
+
 ;; Check
 (defun is-tabup (ts pars)
   "Given pars, checks if on tabu list of <tabu-search>"

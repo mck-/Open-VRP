@@ -102,8 +102,16 @@
 	     (< (+ (fitness (algo-current-sol ts)) (move-fitness (car sorted-moves)))
 		(algo-best-fitness ts)))
 	(car sorted-moves)
-	(aif (find-if-not #'(lambda (mv) (is-tabu-movep ts mv)) sorted-moves) it
-	     (error 'all-moves-tabu :moves all-moves :tabu-list (ts-tabu-list ts))))))
+	(restart-case
+	    (aif (find-if-not #'(lambda (mv) (is-tabu-movep ts mv)) sorted-moves) it
+		 (error 'all-moves-tabu :moves all-moves :tabu-list (ts-tabu-list ts)))
+	  (select-best-tabu-move ()
+	    :report "Choost the best move, you'll need to move somehow, right?"
+	    (car sorted-moves))
+	  (flush-tabu-list ()
+	    :report "Erase everything on the tabu-list and resume."
+	    (clear-tabu-list ts)
+	    (car sorted-moves))))))
 
 ;; --------------------
 ;; If there is no candidate-list
