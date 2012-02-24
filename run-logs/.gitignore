@@ -1,0 +1,5 @@
+# For an empty directory, in which the .png files will be drawn
+# Ignore everything in this directory
+*
+# Except this file
+!.gitignore
