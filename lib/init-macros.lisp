@@ -71,7 +71,7 @@
 ;; Create Problem macro
 ;; ----------------------------
 
-(defmacro define-problem (name node-coords-list fleet-size &key demands capacities time-windows-list durations speeds (to-depot T) plot-filename)
+(defmacro define-problem (name node-coords-list fleet-size &key demands capacities time-windows-list durations speeds (to-depot T) plot-filename log-filename)
   "Creates the appropriate <Problem> object from the inputs. Extra key attributes only accept lists that are of equal length to node-coords-list or fleet-size (depending on what attributes it sets). For demands, durations, capacities and speeds, will also accept a single value, which will set all attributes to this value. With only the demands-list and capacities, creates a CVRP problem. With time-windows, creates a VRPTW problem. When durations and speeds are not provided, defaults to 0 and 1.  When plot-filename is not given, it will plot in \"plots/name.png\"."
   (with-gensyms (network fleet drawer)
     `(let* ((,network (create-nodes ,node-coords-list
@@ -107,4 +107,11 @@
 			      (time-windows-list '('vrptw))
 			      ((and demands capacities) '('cvrp))
 			      (t '('problem)))
-		      :name (string ,name) :fleet ,fleet :network ,network :dist-array (generate-dist-array ,node-coords-list) :to-depot ,to-depot :drawer ,drawer))))
+		      :name (string ,name)
+		      :fleet ,fleet
+		      :network ,network
+		      :dist-array (generate-dist-array ,node-coords-list)
+		      :to-depot ,to-depot
+		      :drawer ,drawer
+		      :log-file (if ,log-filename ,log-filename
+				    (merge-pathnames (concatenate 'string "run-logs/" (string ,name) ".txt")))))))
