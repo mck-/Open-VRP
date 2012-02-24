@@ -35,9 +35,7 @@
 ;; After method that makes all algos print the final solution
 (defmethod run-algo :after ((p problem) (a algo))
   (print (concatenate 'string "Final solution of run with " (string (type-of a)) " on " (problem-name p)))
-  (print "---------------------")
-  (print-routes a)
-  (print "---------------------"))
+  (print-routes a))
 
 ;; -----------------------------
 
