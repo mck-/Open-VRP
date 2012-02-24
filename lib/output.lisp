@@ -22,3 +22,20 @@
   (let ((results (mapcar #'algo-best-fitness algo-objects)))    
     (format t "~&Runs: ~8a~%Max: ~8a~%Min: ~8a~%Avg: ~8a~%Std: ~8a~%"
 	    (length results) (get-max results) (get-min results) (mean results) (standard-deviation results))))
+
+;; ---------------------------
+
+;; Object printing methods
+;; ---------------------------
+
+(defun print-vrp-object (object &optional (stream t))
+  "Given object, will print it's object's slots and values"
+  (dolist (slot (class-slots (class-of object)))
+    (let ((slot-name (slot-definition-name slot)))
+      (when (and
+	     (slot-boundp object (slot-definition-name slot))
+	     (not (or
+		   (equal slot-name (intern "NETWORK" (find-package 'open-vrp.classes)))
+		   (equal slot-name (intern "DIST-ARRAY" (find-package 'open-vrp.classes)))
+		   (equal slot-name (intern "FLEET" (find-package 'open-vrp.classes))))))
+	(format stream "~&Slot: ~18a Value: ~a~%" slot-name (slot-value object slot-name))))))

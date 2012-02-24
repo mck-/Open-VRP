@@ -144,6 +144,7 @@
 	   ;; output
 	   :print-routes
 	   :print-multi-run-stats
+	   :print-vrp-object
 	   :plot-solution
 	   :plot-nodes
 	   :toggle-legend
