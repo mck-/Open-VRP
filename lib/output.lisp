@@ -11,7 +11,7 @@
   (format stream "~&---------------")
   (dolist (busy-veh (get-busy-vehicles prob))    
     (format stream "~&[~2D]: ~A~%" (vehicle-ID busy-veh) (route-indices busy-veh)))
-  (format stream "~&---------------"))
+  (format stream "~&---------------~%"))
 
 (defmethod print-routes ((a algo) &optional (stream t))
   (print-routes (algo-best-sol a) stream))
@@ -29,9 +29,9 @@
 
 (defun print-vrp-object (object &optional (stream t))
   "Given object, will print it's object's slots and values"
-  (format stream "---------------------")
+  (format stream "~&--------------")
   (format stream "~A object details:" (class-of object))
-  (format stream "---------------------~%~%")
+  (format stream "--------------~%~%")
   (dolist (slot (class-slots (class-of object)))
     (let ((slot-name (slot-definition-name slot)))
       (when (and
@@ -59,8 +59,8 @@
 
 ;; with-log-file macro
 ;; -------------------------
-
 (defmacro with-log-or-print ((stream prob &optional (appendp T)) &body body)
+  "A wrapper on top of with-open-file, where we use the filepath stored in the :log-file slot of a problem object. When it is nil, use the T stream. Optional parameter appendp can be set to NIL in order to :supersede if file exists. By default appends."
   (with-gensyms (func)
     `(flet ((,func (,stream)
 	      ,@body))
