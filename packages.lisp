@@ -146,6 +146,7 @@
 	   ;; output
 	   :print-routes
 	   :print-multi-run-stats
+	   :print-final-results
 	   :print-vrp-object
 	   :plot-solution
 	   :plot-nodes	   

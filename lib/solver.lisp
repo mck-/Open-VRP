@@ -38,11 +38,7 @@
 ;; After method that makes all algos print the final solution
 (defmethod run-algo :after ((p problem) (a algo))
   (with-log-or-print (stream p)
-    (print-timestamp stream)
-    (format stream "~&Run took a total of ~A seconds.~%" (- (get-universal-time) *start-time*))
-    (format stream "Final solution of run with ~A on ~A was found on iteration ~A~%"
-	    (string (type-of a)) (problem-name p) (algo-best-iteration a))
-    (print-routes a stream)))
+    (print-final-results p a stream)))
 ;; -----------------------------
 
 ;; Solve Prob
@@ -67,6 +63,11 @@
     (format stream "~&Commencing run with ~A on ~A~%~%" (algo-name a) (problem-name p))
     (print-vrp-object p stream)
     (print-vrp-object a stream)))
+
+;; When all logging is done in file, at least print the final solution in repl
+(defmethod solve-prob :after ((p problem) (a algo))
+  (when (problem-log-filep p)
+    (print-final-results p a t)))
 
 ;; ----------------------------
 

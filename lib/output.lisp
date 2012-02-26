@@ -22,6 +22,14 @@
     (format t "~&Runs: ~8a~%Max: ~8a~%Min: ~8a~%Avg: ~8a~%Std: ~8a~%"
 	    (length results) (get-max results) (get-min results) (mean results) (standard-deviation results))))
 
+(defun print-final-results (prob algo stream)
+  "Prints final results of run, helper function to :after methods of run-algo and solve-prob."
+  (format stream "~&Run took a total of ~A seconds.~%" (- (get-universal-time) *start-time*))
+  (format stream "Final solution of run with ~A on ~A was found on iteration ~A~%"
+	  (string (type-of algo)) (problem-name prob) (algo-best-iteration algo))
+  (print-routes algo stream))
+
+
 ;; ---------------------------
 
 ;; Object printing methods
