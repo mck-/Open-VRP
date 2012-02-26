@@ -22,18 +22,23 @@ With this framework, I hope to catalyze the research and application of routing 
 The ultimate vision for Open VRP is a simple intuitive embedded language for the OR community, free for anyone.
 
 ## Usage
+Check the [Wiki](https://github.com/mck-/Open-VRP/wiki) for more documentation, the following is a short summary of the main functionality.
 
-`solve-plot` expects a problem object and an algo object. It calls `solve-prob` and `plot-solution`.
+`solve-prob` expects a problem object and an algo object.
 
 `test-vrp`, `solomon25`, `solomon100`, `christofides-1` and `christofides-2` are pre-loaded demo problems. To use Tabu Search:
 
 ```
-(solve-plot test-vrp (make-instance 'tabu-search :iterations 10 :animate T))
-(solve-plot solomon100 (make-instance 'tabu-search :iterations 100))
-(solve-plot christofides-2 (make-instance 'tabu-search :iterations 50))
+(solve-prob test-vrp (make-instance 'tabu-search :iterations 10 :animatep T))
+(solve-prob solomon100 (make-instance 'tabu-search :iterations 100))
+(solve-prob christofides-2 (make-instance 'tabu-search :iterations 50))
 ```
 
-When :animate is set to T, each iteration will produce a plot in run-frames/Iteration x.png (much slower). 
+By default, these pre-loaded problems will plot to `plots/name.png` and log to `run-logs/name.txt` where _name_ refers to the `:name` slot of the _Problem_ object. `(toggle-plot <problem>)` to disable plotting the final solution. `(toggle-log-file <problem>)` to disable logging to file, but to the REPL. 
+
+If you find the legend in the way, turn it off with `(toggle-legend <problem>)`.
+
+When :animatep is set to T, each iteration will produce a plot in run-frames/Iteration x.png (much slower, since it needs to plot each iteration). You may use `(toggle-animate <algo>)` to turn it off.
 
 You can define your own problem objects with:
 
@@ -43,7 +48,7 @@ You can define your own problem objects with:
 (define-problem "VRPTW" node-coords n :time-windows time-windows :durations durations)
 ```
 
-where *node-coords* is a list of pairs, *demands-list* a list of associated demands (must be same length), and n is the number of vehicles. When a *demands-list* and vehicle *capacity* are provided, the resulting problem is a CVRP. If *time-windows* (list of pairs) and *durations* are given, the resulting problem object is a VRPTW. When everything is provided, it creates a CVRPTW. Each class of problem has its own specific constraints to check. By default, will plot in plots/name.png.
+where *node-coords* is a list of pairs, *demands-list* a list of associated demands (must be same length), and n is the number of vehicles. When a *demands-list* and vehicle *capacity* are provided, the resulting problem is a CVRP. If *time-windows* (list of pairs) and *durations* are given, the resulting problem object is a VRPTW. When everything is provided, it creates a CVRPTW. Each class of problem has its own specific constraints to check. 
 
 Or to load from a text-file [Solomon-format](http://neo.lcc.uma.es/radi-aeb/WebVRP/index.html?/Problem_Instances/CVRPTWInstances.html), [TSPLIB cvrp format](http://neo.lcc.uma.es/radi-aeb/WebVRP/data/Doc.ps) :
 
@@ -66,8 +71,6 @@ When the algo is finished running, it returns the Algo object, which contains :c
 An example output of Solomon's VRPTW 100-customers benchmark test-case, solved with Tabu Search.
 
 ![alt Optimal solution](https://github.com/mck-/Open-VRP/blob/master/plots/solomon100-optimal.png?raw=true "Optimal solution")
-
-Currently, the output is in the REPL, except for the plot. Log stats is **wip**.
 
 ## TODO
 
