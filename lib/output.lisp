@@ -48,9 +48,27 @@
 ;; -------------------------
 (defun print-timestamp (&optional (stream t))
   "Prints timestamp to stream, source from cl-cookbook."
-  (let ((*days* '("Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "Sunday")))
+  (let ((days '("Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "Sunday")))
   (multiple-value-bind (second minute hour date month year day-of-week dst-p tz)
       (get-decoded-time)
     (declare (ignore dst-p))
     (format stream "~&It is now ~2,'0d:~2,'0d:~2,'0d of ~a, ~d/~2,'0d/~d (GMT~@d)"
-	    hour minute second (nth day-of-week *days*) month date year (- tz))))
+	    hour minute second (nth day-of-week days) month date year (- tz)))))
+
+;; -------------------------
+
+;; with-log-file macro
+;; -------------------------
+
+(defmacro with-log-or-print ((stream prob &optional (appendp T)) &body body)
+  (with-gensyms (func)
+    `(flet ((,func (,stream)
+	      ,@body))
+       (aif (problem-log-file ,prob)
+	    (with-open-file (,stream (namestring it) :direction :output
+				     :if-exists (if ,appendp :append :supersede))
+	      (,func ,stream))
+	    (,func t)))))
+	      
+	  
+			 

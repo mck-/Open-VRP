@@ -149,6 +149,7 @@
 	   :plot-nodes
 	   :toggle-legend
 	   :print-timestamp
+	   :with-log-or-print
 	   
 	   ;; conditions
 	   :same-origin-destination
