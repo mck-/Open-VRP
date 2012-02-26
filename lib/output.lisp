@@ -65,11 +65,12 @@
   (with-gensyms (func)
     `(flet ((,func (,stream)
 	      ,@body))
-       (aif (problem-log-file ,prob)
-	    (with-open-file (,stream (namestring it) :direction :output
-				     :if-exists (if ,appendp :append :supersede))
-	      (,func ,stream))
-	    (,func t)))))
-	      
-	  
-			 
+       (if (problem-log-filep ,prob)
+	   (with-open-file (,stream (namestring (problem-log-file ,prob))
+				    :direction :output
+				    :if-exists (if ,appendp :append :supersede))
+	     (,func ,stream))
+	   (,func t)))))
+
+(defun toggle-log-file (prob)
+  (toggle (problem-log-filep prob)))

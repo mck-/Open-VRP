@@ -39,6 +39,7 @@
 	   :problem-to-depot
 	   :problem-drawer
 	   :problem-log-file
+	   :problem-log-filep
 	   :algo-name
 	   :algo-desc
 	   :algo-best-sol
@@ -147,10 +148,11 @@
 	   :print-multi-run-stats
 	   :print-vrp-object
 	   :plot-solution
-	   :plot-nodes
-	   :toggle-legend
+	   :plot-nodes	   
 	   :print-timestamp
 	   :with-log-or-print
+	   :toggle-legend
+	   :toggle-log-file	   
 	   
 	   ;; conditions
 	   :same-origin-destination

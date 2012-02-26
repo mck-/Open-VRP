@@ -37,7 +37,8 @@
    (fleet :reader problem-fleet :initarg :fleet)
    (to-depot :accessor problem-to-depot :initarg :to-depot :initform T)
    (drawer :accessor problem-drawer :initarg :drawer)
-   (log-file :accessor problem-log-file :initarg :log-file :initform nil)))
+   (log-file :accessor problem-log-file :initarg :log-file :initform nil)
+   (log-filep :accessor problem-log-filep :initarg :log-filep :initform T)))
 
 (defclass CVRP (problem)
   ((name :initform "CVRP")
