@@ -168,3 +168,6 @@
 
 (defun toggle-legend (problem)
   (toggle (drawer-legend (problem-drawer problem))))
+
+(defun toggle-plot (problem)
+  (toggle (drawer-plotp (problem-drawer problem))))

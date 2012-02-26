@@ -55,7 +55,8 @@
 	   :drawer-x-pos
 	   :drawer-y-pos
 	   :drawer-max-pix
-	   :drawer-filename))
+	   :drawer-filename
+	   :drawer-plotp))
 
 (defpackage :open-vrp.util
   (:use :common-lisp
@@ -136,7 +137,6 @@
 	   :run-algo
 	   :*algo-backup*
 	   :solve-prob
-	   :solve-plot
 	   :multi-run
 	   :get-best-solution-from-multi-run
 	   :multi-run-algo
@@ -153,6 +153,7 @@
 	   :print-timestamp
 	   :with-log-or-print
 	   :toggle-legend
+	   :toggle-plot
 	   :toggle-log-file	   
 	   
 	   ;; conditions
@@ -241,7 +242,6 @@
 	   :load-tsplib-vrp-file
 	   :solve-prob
 	   :iterate-more
-	   :solve-plot
 	   :plot-solution
 	   :run!
 	   :print-routes

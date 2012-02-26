@@ -67,22 +67,9 @@
 ;; When all logging is done in file, at least print the final solution in repl
 (defmethod solve-prob :after ((p problem) (a algo))
   (when (problem-log-filep p)
-    (print-final-results p a t)))
-
-;; ----------------------------
-
-;; Solve Plot
-;; ------------------------------
-
-(defgeneric solve-plot (problem algo)
-  (:method (problem algo) "solve-plot: Requires two input objects: <problem>, <algo>")
-  (:documentation "Solves and plots. Returns <algo> object. Will have side-effects on <algo> object, which contains the solution. Will leave <problem> object untouched. Calls solve-prob and plot-solution. By default, plots in plots/name.png where name is the :name of <problem>."))
-
-(defmethod solve-plot ((problem problem) (algo algo))
-  (let ((algo-obj (solve-prob problem algo)))
-    (plot-solution (algo-best-sol algo-obj))
-    algo-obj))
-
+    (print-final-results p a t))
+  (when (drawer-plotp (problem-drawer p))
+    (plot-solution (algo-best-sol a))))
 ;; ---------------------------
 
 ;; Multi-run

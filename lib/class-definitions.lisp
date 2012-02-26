@@ -66,7 +66,8 @@
    (legend :accessor drawer-legend :initarg :legend :initform T)
    (legend-x :accessor drawer-legend-x :initarg :legend-x :initform 100)
    (legend-y :accessor drawer-legend-y :initarg :legend-y :initform 900)
-   (filename :accessor drawer-filename :initarg :filename :initform "testing.png")))
+   (filename :accessor drawer-filename :initarg :filename :initform "testing.png")
+   (plotp :accessor drawer-plotp :initarg :plotp :initform T)))
 
 ;; -----------------------------
 
