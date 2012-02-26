@@ -24,15 +24,15 @@
 
 ;; Original attempt was to make generate-moves a general method - using the move-type slot of ts - which can be used to generate all sorts of moves e.g. swap moves.. but the method below enumerates only along node-id (excluding 0) and vehicle-id. This may only be useful for TS-best-insertion-move?? For other moves, we need to define other defmethods?
 
-(defmacro map-node-ID (prob &body body)
-  "Map over all node-IDs, except for base. Anaphoric, will bind node-ID."
-  `(map1-n #'(lambda (node-ID)
+(defmacro for-node-ID ((node-ID prob) &body body)
+  "Map over all node-IDs, except for base."
+  `(map1-n #'(lambda (,node-ID)
 	       ,@body)
 	   (1- (num-nodes ,prob))))
 
-(defmacro map-veh-ID (prob &body body)
-  "Map over all veh-IDs capped at fleet-size. Will consider only busy vehicles and one extra idle vehicle. Anaphoric, will bind veh-ID."
-  `(map0-n #'(lambda (veh-ID)
+(defmacro for-veh-ID ((veh-ID prob) &body body)
+  "Map over all veh-IDs capped at fleet-size. Will consider only busy vehicles and one extra idle vehicle."
+  `(map0-n #'(lambda (,veh-ID)
 	       ,@body)
 	   (min (1+ (vehicle-id (car (last (get-busy-vehicles ,prob)))))
 		(1- (num-veh ,prob)))))
@@ -49,8 +49,8 @@
   (let ((prob (algo-current-sol ts)))
     (remove-if #'(lambda (mv) (useless-move mv prob))
 	       (flatten
-		(map-node-ID prob
-		  (map-veh-ID prob
+		(for-node-ID (node-ID prob)
+		  (for-veh-ID (veh-ID prob)
 		    (make-instance (ts-move-type ts)
 				   :node-ID node-ID
 				   :vehicle-ID veh-ID)))))))		  
