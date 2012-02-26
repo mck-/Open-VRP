@@ -7,8 +7,7 @@
 ;; ---------------------------
 
 (defun toggle-animate (ts)
-  (setf (ts-animatep ts)
-	(if (ts-animatep ts) nil T)))
+  (toggle (ts-animatep ts)))
 
 ;; Tabu List
 ;; -----------------------------
