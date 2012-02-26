@@ -102,13 +102,12 @@
 ;; -------------------
 (defgeneric iterate (algo)
   (:method (algo) "iterate: This algo is not defined.")
-  (:documentation "Runs the algo one iteration. Implementation of this method should use the algo's slot current-sol as current solution and destructively adjust it to a new solution. When algo's slot iterations is 0, then print the best solution found by this algo object. Returns the <algo> object when finished. After each iterate, will automatically check if a new best solution has been found and adjust the :best-sol and :best-fitness slots for you."))
+  (:documentation "Runs the algo one iteration. Implementation of this method should use the algo's slot current-sol as current solution and destructively adjust it to a new solution. When algo's slot iterations is 0, then print the best solution found by this algo object. Returns the <algo> object. After each iterate, will automatically check if a new best solution has been found and adjust the :best-sol and :best-fitness slots for you. When :animatep is set to T, will plot current solution in run-frames/"))
 
-;; when no more iterations, print solution and return the <Algo> object.
 (defmethod iterate :around ((a algo))
   (if (< (algo-iterations a) 1)
       (progn (format t "No more iterations left.") a)
-      (call-next-method))) ; otherwise iterate
+      (call-next-method)))
 
 (defmethod iterate :after ((a algo))
   (let ((sol (algo-current-sol a)))
