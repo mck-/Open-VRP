@@ -32,11 +32,17 @@
        (call-next-method)
     (defparameter *algo-backup* a)))
 
+(defmethod run-algo :before ((p problem) (a algo))
+  (defparameter *start-time* (get-universal-time)))
+
 ;; After method that makes all algos print the final solution
 (defmethod run-algo :after ((p problem) (a algo))
-  (print (concatenate 'string "Final solution of run with " (string (type-of a)) " on " (problem-name p)))
-  (print-routes a))
-
+  (with-log-or-print (stream p)
+    (print-timestamp stream)
+    (format stream "~&Run took a total of ~A seconds.~%" (- (get-universal-time) *start-time*))
+    (format stream "Final solution of run with ~A on ~A~%" (string (type-of a)) (problem-name p))
+    (format stream "Best solution was found on iteration ~A~%" (algo-best-iteration a))
+    (print-routes a stream)))
 ;; -----------------------------
 
 ;; Solve Prob
@@ -52,15 +58,15 @@
   (let ((clone (copy-object problem)))
     (run-algo clone algo)))
 
-(defmethod solve-prob :around ((problem problem) (algo algo))
-  (aif (problem-log-file problem)
-       (with-open-file (stream (merge-pathnames it
-						(asdf:system-source-directory 'open-vrp))
-			       :direction :output
-			       :if-exists :supersede)
-	 (call-next-method))
-      (call-next-method)))
-
+;; Before method to supersede log-file and print log file heading
+;; This method is not part of the run-algo :before, because that would cause iterate-more
+;; which calls run-algo to supersede instead of append to file.
+(defmethod solve-prob :before ((p problem) (a algo))
+  (with-log-or-print (stream p nil)
+    (print-timestamp stream)
+    (format stream "~&Commencing run with ~A on ~A~%~%" (algo-name a) (problem-name p))
+    (print-vrp-object p stream)
+    (print-vrp-object a stream)))
 
 ;; ----------------------------
 
@@ -113,25 +119,23 @@
 ;; when no more iterations, print solution and return the <Algo> object.
 (defmethod iterate :around ((a algo))
   (if (< (algo-iterations a) 1)
-      (progn
-	(format t "No more iterations left.")
-	(print-routes (algo-best-sol a))
-	a)
+      (progn (format t "No more iterations left.") a)
       (call-next-method))) ; otherwise iterate
 
 ;; After each iteration, check to see if a new best solution has been found and save it.
 (defmethod iterate :after ((a algo))
   (setf (algo-iterations a) (1- (algo-iterations a)))
-  (format t "~&Iterations to go: ~A~%" (algo-iterations a))
-  (let* ((sol (algo-current-sol a))
-	 (new-fitness (fitness sol))
-	 (best-fitness (algo-best-fitness a)))
-    (print-routes sol)
-    (when (or (null best-fitness)
-	      (< new-fitness best-fitness))
-      (setf (algo-best-fitness a) new-fitness
-	    (algo-best-sol a) (copy-object sol)
-	    (algo-best-iteration a) (algo-iterations a)))))
+  (let ((sol (algo-current-sol a)))
+    (with-log-or-print (stream sol)
+      (format stream "~&Iterations to go: ~A~%" (algo-iterations a))
+      (print-routes sol stream))
+    (let ((new-fitness (fitness sol))
+	  (best-fitness (algo-best-fitness a)))
+      (when (or (null best-fitness)
+		(< new-fitness best-fitness))
+	(setf (algo-best-fitness a) new-fitness
+	      (algo-best-sol a) (copy-object sol)
+	      (algo-best-iteration a) (algo-iterations a))))))
 
 ;; Resume run - add some more iterations
 ;; ------------------------
