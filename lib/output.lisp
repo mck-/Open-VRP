@@ -40,7 +40,8 @@
 		   (equal slot-name (intern "NETWORK" (find-package 'open-vrp.classes)))
 		   (equal slot-name (intern "DIST-ARRAY" (find-package 'open-vrp.classes)))
 		   (equal slot-name (intern "FLEET" (find-package 'open-vrp.classes))))))
-	(format stream "~&Slot: ~18a Value: ~a~%" slot-name (slot-value object slot-name))))))
+	(format stream "~&Slot: ~18a Value: ~a~%" slot-name (slot-value object slot-name)))))
+  (format stream "------------------------------------~%~%"))
 
 ;; -------------------------
 
