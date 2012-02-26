@@ -135,7 +135,11 @@
 					    (princ "run-frames/Iteration " s)
 					    (princ (algo-iterations a) s)
 					    (princ ".png" s))
-					  (asdf:system-source-directory 'open-vrp)))))
+					  (asdf:system-source-directory 'open-vrp))))
+
+  ;; Print dots in REPL if logging is to file
+  (when (problem-log-filep (algo-current-sol a))
+    (princ ".")))
 
 ;; Animate
 ;; -------------------------
