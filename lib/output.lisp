@@ -82,3 +82,14 @@
 
 (defun toggle-log-file (prob)
   (toggle (problem-log-filep prob)))
+
+;; Acccessors for log-filep
+(defgeneric log-filep (prob/algo)
+  (:documentation "Returns :log-filep boolean given <Problem> or <Algo> object"))
+
+(defmethod log-filep ((p problem))
+  (problem-log-filep p))
+
+(defmethod log-filep ((a algo))
+  (problem-log-filep (algo-current-sol a)))
+  

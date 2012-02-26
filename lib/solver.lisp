@@ -66,7 +66,7 @@
 
 ;; When all logging is done in file, at least print the final solution in repl
 (defmethod solve-prob :after ((p problem) (a algo))
-  (when (problem-log-filep p)
+  (when (log-filep p)
     (print-final-results p a t))
   (when (drawer-plotp (problem-drawer p))
     (plot-solution (algo-best-sol a))))
@@ -138,7 +138,7 @@
 					  (asdf:system-source-directory 'open-vrp))))
 
   ;; Print dots in REPL if logging is to file
-  (when (problem-log-filep (algo-current-sol a))
+  (when (log-filep a)
     (princ ".")))
 
 ;; Animate
@@ -158,6 +158,6 @@
   (run-algo (algo-current-sol a) a))
 
 (defmethod iterate-more :after ((a algo) int)
-  (when (problem-log-filep (algo-best-sol a))
+  (when (log-filep a)
     (print-final-results (algo-best-sol a) a t)))
 ;; ---------------------
