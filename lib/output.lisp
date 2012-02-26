@@ -2,7 +2,7 @@
 ;;; --------------------------
 (in-package :open-vrp.util)
 
-(defgeneric print-routes (solution &optional stream)
+(defgeneric print-routes (prob/algo &optional stream)
   (:documentation "Prints solution given a <problem>/<algo> object. Also prints the total distance when the input is a <problem>/<algo> object."))
 
 (defmethod print-routes ((prob problem) &optional (stream t))
