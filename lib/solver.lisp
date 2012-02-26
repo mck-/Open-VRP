@@ -156,4 +156,8 @@
   (setf (algo-iterations a) int
 	(algo-best-iteration a) int)
   (run-algo (algo-current-sol a) a))
+
+(defmethod iterate-more :after ((a algo) int)
+  (when (problem-log-filep (algo-best-sol a))
+    (print-final-results (algo-best-sol a) a t)))
 ;; ---------------------
