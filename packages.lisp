@@ -219,6 +219,8 @@
 
 	   ;; Tabu Search utils
 	   :toggle-animate
+	   :toggle-aspiration
+	   :toggle-elite-list
 	   :add-to-tabu
 	   :add-move-to-tabu
 	   :is-tabup

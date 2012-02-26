@@ -9,6 +9,12 @@
 (defun toggle-animate (ts)
   (toggle (ts-animatep ts)))
 
+(defun toggle-aspiration (ts)
+  (toggle (ts-aspirationp ts)))
+
+(defun toggle-elite-list (ts)
+  (toggle (ts-elite-listp ts)))
+
 ;; Tabu List
 ;; -----------------------------
 
