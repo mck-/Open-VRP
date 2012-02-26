@@ -149,7 +149,8 @@
   (let ((sc (ts-stopping-condition ts)))
     (when (and sc (funcall sc ts))
       (setf (algo-iterations ts) 0)
-      (format t "~&Stopping condition met. Best-sol was found at iteration: ~A. " (algo-best-iteration ts)))
+      (with-log-or-print (stream (algo-current-sol ts))
+	(format stream "~&Stopping condition met. Best-sol was found at iteration: ~A. " (algo-best-iteration ts))))
     (call-next-method)))
 	
   
