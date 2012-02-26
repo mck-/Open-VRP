@@ -136,18 +136,8 @@
 	      (let ((sorted-moves (sort-moves (assess-moves sol (generate-moves ts)))))
 		(setf (ts-candidate-list ts) (create-candidate-list ts sorted-moves))
 		(select-perform-from-cand ts)))
-	  (perform-add-tabu (select-move ts (assess-moves sol (generate-moves ts))))))))
-
-;; Tabu Search animate
-;; -------------------------
-(defmethod iterate :after ((ts tabu-search))
-  (when (ts-animatep ts)
-    (plot-solution (algo-current-sol ts) (merge-pathnames
-					  (with-output-to-string (s)
-					    (princ "run-frames/Iteration " s)
-					    (princ (algo-iterations ts) s)
-					    (princ ".png" s))
-					  (asdf:system-source-directory 'open-vrp)))))
+	  (perform-add-tabu (select-move ts (assess-moves sol (generate-moves ts))))))
+    ts))
 					  
 ;; --------------------------
 
