@@ -110,20 +110,38 @@
       (progn (format t "No more iterations left.") a)
       (call-next-method))) ; otherwise iterate
 
-;; After each iteration, check to see if a new best solution has been found and save it.
 (defmethod iterate :after ((a algo))
-  (setf (algo-iterations a) (1- (algo-iterations a)))
   (let ((sol (algo-current-sol a)))
+    ;; reduce iteration
+    (setf (algo-iterations a) (1- (algo-iterations a)))
+
+    ;; Logging
     (with-log-or-print (stream sol)
       (format stream "~&Iterations to go: ~A~%" (algo-iterations a))
       (print-routes sol stream))
+
+    ;; Checking if new best solution
     (let ((new-fitness (fitness sol))
 	  (best-fitness (algo-best-fitness a)))
       (when (or (null best-fitness)
 		(< new-fitness best-fitness))
 	(setf (algo-best-fitness a) new-fitness
 	      (algo-best-sol a) (copy-object sol)
-	      (algo-best-iteration a) (algo-iterations a))))))
+	      (algo-best-iteration a) (algo-iterations a)))))
+
+  ;; Plot frame if animatep is set to T
+  (when (algo-animatep a)
+    (plot-solution (algo-current-sol a) (merge-pathnames
+					  (with-output-to-string (s)
+					    (princ "run-frames/Iteration " s)
+					    (princ (algo-iterations a) s)
+					    (princ ".png" s))
+					  (asdf:system-source-directory 'open-vrp)))))
+
+;; Animate
+;; -------------------------
+(defun toggle-animate (algo)
+  (toggle (algo-animatep algo)))  
 
 ;; Resume run - add some more iterations
 ;; ------------------------

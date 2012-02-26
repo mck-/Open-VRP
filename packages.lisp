@@ -47,6 +47,7 @@
 	   :algo-best-iteration
 	   :algo-current-sol
 	   :algo-iterations
+	   :algo-animatep
 	   :drawer-min-coord
 	   :drawer-max-coord
 	   :drawer-legend
@@ -155,6 +156,7 @@
 	   :toggle-legend
 	   :toggle-plot
 	   :toggle-log-file	   
+	   :toggle-animate
 	   
 	   ;; conditions
 	   :same-origin-destination
@@ -210,7 +212,6 @@
 	   ;; Tabu Search object
 	   :ts-move-type
 	   :ts-init-heur
-	   :ts-animatep
 	   :ts-aspirationp
 	   :ts-elite-listp
 	   :ts-tabu-list
@@ -220,7 +221,6 @@
 	   :ts-stopping-condition
 
 	   ;; Tabu Search utils
-	   :toggle-animate
 	   :toggle-aspiration
 	   :toggle-elite-list
 	   :add-to-tabu

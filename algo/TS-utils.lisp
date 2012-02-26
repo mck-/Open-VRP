@@ -6,9 +6,6 @@
 ;; Misc
 ;; ---------------------------
 
-(defun toggle-animate (ts)
-  (toggle (ts-animatep ts)))
-
 (defun toggle-aspiration (ts)
   (toggle (ts-aspirationp ts)))
 
