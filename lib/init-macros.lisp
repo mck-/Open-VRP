@@ -114,4 +114,5 @@
 		      :to-depot ,to-depot
 		      :drawer ,drawer
 		      :log-file (if ,log-filename ,log-filename
-				    (merge-pathnames (concatenate 'string "run-logs/" (string ,name) ".txt")))))))
+				    (merge-pathnames (concatenate 'string "run-logs/" (string ,name) ".txt")
+						     (asdf:system-source-directory 'open-vrp)))))))
