@@ -150,7 +150,9 @@
     (when (and sc (funcall sc ts))
       (setf (algo-iterations ts) 0)
       (with-log-or-print (stream (algo-current-sol ts))
-	(format stream "~&Stopping condition met. Best-sol was found at iteration: ~A. " (algo-best-iteration ts))))
-    (call-next-method)))
+	(format stream "~&Stopping condition met.~%"))
+      (when (problem-log-filep (algo-current-sol ts))
+	(format t "~&Stopping condition met.~%"))))
+    (call-next-method))
 	
   
