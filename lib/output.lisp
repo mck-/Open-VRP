@@ -2,11 +2,10 @@
 ;;; --------------------------
 (in-package :open-vrp.util)
 
-(defgeneric print-routes (solution stream)
-  (:method (solution stream) "print-routes: Expects <problem>/<algo> object and a stream!")
+(defgeneric print-routes (solution &optional stream)
   (:documentation "Prints solution given a <problem>/<algo> object. Also prints the total distance when the input is a <problem>/<algo> object."))
 
-(defmethod print-routes ((prob problem) stream)
+(defmethod print-routes ((prob problem) &optional (stream t))
   (format stream "~&---------------")
   (format stream "~&Fitness: ~A" (fitness prob))
   (format stream "~&---------------")
@@ -14,7 +13,7 @@
     (format stream "~&[~2D]: ~A~%" (vehicle-ID busy-veh) (route-indices busy-veh)))
   (format stream "~&---------------"))
 
-(defmethod print-routes ((a algo) stream)
+(defmethod print-routes ((a algo) &optional (stream t))
   (print-routes (algo-best-sol a) stream))
 
 (defun print-multi-run-stats (algo-objects)
