@@ -166,8 +166,14 @@
 
 ;; ----------------------------------------------
 
-(defun toggle-legend (problem)
-  (toggle (drawer-legend (problem-drawer problem))))
+(defgeneric toggle-legend (problem/algo)
+  (:documentation "Toggles legend drawing. When <Algo> is provided, toggles :best-sol"))
+
+(defmethod toggle-legend ((pr problem))
+  (toggle (drawer-legend (problem-drawer pr))))
+
+(defmethod toggle-legend ((a algo))
+  (toggle (drawer-legend (problem-drawer (algo-best-sol a)))))
 
 (defun toggle-plot (problem)
   (toggle (drawer-plotp (problem-drawer problem))))
