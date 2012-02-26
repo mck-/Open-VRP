@@ -40,8 +40,8 @@
   (with-log-or-print (stream p)
     (print-timestamp stream)
     (format stream "~&Run took a total of ~A seconds.~%" (- (get-universal-time) *start-time*))
-    (format stream "Final solution of run with ~A on ~A~%" (string (type-of a)) (problem-name p))
-    (format stream "Best solution was found on iteration ~A~%" (algo-best-iteration a))
+    (format stream "Final solution of run with ~A on ~A was found on iteration ~A~%"
+	    (string (type-of a)) (problem-name p) (algo-best-iteration a))
     (print-routes a stream)))
 ;; -----------------------------
 
