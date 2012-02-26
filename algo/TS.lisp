@@ -18,7 +18,7 @@
 (defmethod initialize ((prob problem) (ts tabu-search))
   "Creates inital solution and sets it to :algo-current-sol. Returns the <tabu-search> object. For Tabu Search, the default heuristic for generating an initial solution is 'greedy-best-insertion, which is read from the slot :init-heur."
   (init-algo (algo-current-sol
-	      (solve-prob prob (make-instance (ts-init-heur ts))))
+	      (run-algo (copy-object prob) (make-instance (ts-init-heur ts))))
 	     ts)
   ts)
 
