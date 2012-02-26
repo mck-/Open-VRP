@@ -40,6 +40,8 @@
        ((not it))
      ,@body))
 
+(define-modify-macro toggle () not)
+
 ;; ----------------------------------------------------------
 (defun sum (list)
   "A quick list summer, 4 times as fast as (reduce #'+ list)"

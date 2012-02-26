@@ -77,6 +77,7 @@
 	   :sum
 	   :max-car
 	   :max-cdr
+	   :toggle
 	   :copy-object
 
 	   ;; list utils
