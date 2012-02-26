@@ -6,7 +6,7 @@
   :depends-on (vecto alexandria fiveam) 
   :serial t
   :components ((:file "packages")
-	       (:file "class-definitions")
+	       (:file "lib/class-definitions")
 	       (:file "lib/simple-utils")
 	       (:file "lib/list")
 	       (:file "lib/network")
