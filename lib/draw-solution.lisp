@@ -166,15 +166,5 @@
 
 ;; ----------------------------------------------
 
-(defgeneric toggle-legend (obj)
-  (:method (obj) "Expects <drawer>/<problem>!")
-  (:documentation "toggle the legend on/off."))
-	   
-
-(defmethod toggle-legend ((dr drawer))
-  (if (drawer-legend dr)
-      (setf (drawer-legend dr) nil)
-      (setf (drawer-legend dr) T)))
-
-(defmethod toggle-legend ((pr problem))
-  (toggle-legend (problem-drawer pr)))
+(defun toggle-legend (problem)
+  (toggle (drawer-legend (problem-drawer problem))))
