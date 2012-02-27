@@ -50,7 +50,7 @@
 	   :algo-animatep
 	   :drawer-min-coord
 	   :drawer-max-coord
-	   :drawer-legend
+	   :drawer-legendp
 	   :drawer-legend-x
 	   :drawer-legend-y
 	   :drawer-x-pos

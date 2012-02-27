@@ -120,7 +120,7 @@
 				        ;iterate over fleet - draw routes & legend together
 	(dolist (veh (get-busy-vehicles sol))
 	  (multiple-value-bind (r g b) (get-color)
-	    (when (drawer-legend dr)
+	    (when (drawer-legendp dr)
 	      (draw-legend-item dr veh r g b)) ; draw legend item
 	    (set-rgb-stroke r g b))
 	  
@@ -170,10 +170,10 @@
   (:documentation "Toggles legend drawing. When <Algo> is provided, toggles :best-sol"))
 
 (defmethod toggle-legend ((pr problem))
-  (toggle (drawer-legend (problem-drawer pr))))
+  (toggle (drawer-legendp (problem-drawer pr))))
 
 (defmethod toggle-legend ((a algo))
-  (toggle (drawer-legend (problem-drawer (algo-best-sol a)))))
+  (toggle (drawer-legendp (problem-drawer (algo-best-sol a)))))
 
 (defun toggle-plot (problem)
   (toggle (drawer-plotp (problem-drawer problem))))
