@@ -69,27 +69,29 @@
 ;; with-log-file macro
 ;; -------------------------
 (defmacro with-log-or-print ((stream prob &optional (appendp T)) &body body)
-  "A wrapper on top of with-open-file, where we use the filepath stored in the :log-file slot of a problem object. When it is nil, use the T stream. Optional parameter appendp can be set to NIL in order to :supersede if file exists. By default appends."
+  "A wrapper on top of with-open-file, where we use the filepath stored in the :log-file slot of a problem object. When :log-mode is 0, return nil. If 1, use the file stream; if 2, use the T stream. Optional parameter appendp can be set to NIL in order to :supersede if file exists. By default appends. Returns T if logging is succesful."
   (with-gensyms (func)
     `(flet ((,func (,stream)
 	      ,@body))
-       (if (problem-log-filep ,prob)
-	   (with-open-file (,stream (namestring (problem-log-file ,prob))
-				    :direction :output
-				    :if-exists (if ,appendp :append :supersede))
-	     (,func ,stream))
-	   (,func t)))))
+       (ccase (problem-log-mode ,prob)
+	 (0 nil)
+	 (1 (with-open-file (,stream (namestring (problem-log-file ,prob))
+				     :direction :output
+				     :if-exists (if ,appendp :append :supersede))
+	      (,func ,stream)) t)
+	 (2 (,func t) t)))))
+	 
 
 (defun toggle-log-file (prob)
   (toggle (problem-log-filep prob)))
 
 ;; Acccessors for log-filep
-(defgeneric log-filep (prob/algo)
-  (:documentation "Returns :log-filep boolean given <Problem> or <Algo> object"))
+(defgeneric log-mode (prob/algo)
+  (:documentation "Returns :log-mode given <Problem> or <Algo> object"))
 
-(defmethod log-filep ((p problem))
-  (problem-log-filep p))
+(defmethod log-mode ((p problem))
+  (problem-log-mode p))
 
-(defmethod log-filep ((a algo))
-  (problem-log-filep (algo-current-sol a)))
+(defmethod log-mode ((a algo))
+  (problem-log-mode (algo-current-sol a)))
   
