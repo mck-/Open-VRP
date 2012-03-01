@@ -39,7 +39,7 @@
 	   :problem-to-depot
 	   :problem-drawer
 	   :problem-log-file
-	   :problem-log-filep
+	   :problem-log-mode
 	   :algo-name
 	   :algo-desc
 	   :algo-best-sol
