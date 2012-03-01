@@ -37,3 +37,8 @@
   ((list1 :initarg :list1 :reader list1)
    (list2 :initarg :list2 :reader list2))
   (:report "Trying to create objects where input lists are of unequal length!"))  
+
+;; lib/output.lisp lib/solver.lisp
+(define-condition invalid-log-mode (error)
+  ((log-mode :initarg :log-mode :reader log-mode))
+  (:report "Log-mode has to be 0,1,2 -- (no log, file-log, REPL-log)"))
