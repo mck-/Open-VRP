@@ -82,10 +82,11 @@
 	 (2 (,func t) t)))))
 	 
 
-(defun toggle-log-file (prob)
-  (toggle (problem-log-filep prob)))
+(defun set-log-mode (prob x)
+  "Sets log-mode: 0 for no log, 1 for log to log-file, 2 for REPL log."
+  (setf (problem-log-mode prob) x))
 
-;; Acccessors for log-filep
+;; Acccessors for log-mode
 (defgeneric log-mode (prob/algo)
   (:documentation "Returns :log-mode given <Problem> or <Algo> object"))
 

@@ -155,7 +155,7 @@
 	   :with-log-or-print
 	   :toggle-legend
 	   :toggle-plot
-	   :toggle-log-file
+	   :set-log-mode
 	   :log-filep
 	   :toggle-animate
 	   
