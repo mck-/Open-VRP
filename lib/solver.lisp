@@ -138,7 +138,7 @@
 					  (asdf:system-source-directory 'open-vrp))))
 
   ;; Print dots in REPL if logging is to file
-  (when (log-filep a)
+  (unless (= (log-mode a) 2)
     (princ ".")))
 
 ;; Animate
@@ -158,6 +158,6 @@
   (run-algo (algo-current-sol a) a))
 
 (defmethod iterate-more :after ((a algo) int)
-  (when (log-filep a)
+  (unless (= (log-mode a) 2)
     (print-final-results (algo-best-sol a) a t)))
 ;; ---------------------
