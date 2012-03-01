@@ -34,9 +34,9 @@ Check the [Wiki](https://github.com/mck-/Open-VRP/wiki) for more documentation, 
 (solve-prob christofides-2 (make-instance 'tabu-search :iterations 50))
 ```
 
-By default, these pre-loaded problems will plot to `plots/name.png` and log to `run-logs/name.txt` where _name_ refers to the `:name` slot of the _Problem_ object. `(toggle-plot <problem>)` to disable plotting the final solution. `(toggle-log-file <problem>)` to disable logging to file, but to the REPL. 
+By default, these pre-loaded problems will plot to `plots/name.png` and log to `run-logs/name.txt` where _name_ refers to the `:name` slot of the _Problem_ object. `(toggle-plot <problem>)` to disable plotting the final solution. Use `(set-log-mode <problem> x)` to switch from [0] no logging, [1] logging to file or [2] logging to the REPL. When logging is turned off, each iteration is just prints a dot and only the final solution is returned.
 
-If you find the legend in the way, turn it off with `(toggle-legend <problem>)`.
+If you don't like the legend in the plot, turn it off with `(toggle-legend <problem>)`.
 
 When :animatep is set to T, each iteration will produce a plot in run-frames/Iteration x.png (much slower, since it needs to plot each iteration). You may use `(toggle-animate <algo>)` to turn it off.
 
