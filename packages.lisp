@@ -163,6 +163,7 @@
 	   
 	   ;; conditions
 	   :same-origin-destination
+	   :list-of-nils
 
 	   ;; init macros
 	   :create-nodes

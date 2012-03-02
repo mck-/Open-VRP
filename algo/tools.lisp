@@ -117,12 +117,15 @@
 	  (problem-fleet prob)))
 
 (defmethod get-closest-feasible-vehicle ((n node) (prob CVRP))
-  "Returns the vehicle closest to the node and has enough capacity." 
-  (vehicle prob (get-min-index
-		 (mapcar #'(lambda (dist cap)
-			     (unless (> (node-demand n) cap) dist))
-			 (dists-to-vehicles n prob)
-			 (capacities-left prob)))))
+  "Returns the vehicle closest to the node and has enough capacity."
+  (handler-case  
+      (vehicle prob (get-min-index
+		     (mapcar #'(lambda (dist cap)
+				 (unless (> (node-demand n) cap) dist))
+			     (dists-to-vehicles n prob)
+			     (capacities-left prob))))
+    (list-of-nils () (error 'no-feasible-move :moves n))))
+  
 
 ;; Time-window check
 (defun times-of-arriving (node prob)
@@ -135,11 +138,13 @@
 ;; Feasiblility of appending at the end only.
 (defmethod get-closest-feasible-vehicle ((n node) (prob VRPTW))
   "Returns the vehicle closest to the node that has enough time at the end of its route. Used for appending nodes. Use get-optimal-insertion instead for inserting feasibly into routes."
-  (vehicle prob (get-min-index 
-		 (mapcar #'(lambda (dist arr-time cap)
-			     (unless (or (> (node-demand n) cap)
-					 (> arr-time (node-end n)))
-			       dist))
-			 (dists-to-vehicles n prob)
-			 (times-of-arriving n prob)
-			 (capacities-left prob)))))
+  (handler-case
+      (vehicle prob (get-min-index 
+		     (mapcar #'(lambda (dist arr-time cap)
+				 (unless (or (> (node-demand n) cap)
+					     (> arr-time (node-end n)))
+				   dist))
+			     (dists-to-vehicles n prob)
+			     (times-of-arriving n prob)
+			     (capacities-left prob))))
+    (list-of-nils () (error 'no-feasible-move :moves n))))
