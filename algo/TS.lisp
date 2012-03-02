@@ -98,6 +98,7 @@
 (defmethod select-move ((ts tabu-search) all-moves)
   "This function selects best non-tabu move from a list of assessed moves. When aspiration criteria is set to T, then if by performing the move we get a new best solution, circumvent the tabu-list."
   (let ((sorted-moves (sort-moves all-moves)))
+    (unless (move-fitness (car sorted-moves)) (error 'no-feasible-move :moves all-moves))
     (if (and (ts-aspirationp ts)
 	     (< (+ (fitness (algo-current-sol ts)) (move-fitness (car sorted-moves)))
 		(algo-best-fitness ts)))
