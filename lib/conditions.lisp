@@ -55,3 +55,9 @@
   ((arg :initarg :arg :reader arg)
    (size :initarg :size :reader size))
   (:report "Size of dist-array incorrect, given the size of the problem."))
+
+;; lib/draw-solution.lisp
+(define-condition missing-drawer-object (error)
+  ((prob :initarg :prob :reader prob))
+  (:report "Missing a <Drawer> object! Are you trying to plot without node-coords?"))
+   

@@ -108,6 +108,7 @@
   (setf *b* 0.62)
 
   (let ((dr (problem-drawer sol)))
+    (unless dr (error 'missing-drawer-object :prob sol))
     (with-canvas (:width (drawer-max-pix dr) :height (drawer-max-pix dr))
       (let ((font (get-font (merge-pathnames "FreeSerif.ttf" 
 					     (asdf:system-source-directory 'open-vrp))))
@@ -153,6 +154,7 @@
 
 (defmethod plot-nodes ((prob problem))
   (let ((dr (problem-drawer prob)))
+    (unless dr (error 'missing-drawer-object :prob prob))
     (with-canvas (:width (drawer-max-pix dr) :height (drawer-max-pix dr))
       (let ((font (get-font (merge-pathnames "FreeSerif.ttf" 
 					     (asdf:system-source-directory 'open-vrp)))))
@@ -170,10 +172,20 @@
   (:documentation "Toggles legend drawing. When <Algo> is provided, toggles :best-sol"))
 
 (defmethod toggle-legend ((pr problem))
-  (toggle (drawer-legendp (problem-drawer pr))))
+  (aif (problem-drawer pr)
+       (toggle (drawer-legendp it))
+       (error 'missing-drawer-object :prob pr)))
 
 (defmethod toggle-legend ((a algo))
-  (toggle (drawer-legendp (problem-drawer (algo-best-sol a)))))
+  (toggle-legend (algo-best-sol a)))
 
-(defun toggle-plot (problem)
-  (toggle (drawer-plotp (problem-drawer problem))))
+(defgeneric toggle-plot (problem/algo)
+  (:documentation "Toggles plotting final solution. Toggles :best-sol in <Algo>."))
+
+(defmethod toggle-plot ((pr problem))
+  (aif (problem-drawer pr)
+       (toggle (drawer-plotp it))
+       (error 'missing-drawer-object :prob pr)))
+  
+(defmethod toggle-plot ((a algo))
+  (toggle-plot (algo-best-sol a)))
