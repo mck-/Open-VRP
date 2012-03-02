@@ -52,7 +52,7 @@
 ;; Create fleet
 ;; --------------------------
 (defmacro create-vehicles (fleet-size base-node to-depot &key capacities speeds)
-  "Returns a list of vehicles, starting with ID 0. The starting location of their routes are all initialized at base-node. When to-depot is set to T, initialize their routes with 2 base nodes (departure and destination). For capacities and speeds, accepts a list that is of equal lenght to fleet-size. A shorter list will return a smaller fleet."
+  "Returns a list of vehicles, starting with ID 0. The starting location of their routes are all initialized at base-node. When to-depot is set to T, initialize their routes with 2 base nodes (departure and destination). For capacities and speeds, only accepts a list that is of equal lenght to fleet-size."
   (with-gensyms (id capacity speed)
     `(progn
        ;; Checking if input attributes' length is equal to fleet-size
