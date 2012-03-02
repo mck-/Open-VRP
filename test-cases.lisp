@@ -15,8 +15,8 @@
 	(cons -2 -2)))
 
 ;; Initialization of objects
-(defvar test-tsp (define-problem "test-case-TSP" *node-coords* 1 :to-depot nil))
-(defvar test-vrp (define-problem "test-case-VRP" *node-coords* 2))
+(defvar test-tsp (define-problem "test-case-TSP" 1 :node-coords-list *node-coords* :to-depot nil))
+(defvar test-vrp (define-problem "test-case-VRP" 2 :node-coords-list *node-coords*))
 (defvar solomon25 
   (load-testcase-solomon (merge-pathnames "test-cases/25-cust.txt" 
 					  (asdf:system-source-directory 'open-vrp))))
