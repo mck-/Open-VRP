@@ -73,7 +73,7 @@
 ;; Create Problem macro
 ;; ----------------------------
 
-(defmacro define-problem (name fleet-size &key node-coords-list demands capacities time-windows-list durations speeds (to-depot T) plot-filename log-filename)
+(defmacro define-problem (name fleet-size &key node-coords-list demands capacities time-windows-list durations speeds (to-depot T) plot-filename log-filename dist-array)
   "Creates the appropriate <Problem> object from the inputs. Extra key attributes only accept lists that are of equal length to node-coords-list or fleet-size (depending on what attributes it sets). For demands, durations, capacities and speeds, will also accept a single value, which will set all attributes to this value. With only the demands-list and capacities, creates a CVRP problem. With time-windows, creates a VRPTW problem. When durations and speeds are not provided, defaults to 0 and 1.  When plot-filename is not given, it will plot in \"plots/name.png\"."
   (with-gensyms (ln network fleet drawer)
     `(let* ((,ln (same-lengthp ,demands ,node-coords-list ,time-windows-list ,durations))
@@ -115,8 +115,8 @@
 					     :filename (if ,plot-filename ,plot-filename
 							   (merge-pathnames (concatenate 'string "plots/" (string ,name) ".png")
 									    (asdf:system-source-directory 'open-vrp))))))))
-       (declare (ignore ,ln))
-       ,@(unless node-coords-list `((warn "No coords-list provided: Make sure you'll set the dist-array slot!! You cannot use plotting function either.")))
+       (format t "Processed ~A nodes succesfully" ,ln)
+       ,@(unless node-coords-list `((warn "No coords: Make sure dist-array is set! Plotting function disabled.")))
        (make-instance ,@(cond ((and time-windows-list capacities) '('cvrptw))
 			      (time-windows-list '('vrptw))
 			      ((and demands capacities) '('cvrp))
@@ -124,8 +124,10 @@
 		      :name (string ,name)
 		      :fleet ,fleet
 		      :network ,network
-		      ,@(when node-coords-list ; can only generate dist-array with coords
-			      `(:dist-array (generate-dist-array ,node-coords-list)))
+		      ,@(if dist-array
+			    `(:dist-array ,dist-array)
+			    (when node-coords-list ; can only generate dist-array with coords
+				  `(:dist-array (generate-dist-array ,node-coords-list))))
 		      :to-depot ,to-depot
 		      ,@(when node-coords-list `(:drawer ,drawer))
 		      :log-file (if ,log-filename ,log-filename
