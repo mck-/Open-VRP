@@ -136,7 +136,9 @@
 	      (let ((sorted-moves (sort-moves (assess-moves sol (generate-moves ts)))))
 		(setf (ts-candidate-list ts) (create-candidate-list ts sorted-moves))
 		(select-perform-from-cand ts)))
-	  (perform-add-tabu (select-move ts (assess-moves sol (generate-moves ts))))))
+	  (perform-add-tabu
+	   (handler-bind ((all-moves-tabu #'select-best-tabu))
+	     (select-move ts (assess-moves sol (generate-moves ts)))))))
     ts))
 					  
 ;; --------------------------

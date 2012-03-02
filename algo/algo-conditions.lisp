@@ -7,6 +7,9 @@
    (tabu-list :initarg :tabu-list :reader tabu-list))
   (:report "All possible moves are on the Tabu-list! Consider reducing tabu-tenure, or override the select-move procedure."))
 
+(defun select-best-tabu (c)
+  (invoke-restart 'select-best-tabu-move))
+
 ;; algo/best-insertion.lisp
 (define-condition no-feasible-move (error)
   ((moves :initarg :moves :reader moves))

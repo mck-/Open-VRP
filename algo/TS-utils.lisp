@@ -67,7 +67,8 @@
 			   ans
 			   (push (car moves) ans)))))) ;only add if move is non-tabu
     (iter (cdr sorted-moves)
-	  (list (select-move ts sorted-moves))))) ;first move is non-tabu
+	  (handler-bind ((all-moves-tabu #'select-best-tabu))
+	    (list (select-move ts sorted-moves))))))
 
 (defmethod remove-affected-moves ((ts tabu-search) move)
   "Given a <Tabu-search> and one <Move> (to be performed), remove all the moves from the candidate-list that do not apply anymore after the selected move is performed."
