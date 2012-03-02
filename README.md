@@ -21,6 +21,17 @@ With this framework, I hope to catalyze the research and application of routing 
 
 The ultimate vision for Open VRP is a simple intuitive embedded language for the OR community, free for anyone.
 
+## Installation
+
+```
+~$ git clone git://github.com/mck-/Open-VRP.git
+```
+Add this path and evaluate require:
+```
+(push "/path/to/Open-VRP/" asdf:*central-registry*)
+(require 'open-vrp)
+```
+
 ## Usage
 Check the [Wiki](https://github.com/mck-/Open-VRP/wiki) for more documentation, the following is a short summary of the main functionality.
 
