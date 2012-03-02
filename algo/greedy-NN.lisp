@@ -12,7 +12,9 @@
 (defmethod run-algo ((p problem) (a greedy-NN))
   "While there exists unchosen nodes, keep appending it. Returns the <Algo> object when done. Also prints the fitness and solution (run-algo :after method)."
   (let ((v (vehicle p 0)))
-    (awhile (get-closest-node p 0 (route-indices v))
+    (awhile (handler-case
+		(get-closest-node p 0 (route-indices v))
+	      (list-of-nils () nil))
       (append-node v it)))
   (init-algo p a)
   a)
