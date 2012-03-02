@@ -41,3 +41,12 @@
 ;; lib/init-macros.lisp
 (define-condition empty-network (error)()
   (:report "Network is empty! To create a network requires at least one parameter!"))
+
+(define-condition not-an-array (error)
+  ((arg :initarg :arg :reader arg))
+  (:report "Dist-array must be of type array, cannot be a list"))
+
+(define-condition array-size-incorrect (error)
+  ((arg :initarg :arg :reader arg)
+   (size :initarg :size :reader size))
+  (:report "Size of dist-array incorrect, given the size of the problem."))

@@ -72,6 +72,14 @@
 
 ;; Create Problem macro
 ;; ----------------------------
+(defun validate-dist-arrayp (dist-array size)
+  "Given a dist-array and the size of the problem, check if the dist-array is valid, i.e. is an array and of size * size."
+  (unless (arrayp dist-array)
+    (error 'not-an-array :arg dist-array))
+  (unless (and (= size (array-dimension dist-array 0))
+	       (= size (array-dimension dist-array 1)))
+    (error 'array-size-incorrect :arg dist-array :size size))
+  T)		  
 
 (defmacro define-problem (name fleet-size &key node-coords-list demands capacities time-windows-list durations speeds (to-depot T) plot-filename log-filename dist-array)
   "Creates the appropriate <Problem> object from the inputs. Extra key attributes only accept lists that are of equal length to node-coords-list or fleet-size (depending on what attributes it sets). For demands, durations, capacities and speeds, will also accept a single value, which will set all attributes to this value. With only the demands-list and capacities, creates a CVRP problem. With time-windows, creates a VRPTW problem. When durations and speeds are not provided, defaults to 0 and 1.  When plot-filename is not given, it will plot in \"plots/name.png\"."
@@ -117,6 +125,7 @@
 									    (asdf:system-source-directory 'open-vrp))))))))
        (format t "Processed ~A nodes succesfully" ,ln)
        ,@(unless node-coords-list `((warn "No coords: Make sure dist-array is set! Plotting function disabled.")))
+       ,@(when dist-array `((validate-dist-arrayp ,dist-array ,ln)))
        (make-instance ,@(cond ((and time-windows-list capacities) '('cvrptw))
 			      (time-windows-list '('vrptw))
 			      ((and demands capacities) '('cvrp))
