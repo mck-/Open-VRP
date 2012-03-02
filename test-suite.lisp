@@ -39,13 +39,14 @@
 (defun space-v ()
   (make-instance 'vehicle
 		 :capacity 3
-		 :route (list (make-instance 'node :demand 1)
-			      (make-instance 'node :demand 1))))
+		 :route (list (new-node 8 0 0 :demand 1)
+			      (new-node 9 1 1 :demand 1))))
 (defun overfull-v ()
   (make-instance 'vehicle
 		 :capacity 2
-		 :route (list (make-instance 'node :demand 1)
-			      (make-instance 'node :demand 2))))
+		 :route (list (new-node 0 0 0 :demand 1)
+			      (new-node 1 1 1 :demand 2))))
+
 (test capacity-veh-in
   (is (in-capacityp (space-v))))
 
@@ -102,7 +103,7 @@
   (is (in-timep (make-instance 'vrptw :fleet (list (on-time-v) (on-time-v) (on-time-v))))))
 
 (test time-window-test-fleet-late
-  (is (in-timep (make-instance 'vrptw :fleet (list (on-time-v) (late-v-speed) (on-time-v))))))
+  (is-false (in-timep (make-instance 'vrptw :fleet (list (on-time-v) (late-v-speed) (on-time-v))))))
 
 ;; Capacity AND Time Windows
 (defun on-time-and-in-cap-v ()
