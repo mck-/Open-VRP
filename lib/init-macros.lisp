@@ -123,7 +123,7 @@
 					     :filename (if ,plot-filename ,plot-filename
 							   (merge-pathnames (concatenate 'string "plots/" (string ,name) ".png")
 									    (asdf:system-source-directory 'open-vrp))))))))
-       (format t "Processed ~A nodes succesfully" ,ln)
+       (format t "~&Processed ~A nodes succesfully for ~A" ,ln ,name)
        ,@(unless node-coords-list `((warn "No coords: Make sure dist-array is set! Plotting function disabled.")))
        ,@(when dist-array `((validate-dist-arrayp ,dist-array ,ln)))
        (make-instance ,@(cond ((and time-windows-list capacities) '('cvrptw))
