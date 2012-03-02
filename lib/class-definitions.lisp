@@ -7,8 +7,8 @@
 
 (defclass node ()
   ((id :reader node-id :initarg :id)
-   (xcor :reader node-xcor :initarg :xcor)
-   (ycor :reader node-ycor :initarg :ycor)
+   (xcor :reader node-xcor :initarg :xcor :initform nil)
+   (ycor :reader node-ycor :initarg :ycor :initform nil)
    (demand :reader node-demand :initarg :demand)
    (start :reader node-start :initarg :start)
    (end :reader node-end :initarg :end)
