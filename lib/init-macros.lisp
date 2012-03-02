@@ -116,6 +116,7 @@
 							   (merge-pathnames (concatenate 'string "plots/" (string ,name) ".png")
 									    (asdf:system-source-directory 'open-vrp))))))))
        (declare (ignore ,ln))
+       ,@(unless node-coords-list `((warn "No coords-list provided: Make sure you'll set the dist-array slot!! You cannot use plotting function either.")))
        (make-instance ,@(cond ((and time-windows-list capacities) '('cvrptw))
 			      (time-windows-list '('vrptw))
 			      ((and demands capacities) '('cvrp))
