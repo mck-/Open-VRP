@@ -187,6 +187,7 @@
 	   :fitness-before-after
 	   :insertion-move
 	   :get-best-insertion-move
+	   :get-best-insertion-move-in-vehicle
 	   :get-closest-node
 	   :feasible-movep
 
