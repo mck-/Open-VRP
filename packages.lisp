@@ -120,6 +120,7 @@
 	   ;; fleet utils
 	   :route-indices
 	   :vehicle-with-node-ID
+	   :node-on-routep
 	   :total-dist
 	   :vehicle
 	   :new-vehicle

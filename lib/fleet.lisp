@@ -25,6 +25,10 @@
 (defmethod vehicle-with-node-ID ((p problem) node-ID)
   (position-if #'(lambda (route) (member node-ID route)) (route-indices p)))
 
+(defun node-on-routep (node-id vehicle)
+  "Returns NIL of <vehicle> does not have the node on its route."
+  (member node-id (route-indices vehicle)))
+
 (defgeneric total-dist (veh/prob dist-array)
   (:method (veh/prob dist-array) "Expects <problem> as input!")
   (:documentation "Returns total distance of the route(s) given a vehicle or a fleet."))

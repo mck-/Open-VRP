@@ -45,9 +45,12 @@
 
 (defmethod feasible-movep and ((sol CVRP) (m insertion-move))
   (with-slots (node-ID vehicle-ID) m
-    (multiple-value-bind (comply cap-left) (in-capacityp (vehicle sol vehicle-ID))
-      (unless comply (error 'infeasible-solution :sol sol :func #'in-capacityp))
-      (<= (node-demand (node sol node-ID)) cap-left))))
+    (let ((veh (vehicle sol vehicle-ID)))
+      ; if node is already on the route, moving intra-route is feasible
+      (if (node-on-routep node-ID veh) T
+	  (multiple-value-bind (comply cap-left) (in-capacityp veh)
+	    (unless comply (error 'infeasible-solution :sol sol :func #'in-capacityp))
+	    (<= (node-demand (node sol node-ID)) cap-left))))))
 
 (defmethod feasible-movep and ((sol VRPTW) (m insertion-move))
   (with-slots (node-ID vehicle-ID index) m
