@@ -68,7 +68,7 @@
 (defmethod solve-prob :after ((p problem) (a algo))
   (unless (= (log-mode p) 2)
     (print-final-results p a t))
-  (when (drawer-plotp (problem-drawer p))
+  (when (and (problem-drawer p) (drawer-plotp (problem-drawer p)))
     (plot-solution (algo-best-sol a))))
 ;; ---------------------------
 
