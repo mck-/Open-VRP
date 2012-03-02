@@ -8,7 +8,7 @@
   "Gets from list the value (max or min) while ignoring NIL's. Returns NIL if the whole list is nil. Use get-min or get-max!"
   (let ((in-list (if key (mapcar key list) list)))
     (labels ((iter (ls ans)
-	       (if (null ls) ans
+	       (if (null ls) (if ans ans (error 'list-of-nils :ls list :key key))
 		   (iter (cdr ls)
 			 (let ((x (car ls)))
 			   (cond ((null ans) x)

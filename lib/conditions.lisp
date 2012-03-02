@@ -12,6 +12,11 @@
   ((index :initarg :index :reader index)
    (ls :initarg :ls :reader ls)))
 
+(define-condition list-of-nils (error)
+  ((ls :initarg :ls :reader ls)
+   (key :initarg :key :reader key))
+  (:report "Cannot get min/max from a list of NIL values."))
+
 ;; lib/network.lisp
 (define-condition same-origin-destination (error)
   ((from :initarg :from :reader from)
