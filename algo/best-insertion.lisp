@@ -31,10 +31,10 @@
 	   (node-before (node-id (nth (1- index) route))))
       (setf (move-fitness m)
 	    (if (= index (length route)) ;if appending to end of route
-		(distance node-ID (node-id (last-node route)) dist-array)
+		(distance (node-id (last-node route)) node-ID dist-array)
 		(let ((node-after (node-id (nth index route))))
 		  (-
-		   (+ (distance node-ID node-before dist-array)
+		   (+ (distance node-before node-ID dist-array)
 		      (distance node-ID node-after dist-array)) 
 		   (handler-case (distance node-before node-after dist-array)
 		     (same-origin-destination () 0)))))))))
