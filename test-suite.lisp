@@ -153,3 +153,16 @@
 (test tw-move-infeasible
   (is (not (feasible-movep (make-instance 'vrptw :fleet (list (on-time-v) (on-time-v)) :network (vector (new-node 5 2 1 :start 3 :end 5 :duration 1)))
 			   (make-instance 'insertion-move :node-id 0 :vehicle-id 0 :index 3)))))
+
+;; -----------------------
+
+;; Asymmetric network
+;; -----------------------
+
+(defvar asym-net (define-problem "asym" 1 :demands '(0 1 1) :capacities 2 :to-depot nil
+				 :dist-array #2A((nil 1 5)(5 nil 1) (1 5 nil))))
+
+(test asym-greedy-nn (is (solve-prob asym-net (make-instance 'greedy-nn))))
+(test asym-greedy-append (is (solve-prob asym-net (make-instance 'greedy-append))))
+(test asym-greedy-best-insertion (is (solve-prob asym-net (make-instance 'greedy-best-insertion))))
+(test asym-tabu-search (is (solve-prob asym-net (make-instance 'tabu-search))))
