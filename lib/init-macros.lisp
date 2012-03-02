@@ -17,8 +17,8 @@
 ;; Create network
 ;; ----------------------------
 (defun same-lengthp(&rest lists)
-  "Returns NIL if lists are not of equal length. Returns their length if all are equal. Accepts NIL arguments, which will be ignored."
-  (let ((pruned-list (remove nil lists)))
+  "Returns NIL if lists are not of equal length. Returns their length if all are equal. Accepts NIL arguments or single numbers, which will be ignored."
+  (let ((pruned-list (remove-if-not #'consp lists)))
     (labels ((iter (ls len)
 	       (if (null ls) len 
 		   (and (= len (length (car ls)))
@@ -33,7 +33,7 @@
        (unless ,ln (error 'not-equal-length))
        
        (loop with ,nodes = (make-array ,ln :fill-pointer 0) ;vector of nodes
-	  for ,id from 0
+	  for ,id from 0 to ,ln
 	    ,@(when node-coords `(and ,coords in ,node-coords))
 	    ,@(when demands `(and ,demand in ,demands))
 	    ,@(when time-windows `(and ,tw in ,time-windows))
@@ -73,38 +73,49 @@
 ;; Create Problem macro
 ;; ----------------------------
 
-(defmacro define-problem (name node-coords-list fleet-size &key demands capacities time-windows-list durations speeds (to-depot T) plot-filename log-filename)
+(defmacro define-problem (name fleet-size &key node-coords-list demands capacities time-windows-list durations speeds (to-depot T) plot-filename log-filename)
   "Creates the appropriate <Problem> object from the inputs. Extra key attributes only accept lists that are of equal length to node-coords-list or fleet-size (depending on what attributes it sets). For demands, durations, capacities and speeds, will also accept a single value, which will set all attributes to this value. With only the demands-list and capacities, creates a CVRP problem. With time-windows, creates a VRPTW problem. When durations and speeds are not provided, defaults to 0 and 1.  When plot-filename is not given, it will plot in \"plots/name.png\"."
-  (with-gensyms (network fleet drawer)
-    `(let* ((,network (create-nodes ,node-coords-list
+  (with-gensyms (ln network fleet drawer)
+    `(let* ((,ln (same-lengthp ,demands ,node-coords-list ,time-windows-list ,durations))
+	    (,network (create-nodes ,@(when node-coords-list
+					    `(:node-coords ,node-coords-list))
 				    ,@(when demands 
-					    `(:demands (if (listp ,demands)
-							   ,demands
-							   (make-list (length ,node-coords-list) 
-								      :initial-element ,demands))))
-				    ,@(when time-windows-list `(:time-windows ,time-windows-list))
+					    `(:demands
+					      (if (listp ,demands)
+						  ,demands
+						  (make-list ,ln
+							     :initial-element ,demands))))
+				    ,@(when time-windows-list
+					    `(:time-windows ,time-windows-list))
 				    ,@(when durations 
-					    `(:durations (if (listp ,durations)
-							   ,durations
-							   (make-list (length ,node-coords-list) 
-								      :initial-element ,durations))))))
-	    (,fleet (create-vehicles ,fleet-size (aref ,network 0) ,to-depot
+					    `(:durations
+					      (if (listp ,durations)
+						  ,durations
+						  (make-list ,ln
+							     :initial-element ,durations))))))  
+	    (,fleet (create-vehicles ,fleet-size (if (= 0 (length ,network))
+						     (error 'empty-network)
+						     (aref ,network 0)) ,to-depot
 				     ,@(when capacities 
-					    `(:capacities (if (listp ,capacities)
-							   ,capacities
-							   (make-list ,fleet-size 
-								      :initial-element ,capacities))))
+					     `(:capacities
+					       (if (listp ,capacities)
+						   ,capacities
+						   (make-list ,fleet-size 
+							      :initial-element ,capacities))))
 				     ,@(when speeds
-					    `(:speeds (if (listp ,speeds)
-							   ,speeds
-							   (make-list ,fleet-size 
-								      :initial-element ,speeds))))))
-	    (,drawer (make-instance 'drawer
-				    :min-coord (get-min-coord ,node-coords-list)
-				    :max-coord (get-max-coord ,node-coords-list)
-				    :filename (if ,plot-filename ,plot-filename
-						  (merge-pathnames (concatenate 'string "plots/" (string ,name) ".png")
-								   (asdf:system-source-directory 'open-vrp))))))
+					    `(:speeds
+					      (if (listp ,speeds)
+						  ,speeds
+						  (make-list ,fleet-size 
+							     :initial-element ,speeds))))))
+	    ,@(when node-coords-list
+		    `((,drawer (make-instance 'drawer
+					     :min-coord (get-min-coord ,node-coords-list)
+					     :max-coord (get-max-coord ,node-coords-list)
+					     :filename (if ,plot-filename ,plot-filename
+							   (merge-pathnames (concatenate 'string "plots/" (string ,name) ".png")
+									    (asdf:system-source-directory 'open-vrp))))))))
+       (declare (ignore ,ln))
        (make-instance ,@(cond ((and time-windows-list capacities) '('cvrptw))
 			      (time-windows-list '('vrptw))
 			      ((and demands capacities) '('cvrp))
@@ -112,9 +123,10 @@
 		      :name (string ,name)
 		      :fleet ,fleet
 		      :network ,network
-		      :dist-array (generate-dist-array ,node-coords-list)
+		      ,@(when node-coords-list ; can only generate dist-array with coords
+			      `(:dist-array (generate-dist-array ,node-coords-list)))
 		      :to-depot ,to-depot
-		      :drawer ,drawer
+		      ,@(when node-coords-list `(:drawer ,drawer))
 		      :log-file (if ,log-filename ,log-filename
 				    (merge-pathnames (concatenate 'string "run-logs/" (string ,name) ".txt")
 						     (asdf:system-source-directory 'open-vrp)))))))

@@ -37,3 +37,7 @@
   ((list1 :initarg :list1 :reader list1)
    (list2 :initarg :list2 :reader list2))
   (:report "Trying to create objects where input lists are of unequal length!"))  
+
+;; lib/init-macros.lisp
+(define-condition empty-network (error)()
+  (:report "Network is empty! To create a network requires at least one parameter!"))

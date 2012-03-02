@@ -97,11 +97,10 @@ EDGE_WEIGHT_FORMAT and EDGE_WEIGHT_TYPE are optional"
       (when (not (eq (intern "EOF") (read stream)))
       	(error "The file must be terminated by EOF"))
 
-      (define-problem  name
-      	               (couple-lists x-coords y-coords) 
-      	               25 
-      		       :demands demands
-      		       :capacities capacity))))
+      (define-problem name 25
+	:node-coords-list (couple-lists x-coords y-coords)
+	:demands demands
+	:capacities capacity))))
 
 
 
