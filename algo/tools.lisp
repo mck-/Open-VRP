@@ -93,7 +93,10 @@
 ;; ---------------------------
 (defun dists-to-vehicles (node prob)
   "Given a <Node> and a <Problem>, return the list of all the distances from the <Node> to the current positions of the fleet. Used by get-closest-(feasible)-vehicle."
-  (mapcar #'(lambda (x) (node-distance (last-node x) node)) (problem-fleet prob)))
+  (mapcar #'(lambda (x) (distance (node-id (last-node x))
+				  (node-id node)
+				  (problem-dist-array prob)))
+	  (problem-fleet prob)))
 
 ;; challenge: what if the vehicle is located on the node n - use only for initial insertion?
 (defun get-closest-vehicle (n prob)
@@ -126,7 +129,7 @@
   "Returns a list of arrival times of the vehicles to node given the present solution."
   (mapcar #'(lambda (x)
 	      (multiple-value-bind (c time)
-		  (in-timep x) (when c (+ time (travel-time (last-node x) node)))))
+		  (veh-in-timep x) (when c (+ time (travel-time (last-node x) node)))))
 	  (problem-fleet prob)))
 
 ;; Feasiblility of appending at the end only.

@@ -129,6 +129,7 @@
 	   :in-capacityp
 	   :travel-time
 	   :time-after-serving-node
+	   :veh-in-timep
 	   :in-timep
 
 	   :fitness

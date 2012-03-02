@@ -17,7 +17,7 @@
 
 (defmethod constraintsp and ((sol CVRP)) (in-capacityp sol))
 
-(defmethod constraintsp and ((sol VRPTW)) (in-timep (problem-fleet sol)))
+(defmethod constraintsp and ((sol VRPTW)) (in-timep sol))
 
 ;; Helper macro for defining constraints-checking methods below
 ;; Returns NIL as soon as it finds out that a constraint is violated
@@ -59,10 +59,13 @@
 ;; 2. Time-window constraints
 ;; -------------------------
 
-(defun travel-time (n1 n2 &optional (speed 1))
-  "Given two <nodes> and optional speed, return the travel-time."
+(defun travel-time (n1 n2 &key dist-array (speed 1))
+  "Given two <nodes> and optional speed, return the travel-time. When dist-array is not provided, calculate distance directly using coords."
   (handler-case
-      (/ (node-distance n1 n2) speed)
+      (/ (if dist-array
+	     (distance (node-id n1) (node-id n2) dist-array)
+	     (node-distance n1 n2))
+	 speed)
     (same-origin-destination () 0)))
 	 
 (defun time-after-serving-node (node arrival-time)
@@ -71,14 +74,11 @@
 	((< arrival-time (node-start node)) (+ (node-start node) (node-duration node))) ;wait
 	(t (+ arrival-time (node-duration node)))))
 
-(defgeneric in-timep (veh/vrptw)
-  (:method (veh/vrptw) "in-timep: Expects <Vehicle-TW>/<Problem>!")
-  (:documentation "Tests weather the route on <Vehicle> is complying with the time-window constraints. Returns T and the time of finishing its last task. When <Fleet> is provided, test all vehicles."))
-
-(defmethod in-timep ((v vehicle))
+(defun veh-in-timep (v &optional dist-array)
+  "Tests weather the route on <Vehicle> is complying with the time-window constraints. Returns T and the time of finishing its last task."
   (unless (vehicle-speed v) (error 'no-speed-vehicle :veh v))
   (symbol-macrolet ((to (car route))
-		    (arr-time (+ time (travel-time loc to))))
+		    (arr-time (+ time (travel-time loc to :dist-array dist-array :speed (vehicle-speed v)))))
     (constraints-check
      (route time loc)
      ((cdr (vehicle-route v)) 0 (car (vehicle-route v)))
@@ -90,7 +90,7 @@
    (veh)
    ((problem-fleet pr))
    ((cdr veh))
-   (in-timep (car veh))))
+   (veh-in-timep (car veh) (aif (problem-dist-array pr) it))))
 ;; -------------------------
 
 

@@ -33,7 +33,7 @@
   ((name :reader problem-name :initarg :name :initform "VRP")
    (desc :reader problem-desc :initarg :desc :initform "Vehicle Routing Problem")
    (network :reader problem-network :initarg :network)
-   (dist-array :accessor problem-dist-array :initarg :dist-array)
+   (dist-array :accessor problem-dist-array :initarg :dist-array :initform nil)
    (fleet :reader problem-fleet :initarg :fleet)
    (to-depot :accessor problem-to-depot :initarg :to-depot :initform T)
    (drawer :accessor problem-drawer :initarg :drawer)

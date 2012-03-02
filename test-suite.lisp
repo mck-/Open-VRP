@@ -93,13 +93,13 @@
 
 
 (test time-window-test-on-time
-  (is (in-timep on-time-v)))
+  (is (veh-in-timep on-time-v)))
 
 (test time-window-test-too-late
-  (is (null (not (in-timep late-v-duration)))))
+  (is (null (not (veh-in-timep late-v-duration)))))
 
 (test time-window-test-too-late
-  (is (null (not (in-timep late-v-speed)))))
+  (is (null (not (veh-in-timep late-v-speed)))))
 
 (test time-window-test-fleet-on-time
   (is (in-timep (make-instance 'vrptw :fleet (list on-time-v on-time-v on-time-v)))))
