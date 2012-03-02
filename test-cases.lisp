@@ -1,6 +1,6 @@
 ;; Some test instances
 ;; -----------------------
-(in-package :open-vrp)
+(in-package :open-vrp.test)
 
 (defparameter *node-coords*
   (list (cons 0 0)

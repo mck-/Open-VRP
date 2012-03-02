@@ -233,12 +233,27 @@
 	   :TS-best-insertion-move
 	   :create-candidate-list))
 
-(defpackage :open-vrp
+(defpackage :open-vrp.test
   (:use :common-lisp
 	:open-vrp.classes
 	:open-vrp.util
 	:open-vrp.algo
 	:fiveam)
+  (:export :run!
+	   ;; demos
+	   :test-tsp
+	   :test-vrp
+	   :solomon25
+	   :solomon100
+	   :christofides-1
+	   :christofides-2))
+
+(defpackage :open-vrp
+  (:use :common-lisp
+	:open-vrp.classes
+	:open-vrp.util
+	:open-vrp.algo
+	:open-vrp.test)
   (:import-from	:alexandria :shuffle :flatten :with-gensyms)
   (:export :define-problem
 	   :load-testcase-Solomon
@@ -246,7 +261,6 @@
 	   :solve-prob
 	   :iterate-more
 	   :plot-solution
-	   :run!
 	   :print-routes
 
 	   ;; algos
@@ -256,6 +270,7 @@
 	   :greedy-best-insertion
 	   
 	   ;; demos
+	   :run!
 	   :test-tsp
 	   :test-vrp
 	   :solomon25
