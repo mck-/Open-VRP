@@ -112,6 +112,7 @@
 	   :distance
 	   :node-distance
 	   :generate-dist-array
+	   :set-dist-array
 	   :get-array-row
 	   :node
 	   :new-node

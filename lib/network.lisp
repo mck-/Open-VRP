@@ -52,6 +52,10 @@
 			 (1- size)))
 	     (1- size))
      dist-array))
+
+(defun set-dist-array (problem dist-array)
+  "Given a <problem> and a 2-dimensional array in dist-array, set it in <problem>"
+  (setf (problem-dist-array problem) dist-array))
      
 ;; ----------------------------------------
 
