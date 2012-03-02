@@ -50,13 +50,13 @@
   (is (in-capacityp (space-v))))
 
 (test capacity-veh-out
-  (is (not (in-capacityp (overfull-v)))))
+  (is-false (in-capacityp (overfull-v))))
 
 (test capacity-fleet-in
   (is (in-capacityp (make-instance 'cvrp :fleet (list (space-v) (space-v) (space-v))))))
 
 (test capacity-fleet-out
-  (is (not (in-capacityp (make-instance 'cvrp :fleet (list (overfull-v) (space-v)))))))
+  (is-false (in-capacityp (make-instance 'cvrp :fleet (list (overfull-v) (space-v))))))
 
 ;; Time Windows
 (defun on-time-v ()
@@ -74,8 +74,8 @@
    'vehicle
    :speed 1
    :route (list
-	   (new-node 1 1 0 :start 0 :end 2 :duration 10)
-	   (new-node 2 2 0 :start 0 :end 2 :duration 1) 
+	   (new-node 1 1 0 :start 0 :end 2 :duration 0)
+	   (new-node 2 2 0 :start 0 :end 2 :duration 10) 
 	   (new-node 3 3 0 :start 5 :end 8 :duration 2)
 	   (new-node 4 4 0 :start 0 :end 10 :duration 1))))
 
@@ -87,16 +87,16 @@
 	   (new-node 1 1 0 :start 0 :end 2 :duration 1)
 	   (new-node 2 2 0 :start 0 :end 2 :duration 1) 
 	   (new-node 3 3 0 :start 5 :end 8 :duration 2)
-	   (new-node 4 4 0 :start 0 :end 10 :duration 1))))
+	   (new-node 4 4 0 :start 0 :end 8 :duration 1))))
 
 (test time-window-test-on-time
   (is (veh-in-timep (on-time-v))))
 
-(test time-window-test-too-late
-  (is (null (not (veh-in-timep (late-v-duration))))))
+(test time-window-test-too-late-duration
+  (is-false (veh-in-timep (late-v-duration))))
 
-(test time-window-test-too-late
-  (is (null (not (veh-in-timep (late-v-speed))))))
+(test time-window-test-too-late-speed
+  (is-false (veh-in-timep (late-v-speed))))
 
 (test time-window-test-fleet-on-time
   (is (in-timep (make-instance 'vrptw :fleet (list (on-time-v) (on-time-v) (on-time-v))))))
@@ -132,7 +132,7 @@
   (is (constraintsp (make-instance 'cvrptw :fleet (list (on-time-and-in-cap-v) (on-time-and-in-cap-v))))))
 
 (test tw-and-cap-test-fail
-  (is (not (constraintsp (make-instance 'cvrptw :fleet (list (on-time-and-in-cap-v) (on-time-but-overfull-v)))))))
+  (is-false (constraintsp (make-instance 'cvrptw :fleet (list (on-time-and-in-cap-v) (on-time-but-overfull-v))))))
 ;; -----------------------
 
 ;; Move feasibility checks
@@ -143,16 +143,16 @@
 		      (make-instance 'insertion-move :node-id 0 :vehicle-id 0))))
 
 (test cap-move-infeasible
-  (is (not (feasible-movep (make-instance 'cvrp :fleet (list (space-v) (space-v)) :network (vector (new-node 1 1 1 :demand 5)))
-			   (make-instance 'insertion-move :node-id 0 :vehicle-id 0)))))
+  (is-false (feasible-movep (make-instance 'cvrp :fleet (list (space-v) (space-v)) :network (vector (new-node 1 1 1 :demand 5)))
+			   (make-instance 'insertion-move :node-id 0 :vehicle-id 0))))
 				     
 (test tw-move-feasible
   (is (feasible-movep (make-instance 'vrptw :fleet (list (on-time-v) (on-time-v)) :network (vector (new-node 5 2 1 :start 3 :end 5 :duration 1)))
 		      (make-instance 'insertion-move :node-id 0 :vehicle-id 0 :index 2))))
 
 (test tw-move-infeasible
-  (is (not (feasible-movep (make-instance 'vrptw :fleet (list (on-time-v) (on-time-v)) :network (vector (new-node 5 2 1 :start 3 :end 5 :duration 1)))
-			   (make-instance 'insertion-move :node-id 0 :vehicle-id 0 :index 3)))))
+  (is-false (feasible-movep (make-instance 'vrptw :fleet (list (on-time-v) (on-time-v)) :network (vector (new-node 5 2 1 :start 3 :end 5 :duration 1)))
+			   (make-instance 'insertion-move :node-id 0 :vehicle-id 0 :index 3))))
 
 ;; -----------------------
 
