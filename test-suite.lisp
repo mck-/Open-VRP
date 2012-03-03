@@ -161,7 +161,7 @@
 ;; -----------------------
 
 (defvar asym-net (define-problem "asym" 1 :demands '(0 1 1) :capacities 2 :to-depot nil
-				 :dist-array #2A((nil 1 5)(5 nil 1) (1 5 nil))))
+				 :dist-matrix #2A((nil 1 5)(5 nil 1) (1 5 nil))))
 
 (test asym-greedy-nn (is (solve-prob asym-net (make-instance 'greedy-nn))))
 (test asym-greedy-append (is (solve-prob asym-net (make-instance 'greedy-append))))
