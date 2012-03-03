@@ -53,9 +53,16 @@
 	     (1- size))
      dist-array))
 
+(defun 2d-list-to-array (matrix)
+  "Given a list of lists, return a 2-dimensional array."
+  (make-array (list (length matrix) (length (car matrix)))
+	      :initial-contents matrix))
+
 (defun set-dist-array (problem dist-array)
-  "Given a <problem> and a 2-dimensional array in dist-array, set it in <problem>"
-  (setf (problem-dist-array problem) dist-array))
+  "Given a <problem> and a 2-dimensional list or array in dist-array, set it in <problem>"
+  (setf (problem-dist-array problem) (if (listp dist-array)
+					 (2d-list-to-array dist-array)
+					 dist-array)))
      
 ;; ----------------------------------------
 
