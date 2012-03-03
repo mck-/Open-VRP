@@ -159,6 +159,7 @@
 	   :toggle-legend
 	   :toggle-plot
 	   :set-log-mode
+	   :log-mode
 	   :log-filep
 	   :toggle-animate
 	   
