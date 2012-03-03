@@ -46,21 +46,28 @@ Check the [Wiki](https://github.com/mck-/Open-VRP/wiki) for more documentation, 
 (solve-prob christofides-2 (make-instance 'tabu-search :iterations 50))
 ```
 
-By default, these pre-loaded problems will plot to `plots/name.png` and log to `run-logs/name.txt` where _name_ refers to the `:name` slot of the _Problem_ object. `(toggle-plot <problem>)` to disable plotting the final solution. Use `(set-log-mode <problem> x)` to switch from [0] no logging, [1] logging to file or [2] logging to the REPL. When logging is turned off, each iteration is just prints a dot and only the final solution is returned.
+By default, problems will plot to `plots/name.png` and log to `run-logs/name.txt` where _name_ refers to the `:name` slot of the _Problem_ object. `(toggle-plot <problem>)` to disable plotting the final solution. Use `(set-log-mode <problem> x)` to switch from [0] no logging, [1] logging to file or [2] logging to the REPL. 
 
 If you don't like the legend in the plot, turn it off with `(toggle-legend <problem>)`.
 
-When :animatep is set to T, each iteration will produce a plot in run-frames/Iteration x.png (much slower, since it needs to plot each iteration). You may use `(toggle-animate <algo>)` to turn it off.
+When :animatep is set to T, each iteration will produce a plot in run-frames/Iteration x.png (much slower, since it needs to plot each iteration). You may use `(toggle-animate <algo>)` to turn it on/off.
 
 You can define your own problem objects with:
 
 ```
-(define-problem "VRP" node-coords n)
-(define-problem "CVRP" node-coords n :demands demands-list :capacities capacity-list)
-(define-problem "VRPTW" node-coords n :time-windows time-windows :durations durations)
+(define-problem "VRP" fleet-size :node-coords-list node-coords :to-depot T)
+(define-problem "CVRP" fleet-size :node-coords-list node-coords :demands demands-list :capacities capacity-list)
+(define-problem "VRPTW" fleet-size :node-coords-list node-coords :time-windows time-windows :durations durations :speeds speed)
 ```
 
-where *node-coords* is a list of pairs, *demands-list* a list of associated demands (must be same length), and n is the number of vehicles. When a *demands-list* and vehicle *capacity* are provided, the resulting problem is a CVRP. If *time-windows* (list of pairs) and *durations* are given, the resulting problem object is a VRPTW. When everything is provided, it creates a CVRPTW. Each class of problem has its own specific constraints to check. 
+where *node-coords* is a list of pairs, *demands-list* a list of associated demands (must be same length), and *fleet-size* is the number of vehicles. When a *demands-list* and vehicle *capacity* are provided, the resulting problem is a CVRP. If *time-windows* (list of pairs) and *durations* are given, the resulting problem object is a VRPTW. When everything is provided, it creates a CVRPTW. Each class of problem has its own specific constraints to check.
+
+You may also provide a(n asymmetric) distance matrix instead of node-coords (real-life problems). You won't be able to plot the solution without *node-coords* though.
+
+```
+(define-problem "ASYM-CVRP" 3 :demands '(0 1 2 3 2 1) :capacities 8 :dist-array dist-aray)
+```
+Note that the above will create 6 nodes, so the dimensions of the dist-array must be 6x6. Also note that we provide a single number for capacities (instead of a list with length 3), which means that all vehicles will have a capacity of 8. Single numbers are allowed for :demands, :durations, :capacites and :speeds
 
 Or to load from a text-file [Solomon-format](http://neo.lcc.uma.es/radi-aeb/WebVRP/index.html?/Problem_Instances/CVRPTWInstances.html), [TSPLIB cvrp format](http://neo.lcc.uma.es/radi-aeb/WebVRP/data/Doc.ps) :
 
