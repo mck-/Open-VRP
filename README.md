@@ -15,11 +15,11 @@ The solutions are drawn using [vecto](http://www.xach.com/lisp/vecto/) in a .png
 
 ## Vision
 
-Too often have I found myself having to build a VRP model from scratch, just to experiment with some meta-heuristics for a school paper. Academics/students with a background/interest in Mathematics/Operations Research without the skills/patience for die-hard coding (in C++/Java), have no choice but to spend their valuable time stuck in the debug/test/debug cycle. [Here](https://kuomarc.wordpress.com/2012/01/27/why-i-love-common-lisp-and-hate-java/) is why those in OR should consider Common Lisp as an option.
+Too often have I found myself having to build a VRP model from scratch, just to experiment with some meta-heuristics for a school paper. Academics/students with a background/interest in Mathematics/Operations Research without the skills/patience for die-hard coding (in C++/Java), have no choice but to spend their valuable time stuck in the debug/test/debug cycle. [Here](https://kuomarc.wordpress.com/2012/01/27/why-i-love-common-lisp-and-hate-java/) is [why](http://kuomarc.wordpress.com/2012/03/05/the-uncommon-lisp-approach-to-operations-research/) those in OR should consider Common Lisp as an option.
 
 With this framework, I hope to catalyze the research and application of routing solutions. Researchers in innovative new algorithms should not need to fiddle in the Eclipse debugger screen. They should be able to focus all their energy and effort in devising their heuristics. OR should be kept fun and engaging.
 
-The ultimate vision for Open VRP is a simple intuitive embedded language for the OR community, free for anyone.
+The ultimate vision for Open VRP is a simple intuitive toolkit for the OR community, free for anyone.
 
 ## Installation
 
@@ -27,6 +27,7 @@ The ultimate vision for Open VRP is a simple intuitive embedded language for the
 ~$ git clone git://github.com/mck-/Open-VRP.git
 ```
 Add this path and evaluate require:
+
 ```
 (push "/path/to/Open-VRP/" asdf:*central-registry*)
 (require 'open-vrp)
