@@ -4,3 +4,5 @@
 *png
 # Ignore compiled list files
 *fasl
+
+profile-results.txt
