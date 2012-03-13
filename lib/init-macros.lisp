@@ -43,12 +43,12 @@
 	  ,@(when durations `(and ,dur in ,durations))
 	  do
 	  (vector-push
-	   (make-instance 'node
-			  :id ,id
-			  ,@(when node-coords `(:xcor (car ,coords) :ycor (cdr ,coords)))
-			  ,@(when demands `(:demand ,demand))
-			  ,@(when time-windows `(:start (car ,tw) :end (cdr ,tw)))
-			  ,@(when durations `(:duration ,dur)))
+	   (make-node
+	    :id ,id
+	    ,@(when node-coords `(:xcor (car ,coords) :ycor (cdr ,coords)))
+	    ,@(when demands `(:demand ,demand))
+	    ,@(when time-windows `(:start (car ,tw) :end (cdr ,tw)))
+	    ,@(when durations `(:duration ,dur)))
 	   ,nodes)
 	  finally (return ,nodes)))))
   
