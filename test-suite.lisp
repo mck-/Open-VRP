@@ -37,15 +37,16 @@
 ;; --------------------------------
 ;; Capacity
 (defun space-v ()
-  (make-instance 'vehicle
-		 :capacity 3
-		 :route (list (new-node 8 0 0 :demand 1)
-			      (new-node 9 1 1 :demand 1))))
+  (make-vehicle
+   :capacity 3
+   :route (list (new-node 8 0 0 :demand 1)
+		(new-node 9 1 1 :demand 1))))
+
 (defun overfull-v ()
-  (make-instance 'vehicle
-		 :capacity 2
-		 :route (list (new-node 0 0 0 :demand 1)
-			      (new-node 1 1 1 :demand 2))))
+  (make-vehicle
+   :capacity 2
+   :route (list (new-node 0 0 0 :demand 1)
+		(new-node 1 1 1 :demand 2))))
 
 (test capacity-veh-in
   (is (in-capacityp (space-v))))
@@ -61,8 +62,7 @@
 
 ;; Time Windows
 (defun on-time-v ()
-  (make-instance
-   'vehicle
+  (make-vehicle
    :speed 1
    :route (list
 	   (new-node 1 1 0 :start 0 :end 2 :duration 1)
@@ -71,8 +71,7 @@
 	   (new-node 4 4 0 :start 0 :end 10 :duration 1))))
 
 (defun late-v-duration ()
-  (make-instance
-   'vehicle
+  (make-vehicle
    :speed 1
    :route (list
 	   (new-node 1 1 0 :start 0 :end 2 :duration 0)
@@ -81,8 +80,7 @@
 	   (new-node 4 4 0 :start 0 :end 10 :duration 1))))
 
 (defun late-v-speed ()
-  (make-instance
-   'vehicle
+  (make-vehicle
    :speed 0.5
    :route (list
 	   (new-node 1 1 0 :start 0 :end 2 :duration 1)
@@ -107,8 +105,7 @@
 
 ;; Capacity AND Time Windows
 (defun on-time-and-in-cap-v ()
-  (make-instance
-   'vehicle
+  (make-vehicle
    :speed 1
    :capacity 10
    :route (list
@@ -118,8 +115,7 @@
 	   (new-node 4 4 0 :start 0 :end 10 :duration 1 :demand 1))))
 
 (defun on-time-but-overfull-v ()
-  (make-instance
-   'vehicle
+  (make-vehicle
    :speed 1
    :capacity 2
    :route (list
