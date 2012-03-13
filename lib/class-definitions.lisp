@@ -22,7 +22,7 @@
   (id 0 :type fixnum :read-only t)
   route
   (capacity 0 :type fixnum :read-only t)
-  (speed 0 :type fixnum :read-only t))
+  (speed 1 :type fixnum :read-only t))
 ;; ----------------------------
 
 ;; The problem object class
