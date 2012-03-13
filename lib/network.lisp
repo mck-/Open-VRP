@@ -6,6 +6,7 @@
 ;;; - generate-dist-array (coord-list)	- Returns array of distances
 ;;; - new-node				- Macro that creates a <Node> according to input
 (in-package :open-vrp.util)
+(proclaim '(optimize (speed 3)))
 
 (defun distance (i j dist-array)
   "Read from the distance-table with two indices."
@@ -14,13 +15,12 @@
 
 (defun distance-coords (x1 y1 x2 y2)
   "Calculates pythagoras distance"
-  (declare (optimize (speed 3))
   (flet ((square (x)
 	   (* x x)))
     (sqrt (+ (square (- x1 x2)) (square (- y1 y2))))))
 
 (defun distance-coord-pair (n1 n2)
-   "Calculates distance given two coord pairs. Returns NIL if both coords are the same."
+  "Calculates distance given two coord pairs. Returns NIL if both coords are the same."
    (if (eql n1 n2)
        NIL
        (distance-coords (car n1) (cdr n1)
