@@ -20,7 +20,7 @@
 
 (defstruct vehicle
   (id 0 :type fixnum :read-only t)
-  (route 0 :type fixnum)
+  route
   (capacity nil :type fixnum :read-only t)
   (speed nil :type fixnum :read-only t))
 ;; ----------------------------
