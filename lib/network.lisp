@@ -14,6 +14,7 @@
 
 (defun distance-coords (x1 y1 x2 y2)
   "Calculates pythagoras distance"
+  (declare (optimize (speed 3))
   (flet ((square (x)
 	   (* x x)))
     (sqrt (+ (square (- x1 x2)) (square (- y1 y2))))))
