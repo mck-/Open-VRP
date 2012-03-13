@@ -7,8 +7,8 @@
 
 (defstruct node
   (id 0 :type fixnum :read-only t)
-  (xcor 0 :type short-float :read-only t)
-  (ycor 0 :type short-float :read-only t)
+  (xcor 0 :read-only t)
+  (ycor 0 :read-only t)
   (demand 0 :type fixnum :read-only t)
   (start 0 :type fixnum :read-only t)
   (end 0 :type fixnum :read-only t)
@@ -22,7 +22,7 @@
   (id 0 :type fixnum :read-only t)
   route
   (capacity 0 :type fixnum :read-only t)
-  (speed 1 :type fixnum :read-only t))
+  (speed 1 :read-only t))
 ;; ----------------------------
 
 ;; The problem object class
