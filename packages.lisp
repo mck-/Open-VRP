@@ -1,4 +1,3 @@
-;;; Tue Nov 15, 2011 (c) Marc Kuo
 ;;; CLOS package descriptions
 ;;; -----------------------------
  
