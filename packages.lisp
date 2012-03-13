@@ -248,6 +248,7 @@
 	:open-vrp.algo
 	:fiveam)
   (:export :run!
+	   :*node-coords*
 	   ;; demos
 	   :test-tsp
 	   :test-vrp
