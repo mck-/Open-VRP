@@ -79,8 +79,8 @@
 ;; Create Node macro
 ;; ------------------
 (defmacro new-node (id xcor ycor &key demand start end duration)
-  `(make-instance 'node :id ,id :xcor ,xcor :ycor ,ycor
-		  ,@(when demand `(:demand ,demand))
-		  ,@(when start `(:start ,start))
-		  ,@(when end `(:end ,end))
-		  ,@(when duration `(:duration ,duration))))
+  `(make-node :id ,id :xcor ,xcor :ycor ,ycor
+	      ,@(when demand `(:demand ,demand))
+	      ,@(when start `(:start ,start))
+	      ,@(when end `(:end ,end))
+	      ,@(when duration `(:duration ,duration))))
