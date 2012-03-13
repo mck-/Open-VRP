@@ -9,10 +9,10 @@
   (id 0 :type fixnum :read-only t)
   (xcor 0 :type fixnum :read-only t)
   (ycor 0 :type fixnum :read-only t)
-  (demand 0 :type fixnum :read-only t)
-  (start 0 :type fixnum :read-only t)
-  (end 0 :type fixnum :read-only t)
-  (duration 0 :type fixnum :read-only t))
+  (demand nil :type fixnum :read-only t)
+  (start nil :type fixnum :read-only t)
+  (end nil :type fixnum :read-only t)
+  (duration nil :type fixnum :read-only t))
 ;; --------------------------
 
 ;; The vehicle object
@@ -21,8 +21,8 @@
 (defstruct vehicle
   (id 0 :type fixnum :read-only t)
   (route 0 :type fixnum)
-  (capacity 0 :type fixnum :read-only t)
-  (speed 1 :type fixnum :read-only t))
+  (capacity nil :type fixnum :read-only t)
+  (speed nil :type fixnum :read-only t))
 ;; ----------------------------
 
 ;; The problem object class
