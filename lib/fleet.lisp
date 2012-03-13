@@ -58,8 +58,8 @@
 ;; Create Vehicle macro
 ;; ------------------
 (defmacro new-vehicle (id base-node to-depot &key capacity speed)
-  `(make-instance 'vehicle
-		  :id ,id
-		  :route ,(if to-depot `(list ,base-node ,base-node) `(list ,base-node))
-		  ,@(when capacity `(:capacity ,capacity))
-		  ,@(when speed `(:speed ,speed))))
+  `(make-vehicle
+    :id ,id
+    :route ,(if to-depot `(list ,base-node ,base-node) `(list ,base-node))
+    ,@(when capacity `(:capacity ,capacity))
+    ,@(when speed `(:speed ,speed))))
