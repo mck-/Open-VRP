@@ -23,17 +23,12 @@
    (if (eql n1 n2)
        NIL
        (distance-coords (car n1) (cdr n1)
-			(car n2) (cdr n2))))
-	         
-(defgeneric node-distance (node1 node2)
-  (:method (node1 node) "Inputs are not two nodes.")
-  (:documentation "Given two node objects, calculate and return their distance (Cartesian)."))
+			(car n2) (cdr n2))))	        
 
-(defmethod node-distance ((n1 node) (n2 node))
+(defun node-distance (n1 n2)
+  "Given two node objects, calculate and return their distance (Cartesian)."
   (when (= (node-id n1) (node-id n2)) (error 'same-origin-destination :from n1 :to n2))
-  (let ((x1 (node-xcor n1)) (y1 (node-ycor n1))
-	(x2 (node-xcor n2)) (y2 (node-ycor n2)))
-    (distance-coords x1 y1 x2 y2)))
+  (distance-coords (node-xcor n1) (node-ycor n1) (node-xcor n2) (node-ycor n2)))
 
 (defun get-array-row (array row-index)
   "Given a 2-dimenstional array and a row-index, return the row as a list"
