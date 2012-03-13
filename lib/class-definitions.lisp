@@ -5,24 +5,24 @@
 ;; The node object
 ;; ----------------------
 
-(defclass node ()
-  ((id :reader node-id :initarg :id)
-   (xcor :reader node-xcor :initarg :xcor :initform nil)
-   (ycor :reader node-ycor :initarg :ycor :initform nil)
-   (demand :reader node-demand :initarg :demand)
-   (start :reader node-start :initarg :start)
-   (end :reader node-end :initarg :end)
-   (duration :reader node-duration :initarg :duration :initform 0)))
+(defstruct node
+  (id 0 :type fixnum :read-only t)
+  (xcor 0 :type fixnum :read-only t)
+  (ycor 0 :type fixnum :read-only t)
+  (demand 0 :type fixnum :read-only t)
+  (start 0 :type fixnum :read-only t)
+  (end 0 :type fixnum :read-only t)
+  (duration 0 :type fixnum :read-only t))
 ;; --------------------------
 
 ;; The vehicle object
 ;; ---------------------------
 
-(defclass vehicle ()
-  ((id :reader vehicle-id :initarg :id)
-   (route :accessor vehicle-route :initarg :route)
-   (capacity :reader vehicle-capacity :initarg :capacity)
-   (speed :accessor vehicle-speed :initarg :speed :initform 1)))
+(defstruct vehicle
+  (id 0 :type fixnum :read-only t)
+  (route 0 :type fixnum)
+  (capacity 0 :type fixnum :read-only t)
+  (speed 1 :type fixnum :read-only t))
 ;; ----------------------------
 
 ;; The problem object class
