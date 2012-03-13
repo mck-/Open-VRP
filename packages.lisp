@@ -18,6 +18,10 @@
 	   :name
 	   :desc
 	   :iterations
+
+	   ;; constructor functions
+	   :make-node
+	   :make-vehicle
 	   	   
 	   ;; accessor functions
 	   :node-id
