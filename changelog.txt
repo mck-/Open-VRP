@@ -1,0 +1,11 @@
+
+v. 0.5.1
+
+ - Performance increase by 67% (see issue #19)
+ - Use defstruct for nodes, vehicles, drawer and moves
+ - improve efficiency of node-on-routep, vehicle-with-node-id and map0-n/map1-n
+
+
+v. 0.5
+
+ - First versioning of a "stable" Open-VRP

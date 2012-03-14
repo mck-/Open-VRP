@@ -1,6 +1,6 @@
 (defsystem :open-vrp-lib
   :description "open-vrp-library"
-  :version "0.5"
+  :version "0.5.1"
   :author "Marc Kuo"
   :licence "LLGPL"
   :depends-on (vecto alexandria fiveam) 
