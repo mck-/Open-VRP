@@ -1,5 +1,3 @@
-;;; Updated Tue Oct 25, 2011 (c) Marc Kuo
-;;; ------------------------
 (in-package :open-vrp.util)
 
 ;; Simple utils from Paul Graham's Onlisp
