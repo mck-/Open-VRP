@@ -18,16 +18,13 @@
 (defmethod route-indices ((p problem))
   (mapcar #'route-indices (problem-fleet p)))
 
-(defgeneric vehicle-with-node-ID (prob node-id)
-  (:method (prob node) "Expects <problem> and int as inputs!")
-  (:documentation "Given a node-ID, return the vehicle-ID that has the node in its route. The function for the input of the base-node 0 is undefined. Returns NIL if node-ID cannot be found."))
-
-(defmethod vehicle-with-node-ID ((p problem) node-ID)
-  (position-if #'(lambda (route) (member node-ID route)) (route-indices p)))
-
 (defun node-on-routep (node-id vehicle)
   "Returns NIL of <vehicle> does not have the node on its route."
   (member node-id (vehicle-route vehicle) :key #'node-id))
+
+(defun vehicle-with-node-ID (prob node-ID)
+  "Given a node-ID, return the vehicle-ID that has the node in its route. The function for the input of the base-node 0 is undefined. Returns NIL if node-ID cannot be found."
+  (position-if #'(lambda (veh) (node-on-routep node-ID veh)) (problem-fleet prob)))
 
 (defgeneric total-dist (veh/prob dist-array)
   (:method (veh/prob dist-array) "Expects <problem> as input!")
