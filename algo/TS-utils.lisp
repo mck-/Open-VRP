@@ -88,7 +88,7 @@
 ;; -------------------------
 
 (defun stopping-conditionp (ts)
-  "Given a <tabu-search>, tests whether the number of iterations since the best solution was found is larger than tenure value. This is an indicator of cycling behaviour. Minimum 20 iterations in case tenure is smaller than 10. Usefull for many multi-runs."
+  "Given a <tabu-search>, tests whether the number of iterations since the best solution was found is larger than triple tenure value. This is an indicator of cycling behaviour. Minimum 20 iterations in case tenure is smaller than 10. Usefull for many multi-runs."
   (let ((iters (- (algo-best-iteration ts) (algo-iterations ts))))
     (and (> iters 20)
-	 (> iters (* 2 (ts-tenure ts))))))
+	 (> iters (* 3 (ts-tenure ts))))))
