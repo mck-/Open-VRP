@@ -27,7 +27,7 @@
 
 (defun node-on-routep (node-id vehicle)
   "Returns NIL of <vehicle> does not have the node on its route."
-  (member node-id (route-indices vehicle)))
+  (member node-id (vehicle-route vehicle) :key #'node-id))
 
 (defgeneric total-dist (veh/prob dist-array)
   (:method (veh/prob dist-array) "Expects <problem> as input!")
