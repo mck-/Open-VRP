@@ -37,8 +37,8 @@
 
 ;; After method that makes all algos print the final solution
 (defmethod run-algo :after ((p problem) (a algo))
-  (with-log-or-print (stream p)
-    (print-final-results p a stream)))
+  (with-log-or-print (str p)
+    (print-final-results p a str)))
 ;; -----------------------------
 
 ;; Solve Prob
@@ -58,11 +58,11 @@
 ;; This method is not part of the run-algo :before, because that would cause iterate-more
 ;; which calls run-algo to supersede instead of append to file.
 (defmethod solve-prob :before ((p problem) (a algo))
-  (with-log-or-print (stream p nil)
-    (print-timestamp stream)
-    (format stream "~&Commencing run with ~A on ~A~%~%" (algo-name a) (problem-name p))
-    (print-vrp-object p stream)
-    (print-vrp-object a stream)))
+  (with-log-or-print (str p nil)
+    (print-timestamp str)
+    (format str "~&Commencing run with ~A on ~A~%~%" (algo-name a) (problem-name p))
+    (print-vrp-object p str)
+    (print-vrp-object a str)))
 
 ;; When all logging is done in file, at least print the final solution in repl
 (defmethod solve-prob :after ((p problem) (a algo))
@@ -91,6 +91,7 @@
     (iter (cdr solutions) (car solutions))))
 
 (defmacro multi-run-algo (times &body algo-call)
+  "Run algo x times and print and return the best result."
   `(let* ((results (multi-run ,times ,@algo-call))
 	  (best (get-best-solution-from-multi-run results)))
      (print-multi-run-stats results)
@@ -115,9 +116,9 @@
     (setf (algo-iterations a) (1- (algo-iterations a)))
 
     ;; Logging
-    (with-log-or-print (stream sol)
-      (format stream "~&Iterations to go: ~A~%" (algo-iterations a))
-      (print-routes sol stream))
+    (with-log-or-print (str sol)
+      (format str "~&Iterations to go: ~A~%" (algo-iterations a))
+      (print-routes sol str))
 
     ;; Checking if new best solution
     (let ((new-fitness (fitness sol))
