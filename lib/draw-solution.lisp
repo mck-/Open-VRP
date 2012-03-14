@@ -149,7 +149,7 @@
   (plot-solution (algo-best-sol a) output-file))
 
 (defgeneric plot-nodes (problem)
-  (:method (problem) "Expects <drawer> and <network> as input!")
+  (:method (problem) "Expects <Problem> as input!")
   (:documentation "Draws only the nodes in output file."))
 
 (defmethod plot-nodes ((prob problem))
