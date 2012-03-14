@@ -49,7 +49,7 @@
 
 ;; feasibility check
 (defmethod assess-move :around ((sol problem) (m move))
-  (if (feasible-movep sol m)
+  (if (or (typep m 'TS-best-insertion-move) (feasible-movep sol m))
       (call-next-method)
       (setf (move-fitness m) nil)))
 

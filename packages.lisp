@@ -211,7 +211,9 @@
 	   :move-node-ID
 	   :move-vehicle-ID
 	   :move-index
-	   :move-fitness	   
+	   :move-fitness
+	   :make-insertion-move
+	   :make-TS-best-insertion-move
 
 	   ;; algo-objects
 	   :greedy-NN

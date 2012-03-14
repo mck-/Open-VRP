@@ -23,6 +23,4 @@
 ;; ---------------------------
 
 ;; Given a node and a vehicle, TS-best-insertion inserts it in the best possible position
-(defclass TS-best-insertion-move (move)
-  ((node-ID :accessor move-node-ID :initarg :node-ID)
-   (vehicle-ID :accessor move-vehicle-ID :initarg :vehicle-ID)))
+(defstruct (TS-best-insertion-move (:include insertion-move)))

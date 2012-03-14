@@ -8,13 +8,9 @@
 
 ;; 0. Misc
 ;; -------------------------
-(defclass move ()
-  ((fitness :accessor move-fitness :initarg :fitness)))
+(defstruct move fitness)
 
-(defclass insertion-move (move) 
-  ((node-ID :accessor move-node-ID :initarg :node-ID)
-   (vehicle-ID :accessor move-vehicle-ID :initarg :vehicle-ID)
-   (index :accessor move-index :initarg :index)))
+(defstruct (insertion-move (:include move) (:conc-name move-)) node-ID vehicle-ID index)
 
 (defun route-from (ins-move sol)
   "Returns the route that contains the node that will be moved."
@@ -53,8 +49,10 @@
 	    (<= (node-demand (node sol node-ID)) cap-left))))))
 
 (defmethod feasible-movep and ((sol VRPTW) (m insertion-move))
-  (with-slots (node-ID vehicle-ID index) m
-    (symbol-macrolet ((full-route (vehicle-route (vehicle sol vehicle-ID)))
+  (let ((node-id (move-node-id m))
+	(veh-id (move-vehicle-id m))
+	(index (move-index m)))
+    (symbol-macrolet ((full-route (vehicle-route (vehicle sol veh-id)))
 		      (ins-node (node sol node-ID))
 		      (to (if (= 1 i) ins-node (car route)))
 		      (arr-time (+ time (travel-time loc to))))

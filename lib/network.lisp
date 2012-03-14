@@ -6,7 +6,7 @@
 ;;; - generate-dist-array (coord-list)	- Returns array of distances
 ;;; - new-node				- Macro that creates a <Node> according to input
 (in-package :open-vrp.util)
-(proclaim '(optimize (speed 3)))
+;(proclaim '(optimize (speed 3)))
 
 (defun distance (i j dist-array)
   "Read from the distance-table with two indices."

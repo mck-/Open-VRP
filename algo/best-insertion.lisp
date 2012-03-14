@@ -14,10 +14,10 @@
     (do ((index 1 (1+ index)))
 	((> index (if (problem-to-depot sol) (1- (length route)) (length route))))
       (unless (and pos (or (= index pos) (= index (1+ pos)))) ;useless moves avoided
-	(push (make-instance 'insertion-move
-			     :index index
-			     :vehicle-id vehicle-id
-			     :node-id node-id)
+	(push (make-insertion-move
+	       :index index
+	       :vehicle-id vehicle-id
+	       :node-id node-id)
 	      moves)))
     (nreverse moves)))
 

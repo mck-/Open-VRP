@@ -137,19 +137,19 @@
 
 (test cap-move-feasible
   (is (feasible-movep (make-instance 'cvrp :fleet (list (space-v) (space-v)) :network (vector (new-node 1 1 1 :demand 1)))
-		      (make-instance 'insertion-move :node-id 0 :vehicle-id 0))))
+		      (make-insertion-move :node-id 0 :vehicle-id 0))))
 
 (test cap-move-infeasible
   (is-false (feasible-movep (make-instance 'cvrp :fleet (list (space-v) (space-v)) :network (vector (new-node 1 1 1 :demand 5)))
-			   (make-instance 'insertion-move :node-id 0 :vehicle-id 0))))
+			   (make-insertion-move :node-id 0 :vehicle-id 0))))
 				     
 (test tw-move-feasible
   (is (feasible-movep (make-instance 'vrptw :fleet (list (on-time-v) (on-time-v)) :network (vector (new-node 5 2 1 :start 3 :end 5 :duration 1)))
-		      (make-instance 'insertion-move :node-id 0 :vehicle-id 0 :index 2))))
+		      (make-insertion-move :node-id 0 :vehicle-id 0 :index 2))))
 
 (test tw-move-infeasible
   (is-false (feasible-movep (make-instance 'vrptw :fleet (list (on-time-v) (on-time-v)) :network (vector (new-node 5 2 1 :start 3 :end 5 :duration 1)))
-			   (make-instance 'insertion-move :node-id 0 :vehicle-id 0 :index 3))))
+			   (make-insertion-move :node-id 0 :vehicle-id 0 :index 3))))
 
 ;; -----------------------
 

@@ -46,14 +46,17 @@
 
 (defmethod generate-moves ((ts tabu-search))
   "Generates a list of <move> instances (depending on what was defined in the ts slot) for all nodes and vehicles."
-  (let ((prob (algo-current-sol ts)))
-    (remove-if #'(lambda (mv) (useless-move mv prob))
-	       (flatten
-		(for-node-ID (node-ID prob)
-		  (for-veh-ID (veh-ID prob)
-		    (make-instance (ts-move-type ts)
-				   :node-ID node-ID
-				   :vehicle-ID veh-ID)))))))		  
+  (flet ((symb (a b)
+	   (intern (format nil "~a-~a" (symbol-name a) (symbol-name b)) :open-vrp.algo)))
+    (let ((prob (algo-current-sol ts)))
+      (remove-if #'(lambda (mv) (useless-move mv prob))
+		 (flatten
+		  (for-node-ID (node-ID prob)
+		    (for-veh-ID (veh-ID prob)
+		      (funcall
+		       (symb 'make (ts-move-type ts))
+		       :node-ID node-ID
+		       :vehicle-ID veh-ID))))))))
 
 ;; the difference between cost (inserting) and saving (removing)
 ;; cost of inserting is calculated by (get-best-insertion-move)
@@ -83,17 +86,18 @@
 	  
 (defmethod perform-move ((sol problem) (mv TS-best-insertion-move))
   "Takes <Node> with node-ID and uses get-best-insertion to insert in vehicle-ID. DESTRUCTIVE."
-  (with-slots (node-ID vehicle-ID) mv
-    (let ((best-move (get-best-insertion-move-in-vehicle sol vehicle-ID node-ID)))
-    ;if the move of node is intra-route, AND the node is being moved forward
-      (if (and (= (vehicle-with-node-ID sol node-ID) vehicle-ID)
-	       (> (move-index best-move)
-		  (position node-id (route-to mv sol) :key #'node-id)))
+  (let* ((node-id (move-node-id mv))
+	 (veh-id (move-vehicle-id mv))
+	 (best-move (get-best-insertion-move-in-vehicle sol veh-ID node-ID)))
+	;if the move of node is intra-route, AND the node is being moved forward
+    (if (and (= (vehicle-with-node-ID sol node-ID) veh-ID)
+	     (> (move-index best-move)
+		(position node-id (route-to mv sol) :key #'node-id)))
 	;then perform insertion first, afterward remove the old node, positioned before the new
 	(progn (perform-move sol best-move) (remove-node-ID sol node-ID))
 	;in all other cases, it's okay to remove the node first, then reinsert
 	(progn (remove-node-ID sol node-ID) (perform-move sol best-move))))
-    sol))
+  sol)
 
 (defmethod select-move ((ts tabu-search) all-moves)
   "This function selects best non-tabu move from a list of assessed moves. When aspiration criteria is set to T, then if by performing the move we get a new best solution, circumvent the tabu-list."
