@@ -21,6 +21,7 @@
 	   ;; constructor functions
 	   :make-node
 	   :make-vehicle
+	   :make-drawer
 	   	   
 	   ;; accessor functions
 	   :node-id

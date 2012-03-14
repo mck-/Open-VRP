@@ -124,12 +124,12 @@ With only the demands-list and capacities, creates a CVRP problem. With time-win
 								     (make-list ,fleet-size 
 										:initial-element ,speeds))))))
 	      ,@(when node-coords-list
-		      `((,drawer (make-instance 'drawer
-						:min-coord (get-min-coord ,node-coords-list)
-						:max-coord (get-max-coord ,node-coords-list)
-						:filename (if ,plot-filename ,plot-filename
-							      (merge-pathnames (concatenate 'string "plots/" (string ,name) ".png")
-									       (asdf:system-source-directory 'open-vrp))))))))
+		      `((,drawer (make-drawer
+				  :min-coord (get-min-coord ,node-coords-list)
+				  :max-coord (get-max-coord ,node-coords-list)
+				  :filename (if ,plot-filename ,plot-filename
+						(merge-pathnames (concatenate 'string "plots/" (string ,name) ".png")
+								 (asdf:system-source-directory 'open-vrp))))))))
 	 (format t "~&Processed ~A nodes succesfully for ~A" ,ln ,name)
 	 ,@(unless node-coords-list
 		   `((warn "No coords: Plotting function disabled.")))

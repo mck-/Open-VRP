@@ -55,20 +55,19 @@
 
 ;; ----------------------
 
-;; Mon Dec 5, 2011   
 ;; The drawing object class
 ;; --------------------------------
-(defclass drawer ()
-  ((min-coord :accessor drawer-min-coord :initarg :min-coord)
-   (max-coord :accessor drawer-max-coord :initarg :max-coord)
-   (x-pos :accessor drawer-x-pos :initarg :x-pos :initform 0)
-   (y-pos :accessor drawer-y-pos :initarg :y-pos :initform 0)
-   (max-pix :accessor drawer-max-pix :initarg :max-pix :initform 1000)
-   (legendp :accessor drawer-legendp :initarg :legendp :initform T)
-   (legend-x :accessor drawer-legend-x :initarg :legend-x :initform 100)
-   (legend-y :accessor drawer-legend-y :initarg :legend-y :initform 900)
-   (filename :accessor drawer-filename :initarg :filename :initform "testing.png")
-   (plotp :accessor drawer-plotp :initarg :plotp :initform T)))
+(defstruct drawer
+  min-coord
+  max-coord
+  (x-pos 0)
+  (y-pos 0)
+  (max-pix 1000)
+  (legendp T)
+  (legend-x 100)
+  (legend-y 900)
+  filename
+  (plotp T))
 
 ;; -----------------------------
 
