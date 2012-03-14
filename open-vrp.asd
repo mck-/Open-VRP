@@ -16,6 +16,6 @@
 	       (:file "algo/TS-utils")
 	       (:file "algo/TS")	       
 	       ;; test data
-	       (:file "test-cases")
-	       (:file "test-suite")
+	       (:file "test-cases/test-cases")
+	       (:file "test-cases/test-suite")
 	       ))
