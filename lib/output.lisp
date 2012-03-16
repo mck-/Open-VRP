@@ -61,13 +61,32 @@
   (multiple-value-bind (second minute hour date month year day-of-week dst-p tz)
       (get-decoded-time)
     (declare (ignore dst-p))
-    (format stream "~&It is now ~2,'0d:~2,'0d:~2,'0d of ~a, ~d/~2,'0d/~d (GMT~@d)"
+    (format stream "~&It is now ~2,'0d:~2,'0d:~2,'0d of ~a, ~2,'0d/~2,'0d/~d (GMT~@d)"
 	    hour minute second (nth day-of-week days) month date year (- tz)))))
+
+(defun universal-time-to-string (&optional (time (get-universal-time)))
+  "Returns yymmdd-hhmmss in a string. Used for timestamped log-files."
+  (multiple-value-bind (second minute hour date month year)
+      (decode-universal-time time)
+    (with-output-to-string (s)
+      (format s "~2,'0d~2,'0d~2,'0d-~2,'0d~2,'0d~2,'0d"
+	      year month date hour minute second))))
 
 ;; -------------------------
 
 ;; with-log-file macro
 ;; -------------------------
+
+(defun insert-time-stamp-in-path (path)
+  "Given path, return the string of the path with the timestamp inserted before the .xxx"
+  (let* ((string (namestring path))
+	 (cutoff (- (length string) 4)))
+    (concatenate 'string
+		 (subseq string 0 cutoff)
+		 "_"
+		 (universal-time-to-string *start-time*)
+		 (subseq string cutoff))))
+
 (defmacro with-log-or-print ((stream prob &optional (appendp T)) &body body)
   "A wrapper on top of with-open-file, where we use the filepath stored in the :log-file slot of a problem object. When :log-mode is 0, return nil. If 1, use the file stream; if 2, use the T stream. Optional parameter appendp can be set to NIL in order to :supersede if file exists. By default appends. Returns T if logging is succesful."
   (with-gensyms (func)
@@ -75,7 +94,7 @@
 	      ,@body))
        (ccase (problem-log-mode ,prob)
 	 (0 nil)
-	 (1 (with-open-file (,stream (namestring (problem-log-file ,prob))
+	 (1 (with-open-file (,stream (insert-time-stamp-in-path (problem-log-file ,prob))
 				     :direction :output
 				     :if-exists (if ,appendp :append :supersede))
 	      (,func ,stream)) t)
