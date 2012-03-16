@@ -29,7 +29,7 @@
       (iter (cdr pruned-list) (length (car pruned-list))))))
 
 (defmacro create-nodes (&key node-coords demands time-windows durations dist-matrix)
-  "Given a coord-list, return a vector of nodes. The nodes are created and numbered starting from 0, which is the base node. For additional parameters accept a list with the same length as node-coords, in which each element specifies the node attributes. Note that dist-matrix parameter is not used, but only to create nodes when no other parameter is passed (called from define-problem)."
+  "Will return a vector of nodes that are numbered starting from 0 (which should be the base node, by convention over configuration). All attribute parameters are optional but must be of the same length. Note that dist-matrix parameter is not used, but only to create nodes when no other parameter is passed (called from define-problem)."
   (with-gensyms (nodes id coords demand tw dur ln)
     ;; Checking if input attributes' length is equal to node-coords' length
     `(let ((,ln (same-lengthp ,node-coords ,demands ,time-windows ,durations ,dist-matrix)))
@@ -77,13 +77,11 @@
 ;; ----------------------------
 
 (defmacro define-problem (name fleet-size &key node-coords-list demands capacities time-windows-list durations speeds (to-depot T) plot-filename log-filename dist-matrix)
-  "Creates the appropriate <Problem> object from the inputs. Extra key attributes only accept lists that are of equal length to node-coords-list or fleet-size (depending on what attributes it sets).
+  "Creates the appropriate <Problem> object from the inputs. Extra key attributes only accept lists that are of equal length to node-coords-list or fleet-size (depending on what attributes it sets). For demands, durations, capacities and speeds, will also accept a single value, which will set all attributes to this value.
 
-A(n asymmetric) dist-matrix may be passed, instead of node-coords, in which case plotting will be disabled. dist-matrix must be a square list of lists or 2-dimensional array.
+A(n asymmetric) dist-matrix may be passed, instead of node-coords, in which case plotting will be disabled. dist-matrix must be a list of lists or 2-dimensional array.
 
-For demands, durations, capacities and speeds, will also accept a single value, which will set all attributes to this value.
-
-With only the demands-list and capacities, creates a CVRP problem. With time-windows, creates a VRPTW problem. When durations and speeds are not provided, defaults to 0 and 1.  When plot-filename is not given, it will plot in \"plots/name.png\"."
+With only the demands-list and capacities, creates a CVRP problem. With time-windows, creates a VRPTW problem. When durations and speeds are not provided, defaults to 0 and 1.  When plot-filename is not given, it will plot in \"plots/name.png\". When log-filename is not given, it will log by default in \"run-logs/name.txt\"."
   (with-gensyms (ln network fleet drawer)
     `(let ((,ln (same-lengthp ,demands ,node-coords-list ,time-windows-list ,durations
 ;			      (if (arrayp ,dist-matrix)
