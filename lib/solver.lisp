@@ -32,9 +32,6 @@
        (call-next-method)
     (defparameter *algo-backup* a)))
 
-(defmethod run-algo :before ((p problem) (a algo))
-  (defparameter *start-time* (get-universal-time)))
-
 ;; After method that makes all algos print the final solution
 (defmethod run-algo :after ((p problem) (a algo))
   (with-log-or-print (str p)
@@ -58,6 +55,7 @@
 ;; This method is not part of the run-algo :before, because that would cause iterate-more
 ;; which calls run-algo to supersede instead of append to file.
 (defmethod solve-prob :before ((p problem) (a algo))
+  (defparameter *start-time* (get-universal-time))
   (with-log-or-print (str p nil)
     (print-timestamp str)
     (format str "~&Commencing run with ~A on ~A~%~%" (algo-name a) (problem-name p))
