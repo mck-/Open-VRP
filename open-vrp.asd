@@ -1,3 +1,29 @@
+(defsystem :open-vrp-lib
+  :description "open-vrp-library"
+  :version "0.5.1"
+  :author "Marc Kuo"
+  :licence "LLGPL"
+  :depends-on (vecto alexandria fiveam) 
+  :serial t
+  :components ((:file "packages")
+	       (:module :lib
+			:components
+			((:file "class-definitions")
+			 (:file "simple-utils")
+			 (:file "list")
+			 (:file "network")
+			 (:file "fleet")
+			 (:file "fitness")
+			 (:file "output")
+			 (:file "route")
+			 (:file "draw-solution")
+			 (:file "solver")
+			 (:file "constraints")
+			 (:file "conditions")
+			 (:file "init-macros")
+			 (:file "read-solomon")
+			 (:file "read-cvrp")))))
+
 (defsystem :open-vrp
   :description "open-vrp"
   :version "0.5.1"
@@ -5,17 +31,19 @@
   :licence "LLGPL"
   :depends-on (vecto alexandria fiveam open-vrp-lib) 
   :serial t
-  :components ((:file "algo/algo-conditions")
-	       (:file "algo/tools")
-	       (:file "algo/iterator")
-	       (:file "algo/best-insertion")
-	       (:file "algo/greedy-NN")
-	       (:file "algo/greedy-append")
-	       (:file "algo/greedy-best-insertion")
-	       (:file "algo/TS-classdef")
-	       (:file "algo/TS-utils")
-	       (:file "algo/TS")	       
-	       ;; test data
-	       (:file "test-cases/test-cases")
-	       (:file "test-cases/test-suite")
-	       ))
+  :components ((:module :algo
+			:components
+			((:file "algo-conditions")
+			 (:file "tools")
+			 (:file "iterator")
+			 (:file "best-insertion")
+			 (:file "greedy-NN")
+			 (:file "greedy-append")
+			 (:file "greedy-best-insertion")
+			 (:file "TS-classdef")
+			 (:file "TS-utils")
+			 (:file "TS")))
+	       (:module :test-cases
+			:components
+			((:file "test-cases")
+			 (:file "test-suite")))))			 
