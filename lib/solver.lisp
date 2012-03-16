@@ -142,11 +142,6 @@
   (unless (= (log-mode a) 2)
     (princ ".")))
 
-;; Animate
-;; -------------------------
-(defun toggle-animate (algo)
-  (toggle (algo-animatep algo)))  
-
 ;; Resume run - add some more iterations
 ;; ------------------------
 (defgeneric iterate-more (algo int)

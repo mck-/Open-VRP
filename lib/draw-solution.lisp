@@ -167,25 +167,3 @@
       (save-png (drawer-filename dr))))))
 
 ;; ----------------------------------------------
-
-(defgeneric toggle-legend (problem/algo)
-  (:documentation "Toggles legend drawing. When <Algo> is provided, toggles :best-sol"))
-
-(defmethod toggle-legend ((pr problem))
-  (aif (problem-drawer pr)
-       (toggle (drawer-legendp it))
-       (error 'missing-drawer-object :prob pr)))
-
-(defmethod toggle-legend ((a algo))
-  (toggle-legend (algo-best-sol a)))
-
-(defgeneric toggle-plot (problem/algo)
-  (:documentation "Toggles plotting final solution. Toggles :best-sol in <Algo>."))
-
-(defmethod toggle-plot ((pr problem))
-  (aif (problem-drawer pr)
-       (toggle (drawer-plotp it))
-       (error 'missing-drawer-object :prob pr)))
-  
-(defmethod toggle-plot ((a algo))
-  (toggle-plot (algo-best-sol a)))

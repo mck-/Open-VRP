@@ -60,12 +60,6 @@
         collect (loop for j below (array-dimension array 1)
                       collect (aref array i j))))
 
-(defun set-dist-array (problem dist-array)
-  "Given a <problem> and a 2-dimensional list or array in dist-array, set it in <problem>"
-  (setf (problem-dist-array problem) (if (listp dist-array)
-					 (2d-list-to-array dist-array)
-					 dist-array)))
-     
 ;; ----------------------------------------
 
 ;; Accessor functions

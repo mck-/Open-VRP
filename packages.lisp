@@ -84,7 +84,6 @@
 	   :sum
 	   :max-car
 	   :max-cdr
-	   :toggle
 	   :copy-object
 
 	   ;; list utils
@@ -116,7 +115,6 @@
 	   :distance
 	   :node-distance
 	   :generate-dist-array
-	   :set-dist-array
 	   :get-array-row
 	   :node
 	   :new-node
@@ -160,12 +158,8 @@
 	   :plot-nodes	   
 	   :print-timestamp
 	   :with-log-or-print
-	   :toggle-legend
-	   :toggle-plot
-	   :set-log-mode
 	   :log-mode
 	   :log-filep
-	   :toggle-animate
 	   
 	   ;; conditions
 	   :same-origin-destination
@@ -179,7 +173,16 @@
 	   ;; input
 	   :load-testcase-Solomon
 	   :load-tsplib-vrp-file
-	   ))
+
+	   ;; config utils
+	   :toggle	   
+	   :toggle-legend
+	   :toggle-plot
+	   :toggle-animate
+	   :set-plot-file
+	   :set-log-mode
+	   :set-log-file
+	   :set-dist-array))
 
 (defpackage :open-vrp.algo
   (:use :common-lisp
