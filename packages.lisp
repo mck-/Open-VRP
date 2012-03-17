@@ -158,8 +158,7 @@
 	   :plot-nodes	   
 	   :print-timestamp
 	   :with-log-or-print
-	   :log-mode
-	   :log-filep
+	   :log-to-replp
 	   
 	   ;; conditions
 	   :same-origin-destination
