@@ -15,7 +15,7 @@
 	(cons -2 -2)))
 
 ;; Initialization of objects
-(defvar test-tsp (define-problem "test-case-TSP" 1 :node-coords-list *node-coords* :to-depot nil:plotp nil))
+(defvar test-tsp (define-problem "test-case-TSP" 1 :node-coords-list *node-coords* :to-depot nil :plotp nil))
 (defvar test-vrp (define-problem "test-case-VRP" 2 :node-coords-list *node-coords*))
 (defvar solomon25 
   (load-solomon-vrp-file (merge-pathnames "test-cases/25-cust.txt" 
