@@ -34,6 +34,7 @@
 
 ;; After method that makes all algos print the final solution
 (defmethod run-algo :after ((p problem) (a algo))
+  (setq *finish-time* (get-universal-time))
   (with-log-or-print (str p *start-time*)
     (print-final-results p a str)))
 ;; -----------------------------
@@ -66,7 +67,6 @@
 
 ;; When all logging is done in file, at least print the final solution in repl
 (defmethod solve-prob :after ((p problem) (a algo))
-  (setq *finish-time* (get-universal-time))
   (unless (log-to-replp p)
     (print-final-results p a))
   (when (and (problem-drawer p) (drawer-plotp (problem-drawer p)))
