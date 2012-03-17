@@ -16,15 +16,20 @@
 (defmethod print-routes ((a algo) &optional (stream t))
   (print-routes (algo-best-sol a) stream))
 
-(defun print-multi-run-stats (algo-objects)
+(defun print-run-time (stream start-time)
+  "Prints the difference between current time and start-time in seconds to stream for logging."
+  (format stream "~&Run took a total of ~A seconds.~%" (- (get-universal-time) start-time)))
+
+(defun print-multi-run-stats (algo-objects stream)
   "Given a list of algo-objects returned by multi-run, print run-stats."
-  (let ((results (mapcar #'algo-best-fitness algo-objects)))    
-    (format t "~&Runs: ~8a~%Max: ~8a~%Min: ~8a~%Avg: ~8a~%Std: ~8a~%"
+  (let ((results (mapcar #'algo-best-fitness algo-objects)))
+    (print-run-time stream *multi-run-start-time*)
+    (format stream "~&Runs: ~8a~%Max: ~8a~%Min: ~8a~%Avg: ~8a~%Std: ~8a~%"
 	    (length results) (get-max results) (get-min results) (mean results) (standard-deviation results))))
 
 (defun print-final-results (prob algo stream)
   "Prints final results of run, helper function to :after methods of run-algo and solve-prob."
-  (format stream "~&Run took a total of ~A seconds.~%" (- (get-universal-time) *start-time*))
+  (print-run-time stream *start-time*)
   (format stream "Final solution of run with ~A on ~A was found on iteration ~A~%"
 	  (string (type-of algo)) (problem-name prob) (algo-best-iteration algo))
   (print-routes algo stream))
