@@ -127,6 +127,9 @@
     (with-log-or-print (str sol *start-time*)
       (format str "~&Iterations to go: ~A~%" (algo-iterations a))
       (print-routes sol str))
+    ;; Print dots in REPL if logging is to file
+    (unless (log-to-replp a)
+      (princ "."))
 
     ;; Checking if new best solution
     (let ((new-fitness (fitness sol))
@@ -136,7 +139,7 @@
 	(setf (algo-best-fitness a) new-fitness
 	      (algo-best-sol a) (copy-object sol)
 	      (algo-best-iteration a) (algo-iterations a)))))
-
+  
   ;; Plot frame if animatep is set to T
   (when (algo-animatep a)
     (plot-solution (algo-current-sol a) (merge-pathnames
@@ -144,12 +147,7 @@
 					    (princ "run-frames/Iteration " s)
 					    (princ (algo-iterations a) s)
 					    (princ ".png" s))
-					  (asdf:system-source-directory 'open-vrp))))
-
-  ;; Print dots in REPL if logging is to file
-  (unless (log-to-replp a)
-    (princ ".")))
-
+					  (asdf:system-source-directory 'open-vrp)))))
 ;; Resume run - add some more iterations
 ;; ------------------------
 (defgeneric iterate-more (algo int)
