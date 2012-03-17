@@ -27,7 +27,7 @@
     (format stream "~&Runs: ~8a~%Max: ~8a~%Min: ~8a~%Avg: ~8a~%Std: ~8a~%"
 	    (length results) (get-max results) (get-min results) (mean results) (standard-deviation results))))
 
-(defun print-final-results (prob algo stream)
+(defun print-final-results (prob algo &optional (stream t))
   "Prints final results of run, helper function to :after methods of run-algo and solve-prob."
   (print-run-time stream *start-time*)
   (format stream "Final solution of run with ~A on ~A was found on iteration ~A~%"

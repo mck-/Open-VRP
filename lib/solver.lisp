@@ -65,7 +65,7 @@
 ;; When all logging is done in file, at least print the final solution in repl
 (defmethod solve-prob :after ((p problem) (a algo))
   (unless (= (log-mode p) 2)
-    (print-final-results p a t))
+    (print-final-results p a))
   (when (and (problem-drawer p) (drawer-plotp (problem-drawer p)))
     (plot-solution (algo-best-sol a))))
 ;; ---------------------------
@@ -153,5 +153,5 @@
 
 (defmethod iterate-more :after ((a algo) int)
   (unless (= (log-mode a) 2)
-    (print-final-results (algo-best-sol a) a t)))
+    (print-final-results (algo-best-sol a) a)))
 ;; ---------------------
