@@ -138,16 +138,17 @@
 		(< new-fitness best-fitness))
 	(setf (algo-best-fitness a) new-fitness
 	      (algo-best-sol a) (copy-object sol)
-	      (algo-best-iteration a) (algo-iterations a)))))
+	      (algo-best-iteration a) (algo-iterations a))))
   
-  ;; Plot frame if animatep is set to T
-  (when (algo-animatep a)
-    (plot-solution (algo-current-sol a) (merge-pathnames
-					  (with-output-to-string (s)
-					    (princ "run-frames/Iteration " s)
-					    (princ (algo-iterations a) s)
-					    (princ ".png" s))
-					  (asdf:system-source-directory 'open-vrp)))))
+    ;; Plot frame if animatep is set to T
+    (when (algo-animatep a)
+      (plot-solution sol (merge-pathnames
+			  (with-output-to-string (s)
+			    (princ "run-frames/Iteration " s)
+			    (princ (algo-iterations a) s)
+			    (princ ".png" s))
+			  (asdf:system-source-directory 'open-vrp))))))
+
 ;; Resume run - add some more iterations
 ;; ------------------------
 (defgeneric iterate-more (algo int)
