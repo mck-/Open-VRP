@@ -76,7 +76,7 @@
 ;; Create Problem macro
 ;; ----------------------------
 
-(defmacro define-problem (name fleet-size &key node-coords-list demands capacities time-windows-list durations speeds (to-depot T) plot-filename log-filename dist-matrix)
+(defmacro define-problem (name fleet-size &key node-coords-list demands capacities time-windows-list durations speeds (to-depot T) plot-filename log-filename dist-matrix log-mode plotp)
   "Creates the appropriate <Problem> object from the inputs. Extra key attributes only accept lists that are of equal length to node-coords-list or fleet-size (depending on what attributes it sets). For demands, durations, capacities and speeds, will also accept a single value, which will set all attributes to this value.
 
 A(n asymmetric) dist-matrix may be passed, instead of node-coords, in which case plotting will be disabled. dist-matrix must be a list of lists or 2-dimensional array.
@@ -123,6 +123,7 @@ With only the demands-list and capacities, creates a CVRP problem. With time-win
 										:initial-element ,speeds))))))
 	      ,@(when node-coords-list
 		      `((,drawer (make-drawer
+				  ,@(when plotp `(:plotp ,plotp))
 				  :min-coord (get-min-coord ,node-coords-list)
 				  :max-coord (get-max-coord ,node-coords-list)
 				  :filename (if ,plot-filename ,plot-filename
@@ -151,6 +152,7 @@ With only the demands-list and capacities, creates a CVRP problem. With time-win
 		      
 			:to-depot ,to-depot
 			,@(when node-coords-list `(:drawer ,drawer))
+			,@(when log-mode `(:log-mode ,log-mode))
 			:log-file (if ,log-filename ,log-filename
 				      (merge-pathnames (concatenate 'string "run-logs/" (string ,name) ".txt")
 						       (asdf:system-source-directory 'open-vrp))))))))
