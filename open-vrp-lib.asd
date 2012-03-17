@@ -1,6 +1,6 @@
 (defsystem :open-vrp-lib
   :description "open-vrp-library"
-  :version "0.5.2"
+  :version "0.6.0"
   :author "Marc Kuo"
   :licence "LLGPL"
   :depends-on (vecto alexandria fiveam cl-fad) 
@@ -23,4 +23,5 @@
 			 (:file "init-macros")
 			 (:file "read-solomon")
 			 (:file "read-cvrp")
-			 (:file "config-functions")))))
+			 (:file "config-functions")
+			 (:file "batch-run"))))

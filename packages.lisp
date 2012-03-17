@@ -68,7 +68,7 @@
 	:open-vrp.classes
 	:vecto)
   (:import-from	:alexandria :shuffle :flatten :with-gensyms :mean :standard-deviation)
-  (:import-from :cl-fad :walk-directory)
+  (:import-from :cl-fad :list-directory :directory-exists-p)
   #+sbcl (:import-from :sb-mop :class-slots :slot-definition-name)
   #+(or allegro clisp lispworks) (:import-from :clos :class-slots :slot-definition-name)
   #+cmu (:import-from :mop :class-slots :slot-definition-name) 
@@ -151,6 +151,8 @@
 	   :iterate-more
 	   :*start-time*
 	   :*multi-run-start-time*
+	   :batch-run
+	   :print-run-results-table
 
 	   ;; output
 	   :print-routes

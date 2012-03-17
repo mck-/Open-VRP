@@ -1,7 +1,15 @@
-v. 0.5.2
+v. 0.6.0
 
- - Multi-run logging
- - Timestamped log files
+Features:
+
+ - Batch-run that walks a directory with test-cases and summarises result in table
+ - Multi-run logging with multi-run-algo
+ - Timestamped log files to avoid overwriting
+
+Other:
+
+ - define-problem accepts parameters log-mode and plotp to set at create time
+ - change function name load-testcase-solomon to load-solomon-vrp-file
  - Amalgamated config functions under config-functions.lisp
  - changed log-mode method to log-to-replp, since that was its only usage -- DRYer code
  
