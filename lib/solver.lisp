@@ -83,8 +83,8 @@
   `(progn
      ;so it won't override the first log-file made by solve-prob use -1 seconds
      (setq *multi-run-start-time* (- (get-universal-time) 1))
-     (loop for ,(gensym) below ,times collect ,@algo-call)
-     (setq *multi-run-finish-time* (get-universal-time))))
+     (loop for ,(gensym) below ,times collect ,@algo-call
+	finally (setq *multi-run-finish-time* (get-universal-time)))))
   
 (defun get-best-solution-from-multi-run (solutions)
   "Given a list of solutions (from multi-run), return the best solution."
