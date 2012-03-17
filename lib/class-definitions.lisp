@@ -38,7 +38,7 @@
    (to-depot :accessor problem-to-depot :initarg :to-depot :initform T)
    (drawer :accessor problem-drawer :initarg :drawer :initform nil)
    (log-file :accessor problem-log-file :initarg :log-file :initform nil)
-   (log-mode :accessor problem-log-mode :initarg :log-filep :initform 1)))
+   (log-mode :accessor problem-log-mode :initarg :log-mode :initform 1)))
 ;; log-mode 0 = off, 1 = output file, 2 = REPL
 
 (defclass CVRP (problem)
