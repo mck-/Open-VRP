@@ -68,6 +68,7 @@
 	:open-vrp.classes
 	:vecto)
   (:import-from	:alexandria :shuffle :flatten :with-gensyms :mean :standard-deviation)
+  (:import-from :cl-fad :walk-directory)
   #+sbcl (:import-from :sb-mop :class-slots :slot-definition-name)
   #+(or allegro clisp lispworks) (:import-from :clos :class-slots :slot-definition-name)
   #+cmu (:import-from :mop :class-slots :slot-definition-name) 

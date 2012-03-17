@@ -3,7 +3,7 @@
   :version "0.5.2"
   :author "Marc Kuo"
   :licence "LLGPL"
-  :depends-on (vecto alexandria fiveam) 
+  :depends-on (vecto alexandria fiveam cl-fad) 
   :serial t
   :components ((:file "packages")
 	       (:module :lib
