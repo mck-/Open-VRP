@@ -77,7 +77,10 @@
 
 (defmacro multi-run (times &body algo-call)
   "Run algo x times and collect all resulting solution objects in a list."
-  `(loop for ,(gensym) below ,times collect ,@algo-call))
+  ;so it won't override the first log-file made by solve-prob
+  `(progn
+     (setq *multi-run-start-time* (- (get-universal-time) 1))
+     (loop for ,(gensym) below ,times collect ,@algo-call)))
 
 (defun get-best-solution-from-multi-run (solutions)
   "Given a list of solutions (from multi-run), return the best solution."
@@ -92,8 +95,6 @@
 
 (defmacro multi-run-algo (times &body algo-call)
   "Run algo x times, print multi-run-stats and return the best result."
-  ;so it won't override the first log-file made by solve-prob
-  (setq *multi-run-start-time* (- (get-universal-time) 1)) 
   (with-gensyms (prob results best)
     `(let* ((,prob ,(cadar algo-call))
 	    (,results (multi-run ,times ,@algo-call))
