@@ -47,7 +47,7 @@
 
 ;; logging
 (defmethod perform-move :after ((prob problem) (mv insertion-move))
-  (with-log-or-print (stream prob)
+  (with-log-or-print (stream prob *start-time*)
     (format stream "~&Performing ~A with Node ~A and Vehicle ~A and Index ~A~%" (type-of mv) (move-node-ID mv) (move-vehicle-ID mv) (move-index mv))))
 
 ;; ----------------------

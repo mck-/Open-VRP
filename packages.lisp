@@ -148,6 +148,8 @@
 	   :multi-run-algo
 	   :iterate
 	   :iterate-more
+	   :*start-time*
+	   :*multi-run-start-time*
 
 	   ;; output
 	   :print-routes

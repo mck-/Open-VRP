@@ -82,24 +82,24 @@
 ;; with-log-file macro
 ;; -------------------------
 
-(defun insert-time-stamp-in-path (path)
+(defun insert-time-stamp-in-path (path time)
   "Given path, return the string of the path with the timestamp inserted before the .xxx"
   (let* ((string (namestring path))
 	 (cutoff (- (length string) 4)))
     (concatenate 'string
 		 (subseq string 0 cutoff)
 		 "_"
-		 (universal-time-to-string *start-time*)
+		 (universal-time-to-string time)
 		 (subseq string cutoff))))
 
-(defmacro with-log-or-print ((stream prob &optional (appendp T)) &body body)
-  "A wrapper on top of with-open-file, where we use the filepath stored in the :log-file slot of a problem object. When :log-mode is 0, return nil. If 1, use the file stream; if 2, use the T stream. Optional parameter appendp can be set to NIL in order to :supersede if file exists. By default appends. Returns T if logging is succesful."
+(defmacro with-log-or-print ((stream prob time &optional (appendp T)) &body body)
+  "A wrapper on top of with-open-file, where we use the filepath stored in the :log-file slot of a problem object. When :log-mode is 0, return nil. If 1, use the file stream; if 2, use the T stream. Optional parameter appendp can be set to NIL in order to :supersede if file exists. By default appends. Returns T if logging is succesful. Requires universal-time, to append to log-file."
   (with-gensyms (func)
     `(flet ((,func (,stream)
 	      ,@body))
        (ccase (problem-log-mode ,prob)
 	 (0 nil)
-	 (1 (with-open-file (,stream (insert-time-stamp-in-path (problem-log-file ,prob))
+	 (1 (with-open-file (,stream (insert-time-stamp-in-path (problem-log-file ,prob) ,time)
 				     :direction :output
 				     :if-exists (if ,appendp :append :supersede))
 	      (,func ,stream)) t)

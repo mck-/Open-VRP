@@ -34,12 +34,13 @@
 
 ;; After method that makes all algos print the final solution
 (defmethod run-algo :after ((p problem) (a algo))
-  (with-log-or-print (str p)
+  (with-log-or-print (str p *start-time*)
     (print-final-results p a str)))
 ;; -----------------------------
 
 ;; Solve Prob
 ;; ---------------------------------
+(defparameter *start-time* nil)
 
 ;; a wrapper method to prevent destructive behaviour of CLOS. 
 (defgeneric solve-prob (problem algo)
@@ -55,8 +56,8 @@
 ;; This method is not part of the run-algo :before, because that would cause iterate-more
 ;; which calls run-algo to supersede instead of append to file.
 (defmethod solve-prob :before ((p problem) (a algo))
-  (defparameter *start-time* (get-universal-time))
-  (with-log-or-print (str p nil)
+  (setq *start-time* (get-universal-time))
+  (with-log-or-print (str p *start-time* nil)
     (print-timestamp str)
     (format str "~&Commencing run with ~A on ~A~%~%" (algo-name a) (problem-name p))
     (print-vrp-object p str)
@@ -72,6 +73,7 @@
 
 ;; Multi-run
 ;; ---------------------------
+(defparameter *multi-run-start-time* nil)
 
 (defmacro multi-run (times &body algo-call)
   "Run algo x times and collect all resulting solution objects in a list."
@@ -89,12 +91,20 @@
     (iter (cdr solutions) (car solutions))))
 
 (defmacro multi-run-algo (times &body algo-call)
-  "Run algo x times and print and return the best result."
-  `(let* ((results (multi-run ,times ,@algo-call))
-	  (best (get-best-solution-from-multi-run results)))
-     (print-multi-run-stats results)
-     (print-routes best)
-     best))
+  "Run algo x times, print multi-run-stats and return the best result."
+  ;so it won't override the first log-file made by solve-prob
+  (setq *multi-run-start-time* (- (get-universal-time) 1)) 
+  (with-gensyms (prob results best)
+    `(let* ((,prob ,(cadar algo-call))
+	    (,results (multi-run ,times ,@algo-call))
+	    (,best (get-best-solution-from-multi-run ,results)))
+       (with-log-or-print (str ,prob *multi-run-start-time* nil)
+	 (print-multi-run-stats ,results str)
+	 (print-routes ,best str))
+       (unless (log-to-replp ,prob)
+	 (print-multi-run-stats ,results)
+	 (print-routes ,prob))
+       ,best)))
 ;; -------------------
 
 ;; Iterate
@@ -114,7 +124,7 @@
     (setf (algo-iterations a) (1- (algo-iterations a)))
 
     ;; Logging
-    (with-log-or-print (str sol)
+    (with-log-or-print (str sol *start-time*)
       (format str "~&Iterations to go: ~A~%" (algo-iterations a))
       (print-routes sol str))
 

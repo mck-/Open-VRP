@@ -1,4 +1,10 @@
+v. 0.5.2
 
+ - Multi-run logging
+ - Timestamped log files
+ - Amalgamated config functions under config-functions.lisp
+ - changed log-mode method to log-to-replp, since that was its only usage -- DRYer code
+ 
 v. 0.5.1
 
  - Performance increase by 67% (see issue #19)
