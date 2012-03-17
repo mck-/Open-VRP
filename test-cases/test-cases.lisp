@@ -18,10 +18,10 @@
 (defvar test-tsp (define-problem "test-case-TSP" 1 :node-coords-list *node-coords* :to-depot nil))
 (defvar test-vrp (define-problem "test-case-VRP" 2 :node-coords-list *node-coords*))
 (defvar solomon25 
-  (load-testcase-solomon (merge-pathnames "test-cases/25-cust.txt" 
+  (load-solomon-vrp-file (merge-pathnames "test-cases/25-cust.txt" 
 					  (asdf:system-source-directory 'open-vrp))))
 (defvar solomon100 
-  (load-testcase-solomon (merge-pathnames "test-cases/100-cust.txt" 
+  (load-solomon-vrp-file (merge-pathnames "test-cases/100-cust.txt" 
 					  (asdf:system-source-directory 'open-vrp))))
 (defvar christofides-1 
   (load-tsplib-vrp-file (merge-pathnames "test-cases/Christofides_01.vrp" 

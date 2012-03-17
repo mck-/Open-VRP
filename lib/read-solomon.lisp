@@ -7,7 +7,7 @@
   "Given a list of x and y-coords, return a list of pairs usable. Used for node-coords or time-windows."
   (loop for x in list1 and y in list2 collect (cons x y)))
 		       
-(defun load-testcase-Solomon (file)
+(defun load-solomon-vrp-file (file)
   "Load testcase from file, which should be Solomon style."
   (with-open-file (in file)
     (let ((name (read in))

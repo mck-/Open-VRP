@@ -173,7 +173,7 @@
 	   :define-problem
 
 	   ;; input
-	   :load-testcase-Solomon
+	   :load-solomon-vrp-file
 	   :load-tsplib-vrp-file
 
 	   ;; config utils
