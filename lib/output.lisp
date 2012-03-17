@@ -34,7 +34,7 @@
   "Given a list of algo-objects returned by multi-run, print run-stats."
   (multiple-value-bind (min max avg std runs time time-p-run)
       (get-multi-run-stats algo-objects)    
-    (format str "~&Min: ~8a~%Max: ~8a~%Avg: ~8a~%Std: ~8a~%Runs: ~a~%Time: ~a~%Time/run: ~a~%"
+    (format str "~&Min: ~8a~%Max: ~8a~%Avg: ~8a~%Std: ~8a~%Runs: ~a~%Time: ~a seconds~%Time/run: ~a seconds~%"
 	    min max avg std runs time time-p-run)))
 	    
 
