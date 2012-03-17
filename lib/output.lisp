@@ -20,7 +20,7 @@
   "Prints the difference between current time and start-time in seconds to stream for logging."
   (format stream "~&Run took a total of ~A seconds.~%" (- (get-universal-time) start-time)))
 
-(defun print-multi-run-stats (algo-objects stream)
+(defun print-multi-run-stats (algo-objects &optional (stream t))
   "Given a list of algo-objects returned by multi-run, print run-stats."
   (let ((results (mapcar #'algo-best-fitness algo-objects)))
     (print-run-time stream *multi-run-start-time*)
