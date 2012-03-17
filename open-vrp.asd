@@ -1,6 +1,6 @@
 (defsystem :open-vrp-lib
   :description "open-vrp-library"
-  :version "0.5.1"
+  :version "0.5.2"
   :author "Marc Kuo"
   :licence "LLGPL"
   :depends-on (vecto alexandria fiveam) 
@@ -22,11 +22,12 @@
 			 (:file "conditions")
 			 (:file "init-macros")
 			 (:file "read-solomon")
-			 (:file "read-cvrp")))))
+			 (:file "read-cvrp")
+			 (:file "config-functions")))))
 
 (defsystem :open-vrp
   :description "open-vrp"
-  :version "0.5.1"
+  :version "0.5.2"
   :author "Marc Kuo"
   :licence "LLGPL"
   :depends-on (vecto alexandria fiveam open-vrp-lib) 
