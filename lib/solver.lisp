@@ -108,7 +108,7 @@
 	 (print-routes ,best str))
        (unless (log-to-replp ,prob)
 	 (print-multi-run-stats ,results)
-	 (print-routes ,prob))
+	 (print-routes ,best))
        ,best)))
 ;; -------------------
 
