@@ -8,7 +8,7 @@
 (define-modify-macro toggle () not)
 
 (defgeneric toggle-plot (problem/algo)
-  (:documentation "Toggles plotting on/off of best solution. Config boolean is held by <Drawer> object's plotp slot.")
+  (:documentation "Toggles plotting on/off of best solution. Config boolean is held by <Drawer> object's plotp slot."))
 
 (defmethod toggle-plot ((pr problem))
   (aif (problem-drawer pr)
