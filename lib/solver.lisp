@@ -41,6 +41,7 @@
 ;; Solve Prob
 ;; ---------------------------------
 (defparameter *start-time* nil)
+(defparameter *finish-time* nil)
 
 ;; a wrapper method to prevent destructive behaviour of CLOS. 
 (defgeneric solve-prob (problem algo)
@@ -65,6 +66,7 @@
 
 ;; When all logging is done in file, at least print the final solution in repl
 (defmethod solve-prob :after ((p problem) (a algo))
+  (setq *finish-time* (get-universal-time))
   (unless (log-to-replp p)
     (print-final-results p a))
   (when (and (problem-drawer p) (drawer-plotp (problem-drawer p)))
@@ -74,13 +76,15 @@
 ;; Multi-run
 ;; ---------------------------
 (defparameter *multi-run-start-time* nil)
+(defparameter *multi-run-finish-time* nil)
 
 (defmacro multi-run (times &body algo-call)
   "Run algo x times and collect all resulting solution objects in a list."
-  ;so it won't override the first log-file made by solve-prob
   `(progn
+     ;so it won't override the first log-file made by solve-prob use -1 seconds
      (setq *multi-run-start-time* (- (get-universal-time) 1))
-     (loop for ,(gensym) below ,times collect ,@algo-call)))
+     (loop for ,(gensym) below ,times collect ,@algo-call)
+     (setq *multi-run-finish-time* (get-universal-time)))
 
 (defun get-best-solution-from-multi-run (solutions)
   "Given a list of solutions (from multi-run), return the best solution."
