@@ -20,12 +20,26 @@
   "Prints the difference between current time and start-time in seconds to stream for logging."
   (format stream "~&Run took a total of ~A seconds.~%" (- (get-universal-time) start-time)))
 
-(defun print-multi-run-stats (algo-objects &optional (stream t))
-  "Given a list of algo-objects returned by multi-run, print run-stats."
+(defun get-multi-run-stats (algo-objects)
+  "Given a list of algo-objects, as returned by multi-run, return the stats with (values min max avg std runs time time/run)"
   (let ((results (mapcar #'algo-best-fitness algo-objects)))
-    (print-run-time stream *multi-run-start-time*)
-    (format stream "~&Runs: ~8a~%Max: ~8a~%Min: ~8a~%Avg: ~8a~%Std: ~8a~%"
-	    (length results) (get-max results) (get-min results) (mean results) (standard-deviation results))))
+    (values
+     (get-min results)
+     (get-max results)
+     (mean results)
+     (standard-deviation results)
+     (length results)
+     (- (get-universal-time) *multi-run-start-time*)
+     (/ (- (get-universal-time) *multi-run-start-time*) (length results)))))
+     
+     
+(defun print-multi-run-stats (algo-objects &optional (str t))
+  "Given a list of algo-objects returned by multi-run, print run-stats."
+  (multiple-value-bind (min max avg std runs time time-p-run)
+      (get-multi-run-stats algo-objects)    
+    (format str "~&Min: ~8a~%Max: ~8a~%Avg: ~8a~%Std: ~8a~%Runs: ~a~%Time: ~a~%Time/run: ~a~%"
+	    min max avg std runs time time-p-run)))
+	    
 
 (defun print-final-results (prob algo &optional (stream t))
   "Prints final results of run, helper function to :after methods of run-algo and solve-prob."
