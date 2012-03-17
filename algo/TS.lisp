@@ -156,7 +156,7 @@
   (let ((sc (ts-stopping-condition ts)))
     (when (and sc (funcall sc ts))
       (setf (algo-iterations ts) 0)
-      (with-log-or-print (stream (algo-current-sol ts))
+      (with-log-or-print (stream (algo-current-sol ts) *start-time*)
 	(format stream "~&Stopping condition met.~%"))
       (unless (log-to-replp ts)
 	(format t "~&Stopping condition met.~%"))))
