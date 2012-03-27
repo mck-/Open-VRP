@@ -60,11 +60,8 @@
 (defmethod solve-prob :before ((p problem) (a algo))
   (setq *start-time* (get-universal-time))
   (with-log-or-print (str p *start-time* nil)
-    (print-timestamp str)
-    (format str "~&Commencing run with ~A on ~A~%~%" (algo-name a) (problem-name p))
-    (print-vrp-object p str)
-    (print-vrp-object a str)))
-
+    (print-header p a str)))
+    
 ;; When all logging is done in file, at least print the final solution in repl
 (defmethod solve-prob :after ((p problem) (a algo))
   (unless (log-to-replp p)
