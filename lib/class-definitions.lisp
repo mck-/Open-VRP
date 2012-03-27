@@ -67,7 +67,7 @@
   (legend-x 100)
   (legend-y 900)
   filename
-  (plotp T))
+  (plotp nil))
 
 ;; -----------------------------
 
