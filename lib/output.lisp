@@ -123,7 +123,8 @@
 	      ,@body))
        (ccase (problem-log-mode ,prob)
 	 (0 nil)
-	 (1 (with-open-file (,stream (insert-time-stamp-in-path (problem-log-file ,prob) ,time)
+	 (1 (with-open-file (,stream (ensure-directories-exist
+				      (insert-time-stamp-in-path (problem-log-file ,prob) ,time))
 				     :direction :output
 				     :if-exists (if ,appendp :append :supersede))
 	      (,func ,stream)) t)
