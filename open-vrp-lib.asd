@@ -24,4 +24,4 @@
 			 (:file "read-solomon")
 			 (:file "read-cvrp")
 			 (:file "config-functions")
-			 (:file "batch-run"))))
+			 (:file "batch-run")))))
