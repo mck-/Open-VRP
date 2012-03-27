@@ -96,9 +96,9 @@
 (defun print-header (prob algo &optional (stream t))
   "Given a <Problem> and <Algo> object, print out a short description for the objects, and a line that logs the time of start of solving"
   (print-timestamp stream)
-  (format str "~&Commencing run with ~A on ~A~%~%" (algo-name algo) (problem-name prob))
-  (print-vrp-object prob str)
-  (print-vrp-object algo str))
+  (format stream "~&Commencing run with ~A on ~A~%~%" (algo-name algo) (problem-name prob))
+  (print-vrp-object prob stream)
+  (print-vrp-object algo stream))
   
 
 ;; -------------------------
