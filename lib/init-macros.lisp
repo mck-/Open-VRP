@@ -154,7 +154,7 @@ With only the demands-list and capacities, creates a CVRP problem. With time-win
 			,@(when node-coords-list `(:drawer ,drawer))
 			,@(when log-mode `(:log-mode ,log-mode))
 			:log-file (if ,log-filename ,log-filename
-				      (merge-pathnames (concatenate 'string "run-logs/" (string ,name) ".txt")
+				      (merge-pathnames (concatenate 'string "run-logs/" (string ,name) "/" (string ,name) ".txt")
 						       (asdf:system-source-directory 'open-vrp))))))))
 
 
