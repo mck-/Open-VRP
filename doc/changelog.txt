@@ -1,3 +1,9 @@
+v. 0.6.1
+
+Other:
+
+ - logging in a directory by name of problem
+
 v. 0.6.0
 
 Features:
