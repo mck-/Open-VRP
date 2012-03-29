@@ -129,6 +129,23 @@
 				     :if-exists (if ,appendp :append :supersede))
 	      (,func ,stream)) t)
 	 (2 (,func t) t)))))
+
+;; --------------------------
+
+;; Batch-run append one-liner
+;; --------------------------
+(defun print-batch-run-table-header (stream)
+    (format stream "~&| Test-case |   Min   |   Max   |   Avg   |   Std   | Runs | Time | Time/Run |~%"))
+
+(defun append-run-result (filepath results)
+  "Given the output filepath (with table headers initialized) and a list of algo-objects (as returned by multi-run), append one line that summarizes the run (by calling get-multi-run-stats)."
+  (with-open-file (stream filepath :if-exists :append :direction :output)
+    (multiple-value-bind (min max avg std runs time time-p-run)
+	(get-multi-run-stats results)
+      (format stream "~&|~11a|~9,2f|~9,2f|~9,2f|~9,2f|~6d|~6d|~10,2f|~%"
+	      (problem-name (algo-current-sol (car results)))
+	      min max avg std runs time time-p-run))))
+
 	 
 
 ;; Acccessors for log-mode
