@@ -50,8 +50,3 @@
 (define-condition missing-drawer-object (error)
   ((prob :initarg :prob :reader prob))
   (:report "Missing a <Drawer> object! Are you trying to plot without node-coords?"))
-   
-;; lib/batch-run.lisp
-(define-condition missing-directory (error)
-  ((dir :initarg :dir :reader dir))
-  (:report "Missing directory!"))
