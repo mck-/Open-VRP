@@ -3,6 +3,10 @@ v. 0.6.1
 Other:
 
  - logging in a directory by name of problem
+ - Moved all output related functions out of batch-run.lisp to output.lisp
+ - Batch-run table of results will be print each test-case as it finishes
+   (instead of waiting for the whole batch to finish and keeping result in memory)
+ - Add a directory of Solomon-25 test-cases for quick/simple testing of batch runs
 
 v. 0.6.0
 
