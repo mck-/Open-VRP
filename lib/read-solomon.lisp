@@ -7,7 +7,7 @@
   "Given a list of x and y-coords, return a list of pairs usable. Used for node-coords or time-windows."
   (loop for x in list1 and y in list2 collect (cons x y)))
 		       
-(defun load-solomon-vrp-file (file &key (plotp T) (log-mode 1))
+(defun load-solomon-vrp-file (file)
   "Load testcase from file, which should be Solomon style."
   (with-open-file (in file)
     (let ((name (read in))
@@ -29,6 +29,4 @@
 	       :demands demands
 	       :capacities (make-list fleet-size :initial-element capacities)
 	       :time-windows-list (couple-lists min-times max-times)
-	       :durations service-duration
-	       :plotp plotp
-	       :log-mode log-mode))))))
+	       :durations service-duration))))))
