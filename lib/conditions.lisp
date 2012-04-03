@@ -50,3 +50,8 @@
 (define-condition missing-drawer-object (error)
   ((prob :initarg :prob :reader prob))
   (:report "Missing a <Drawer> object! Are you trying to plot without node-coords?"))
+
+;; lib/read-test-case.lisp
+(define-condition file-not-recognized (error)
+  ((file :initarg :file :reader :file))
+  (:report "Input file not recognized!"))

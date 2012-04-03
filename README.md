@@ -11,7 +11,17 @@ Open VRP is a framework to model and solve [VRP-like](http://neo.lcc.uma.es/radi
 
 The Problem object (e.g. VRP) and the Algorithm object (e.g. Genetic Algorithm) are modelled seperately and combined with the generic method (solve-prob problem algo). Different solution algorithms can be tested and compared against each other on the same problem (which you only model once).
 
-The solutions are drawn using [vecto](http://www.xach.com/lisp/vecto/) in a .png file.
+## Current features (v. 0.6.1)
+
+* TSP, VRP, CVRP, VRPTW, CVRPTW
+* Homogenous/heterogenous fleet
+* Demands, duration, capacity, time-windows, speed
+* Define network using coordinates or (asymettric) distance matrix
+* Tabu Search
+* Logging of search progress (to file or to REPL)
+* Plotting of final solution or after each iteration
+* Test-case loader (Solomon and TSPLIB format)
+* Batch-run to test algo on a directory of test-cases
 
 ## Vision
 
@@ -70,14 +80,11 @@ You may also provide a(n asymmetric) distance matrix instead of node-coords (rea
 ```
 Note that the above will create 6 nodes, so the dimensions of the dist-array must be 6x6. Also note that we provide a single number for capacities (instead of a list with length 3), which means that all vehicles will have a capacity of 8. Single numbers are allowed for :demands, :durations, :capacites and :speeds
 
-Or to load from a text-file [Solomon-format](http://neo.lcc.uma.es/radi-aeb/WebVRP/index.html?/Problem_Instances/CVRPTWInstances.html), [TSPLIB cvrp format](http://neo.lcc.uma.es/radi-aeb/WebVRP/data/Doc.ps) :
+Or to load a problem from a text-file (currently supports [Solomon-format](http://neo.lcc.uma.es/radi-aeb/WebVRP/index.html?/Problem_Instances/CVRPTWInstances.html) and [TSPLIB cvrp format](http://neo.lcc.uma.es/radi-aeb/WebVRP/data/Doc.ps)):
 
 ```
-(defvar test-case-solomon (load-testcase-solomon "path-to-solomon-file-format.txt"))
-(defvar test-case-tsplib (load-tsplib-vrp-file "path-to-tsplib-file-format.txt"))
-
-(solve-plot test-case-solomon (make-instance 'tabu-search :iterations 100))
-(solve-plot test-case-tsplib (make-instance 'tabu-search :iterations 100))
+(defvar test-case-solomon (load-test-case-file "path-to-solomon-file-format.txt"))
+(defvar test-case-tsplib (load-test-case-file "path-to-tsplib-file-format.vrp"))
 ```
 
 When the algo is finished running, it returns the Algo object, which contains :current-sol and :best-sol. Use `iterate-more` to keep searching:
@@ -95,7 +102,7 @@ An example output of Solomon's VRPTW 100-customers benchmark test-case, solved w
 ## TODO
 
 * Extend VRP model to PDPTW
-* Run logs/statistics for test-result gathering (including batch runs)
+* Run logs/statistics for test-result gathering (including batch runs) 
 * User-interface (better macros)
 * Plotting can be improved (real-time output instead of .png files)
 * ...

@@ -175,6 +175,7 @@
 	   :define-problem
 
 	   ;; input
+	   :load-test-case-file
 	   :load-solomon-vrp-file
 	   :load-tsplib-vrp-file
 
