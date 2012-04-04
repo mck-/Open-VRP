@@ -6,7 +6,7 @@
 (defun load-test-case-file (filepath)
   "Given a file, will recognize the format based on some cues and dispatch to appropriate reader function to parse the file. File with .vrp extension will be read as TSPLIB."
   (with-open-file (in filepath)
-    (let ((extension (subseq filepath (- (length filepath) 3))))
+    (let ((extension (pathname-type filepath)))
       (if (string-equal extension "vrp")
 	  (load-tsplib-vrp-file filepath)
 	  (let ((first-word (read in))
