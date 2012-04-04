@@ -10,6 +10,7 @@ Other:
  - Moved all output related functions out of batch-run.lisp to output.lisp
  - Batch-run table of results will print each test-case as it finishes
    (instead of waiting for the whole batch to finish and keeping results in memory)
+ - Batch-run will return all algo objects holding the solutions
  - Add a directory of Solomon-25 test-cases for quick/simple testing of batch runs
 
 v. 0.6.0
