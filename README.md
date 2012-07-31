@@ -1,6 +1,6 @@
 # Open-VRP
 
-Check out the [Wiki](https://github.com/mck-/Open-VRP/wiki) for an overview of Open-VRP and get-started!
+Check out the [Wiki](https://github.com/mck-/Open-VRP/wiki) for an overview of Open-VRP or scroll down for a summary, [fork](https://github.com/mck-/Open-VRP/fork_select) and get-started!
 
 ## Synopsis
 
