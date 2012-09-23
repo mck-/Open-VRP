@@ -171,4 +171,16 @@
 (test asym-greedy-best-insertion (is (solve-prob asym-tsp (make-instance 'greedy-best-insertion))))
 (test asym-tabu-search (is (solve-prob asym-tsp (make-instance 'tabu-search))))
 
-(defvar asym-vrp (define-problem "asym-vrp" 1 :dist-matrix #2A((nil 1 2)(1 nil 3)(2 3 nil)) :time-windows-list '((0 . 10)(2 . 5)(5 . 10)))) 
+(defvar asym-vrp (define-problem "asym-vrp" 1 :dist-matrix #2A((nil 1 2)(1 nil 3)(2 3 nil)) :time-windows-list '((0 . 10)(2 . 5)(5 . 10)) :log-mode 0))
+
+(test asym-vrp-perform-move
+  (is (perform-move asym-vrp
+                    (make-insertion-move :node-id 1 :vehicle-id 0 :index 1))))
+
+(test tw-move-infeasible
+  (is-false (feasible-movep asym-vrp                            
+                            (make-insertion-move :node-id 2 :vehicle-id 0 :index 1))))
+
+(test tw-move-feasible
+  (is (feasible-movep asym-vrp                            
+                      (make-insertion-move :node-id 2 :vehicle-id 0 :index 2))))
