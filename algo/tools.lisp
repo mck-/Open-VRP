@@ -55,7 +55,7 @@
     (symbol-macrolet ((full-route (vehicle-route (vehicle sol veh-id)))
 		      (ins-node (node sol node-ID))
 		      (to (if (= 1 i) ins-node (car route)))
-		      (arr-time (+ time (travel-time loc to))))
+		      (arr-time (+ time (travel-time loc to :dist-array (problem-dist-array sol)))))
       (constraints-check
        (route time loc i)
        ((cdr full-route) 0 (car full-route) index)
@@ -65,7 +65,7 @@
        (<= arr-time (node-end to))
        (and (null route) (< i 1)))))) ; case of append, need to check once more
 
-;; for debugging
+;; for debugging (insert in test-form with progn)
 ;       (format t "Route: ~A~% Loc: ~A~% To: ~A~% Time: ~A~% Arr-time: ~A~% Node-start: ~A~% Node-end: ~A~% Duration: ~A~% ins-node-end: ~A~% i: ~A~%" (mapcar #'node-id route) (node-id loc) (node-id to) time arr-time (node-start to) (node-end to) (node-duration to) (node-end ins-node) i)
 ;; -----------------------------
 	      
@@ -133,7 +133,7 @@
   "Returns a list of arrival times of the vehicles to node given the present solution."
   (mapcar #'(lambda (x)
 	      (multiple-value-bind (c time)
-		  (veh-in-timep x) (when c (+ time (travel-time (last-node x) node)))))
+		  (veh-in-timep x) (when c (+ time (travel-time (last-node x) node :dist-array (problem-dist-array prob))))))
 	  (problem-fleet prob)))
 
 ;; Feasiblility of appending at the end only.

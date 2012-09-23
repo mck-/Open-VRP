@@ -170,3 +170,5 @@
 (test asym-greedy-append (is (solve-prob asym-tsp (make-instance 'greedy-append))))
 (test asym-greedy-best-insertion (is (solve-prob asym-tsp (make-instance 'greedy-best-insertion))))
 (test asym-tabu-search (is (solve-prob asym-tsp (make-instance 'tabu-search))))
+
+(defvar asym-vrp (define-problem "asym-vrp" 1 :dist-matrix #2A((nil 1 2)(1 nil 3)(2 3 nil)) :time-windows-list '((0 . 10)(2 . 5)(5 . 10)))) 
