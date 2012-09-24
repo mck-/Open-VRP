@@ -1,3 +1,9 @@
+v. 0.6.2
+
+Other:
+
+ - Bugfix for asymmetric problems with time-windows
+
 v. 0.6.1
 
 Features:

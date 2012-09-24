@@ -11,7 +11,7 @@ Open VRP is a framework to model and solve [VRP-like](http://neo.lcc.uma.es/radi
 
 The Problem object (e.g. VRP) and the Algorithm object (e.g. Genetic Algorithm) are modelled seperately and combined with the generic method (solve-prob problem algo). Different solution algorithms can be tested and compared against each other on the same problem (which you only model once).
 
-## Current features (v. 0.6.1)
+## Current features (v. 0.6.2)
 
 * TSP, VRP, CVRP, VRPTW, CVRPTW
 * Homogenous/heterogenous fleet
