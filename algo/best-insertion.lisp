@@ -79,7 +79,8 @@
 				     (< (move-fitness new) (move-fitness best-move))) ;better?
 				 new
 				 best-move))
-			 (no-feasible-move () best-move))))))
+			 (no-feasible-move () (or best-move
+                                                  (error 'no-feasible-move))))))))
     (iter (problem-fleet sol) nil)))
 
 ;; -------------------------

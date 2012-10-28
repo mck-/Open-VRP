@@ -14,3 +14,6 @@
 (define-condition no-feasible-move (error)
   ((moves :initarg :moves :reader moves))
   (:report "All moves are infeasible!"))
+
+(define-condition no-initial-feasible-solution (error)()
+  (:report "Could not find feasible initial solution!"))
