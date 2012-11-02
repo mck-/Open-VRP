@@ -69,7 +69,7 @@
 
 (defmethod get-best-insertion-move ((sol problem) (n node))
   (labels ((iter (flt best-move)
-	     (if (null flt) best-move
+	     (if (null flt) (or best-move (error 'no-feasible-move))
 		 (iter (cdr flt)
 		       (handler-case
 			   (let ((new (get-best-insertion-move-in-vehicle sol
@@ -79,8 +79,7 @@
 				     (< (move-fitness new) (move-fitness best-move))) ;better?
 				 new
 				 best-move))
-			 (no-feasible-move () (or best-move
-                                                  (error 'no-feasible-move))))))))
+			 (no-feasible-move () (or best-move)))))))
     (iter (problem-fleet sol) nil)))
 
 ;; -------------------------
