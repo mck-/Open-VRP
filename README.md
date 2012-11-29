@@ -41,7 +41,7 @@ Add this path and evaluate require:
 ```
 (push "/path/to/Open-VRP/" asdf:*central-registry*)
 (require 'open-vrp)
-(in-package 'open-vrp)
+(in-package :open-vrp)
 ```
 
 ## Usage
