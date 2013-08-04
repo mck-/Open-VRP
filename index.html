@@ -1,0 +1,166 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Open-vrp by mck-</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Open-vrp</h1>
+        <p>Open-source framework for modeling Vehicle Routing Problems.</p>
+
+        <p class="view"><a href="https://github.com/mck-/Open-VRP">View the Project on GitHub <small>mck-/Open-VRP</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/mck-/Open-VRP/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/mck-/Open-VRP/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/mck-/Open-VRP">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h2>
+<a name="synopsis" class="anchor" href="#synopsis"><span class="octicon octicon-link"></span></a>Synopsis</h2>
+
+<p>Open VRP is a framework to model and solve <a href="http://neo.lcc.uma.es/radi-aeb/WebVRP/">VRP-like</a> problems for students, academics, businesses and hobbyist alike. This framework allows for quick implementation of simple TSP/VRP problems to more complicated VRPTW, PDPTW, MDCPVRPPDTW, or however cool you want to sound. The library is extensibly written in Common Lisp's CLOS. Depending on your interest/purpose, an algorithm can be:</p>
+
+<ul>
+<li><a href="https://github.com/mck-/Open-VRP/wiki/Using-Open-VRP:-writing-your-algo-from-scratch">written from scratch</a></li>
+<li>tweaked from existing implementations - (currently only <a href="https://github.com/mck-/Open-VRP/wiki/Description-of-the-Tabu-Search-implementation">Tabu Search implemented</a>)</li>
+</ul><p>The Problem object (e.g. VRP) and the Algorithm object (e.g. Genetic Algorithm) are modelled seperately and combined with the generic method (solve-prob problem algo). Different solution algorithms can be tested and compared against each other on the same problem (which you only model once).</p>
+
+<h2>
+<a name="current-features-v-062" class="anchor" href="#current-features-v-062"><span class="octicon octicon-link"></span></a>Current features (v. 0.6.2)</h2>
+
+<ul>
+<li>TSP, VRP, CVRP, VRPTW, CVRPTW</li>
+<li>Homogenous/heterogenous fleet</li>
+<li>Demands, duration, capacity, time-windows, speed</li>
+<li>Define network using coordinates or (asymettric) distance matrix</li>
+<li>Tabu Search</li>
+<li>Logging of search progress (to file or to REPL)</li>
+<li>Plotting of final solution or after each iteration</li>
+<li>Test-case loader (Solomon and TSPLIB format)</li>
+<li>Batch-run to test algo on a directory of test-cases</li>
+</ul><h2>
+<a name="vision" class="anchor" href="#vision"><span class="octicon octicon-link"></span></a>Vision</h2>
+
+<p>Too often have I found myself having to build a VRP model from scratch, just to experiment with some meta-heuristics for a school paper. Academics/students with a background/interest in Mathematics/Operations Research without the skills/patience for die-hard coding (in C++/Java), have no choice but to spend their valuable time stuck in the debug/test/debug cycle. <a href="https://kuomarc.wordpress.com/2012/01/27/why-i-love-common-lisp-and-hate-java/">Here</a> is <a href="http://kuomarc.wordpress.com/2012/03/05/the-uncommon-lisp-approach-to-operations-research/">why</a> those in OR should consider Common Lisp as an option.</p>
+
+<p>With this framework, I hope to catalyze the research and application of routing solutions. Researchers in innovative new algorithms should not need to fiddle in the Eclipse debugger screen. They should be able to focus all their energy and effort in devising their heuristics. OR should be kept fun and engaging.</p>
+
+<p>The ultimate vision for Open VRP is a simple intuitive toolkit for the OR community, free for anyone.</p>
+
+<h2>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<pre><code>~$ git clone git://github.com/mck-/Open-VRP.git
+</code></pre>
+
+<p>Add this path and evaluate require:</p>
+
+<pre><code>(push "/path/to/Open-VRP/" asdf:*central-registry*)
+(require 'open-vrp)
+(in-package :open-vrp)
+</code></pre>
+
+<h2>
+<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h2>
+
+<p>Check the <a href="https://github.com/mck-/Open-VRP/wiki">Wiki</a> for more documentation, the following is a short summary of the main functionality.</p>
+
+<p><code>solve-prob</code> expects a problem object and an algo object.</p>
+
+<p><code>test-vrp</code>, <code>solomon25</code>, <code>solomon100</code>, <code>christofides-1</code> and <code>christofides-2</code> are pre-loaded demo problems. To use Tabu Search:</p>
+
+<pre><code>(solve-prob test-vrp (make-instance 'tabu-search :iterations 10 :animatep T))
+(solve-prob solomon100 (make-instance 'tabu-search :iterations 100))
+(solve-prob christofides-2 (make-instance 'tabu-search :iterations 50))
+</code></pre>
+
+<p>By default, problems will plot to <code>plots/name.png</code> and log to <code>run-logs/name.txt</code> where <em>name</em> refers to the <code>:name</code> slot of the <em>Problem</em> object. <code>(toggle-plot &lt;problem&gt;)</code> to disable plotting the final solution. Use <code>(set-log-mode &lt;problem&gt; x)</code> to switch from [0] no logging, [1] logging to file or [2] logging to the REPL. </p>
+
+<p>If you don't like the legend in the plot, turn it off with <code>(toggle-legend &lt;problem&gt;)</code>.</p>
+
+<p>When :animatep is set to T, each iteration will produce a plot in run-frames/Iteration x.png (much slower, since it needs to plot each iteration). You may use <code>(toggle-animate &lt;algo&gt;)</code> to turn it on/off.</p>
+
+<p>You can define your own problem objects with:</p>
+
+<pre><code>(define-problem "VRP" fleet-size :node-coords-list node-coords :to-depot T)
+(define-problem "CVRP" fleet-size :node-coords-list node-coords :demands demands-list :capacities capacity-list)
+(define-problem "VRPTW" fleet-size :node-coords-list node-coords :time-windows time-windows :durations durations :speeds speed)
+</code></pre>
+
+<p>where <em>node-coords</em> is a list of pairs, <em>demands-list</em> a list of associated demands (must be same length), and <em>fleet-size</em> is the number of vehicles. When a <em>demands-list</em> and vehicle <em>capacity</em> are provided, the resulting problem is a CVRP. If <em>time-windows</em> (list of pairs) and <em>durations</em> are given, the resulting problem object is a VRPTW. When everything is provided, it creates a CVRPTW. Each class of problem has its own specific constraints to check.</p>
+
+<p>You may also provide a(n asymmetric) distance matrix instead of node-coords (real-life problems). You won't be able to plot the solution without <em>node-coords</em> though.</p>
+
+<pre><code>(define-problem "ASYM-CVRP" 3 :demands '(0 1 2 3 2 1) :capacities 8 :dist-array dist-aray)
+</code></pre>
+
+<p>Note that the above will create 6 nodes, so the dimensions of the dist-array must be 6x6. Also note that we provide a single number for capacities (instead of a list with length 3), which means that all vehicles will have a capacity of 8. Single numbers are allowed for :demands, :durations, :capacites and :speeds</p>
+
+<p>Or to load a problem from a text-file (currently supports <a href="http://neo.lcc.uma.es/radi-aeb/WebVRP/index.html?/Problem_Instances/CVRPTWInstances.html">Solomon-format</a> and <a href="http://neo.lcc.uma.es/radi-aeb/WebVRP/data/Doc.ps">TSPLIB cvrp format</a>):</p>
+
+<pre><code>(defvar test-case-solomon (load-test-case-file "path-to-solomon-file-format.txt"))
+(defvar test-case-tsplib (load-test-case-file "path-to-tsplib-file-format.vrp"))
+</code></pre>
+
+<p>When the algo is finished running, it returns the Algo object, which contains :current-sol and :best-sol. Use <code>iterate-more</code> to keep searching:</p>
+
+<pre><code>(iterate-more &lt;algo&gt; int)
+</code></pre>
+
+<h2>
+<a name="output" class="anchor" href="#output"><span class="octicon octicon-link"></span></a>Output</h2>
+
+<p>An example output of Solomon's VRPTW 100-customers benchmark test-case, solved with Tabu Search.</p>
+
+<p><img src="https://github.com/mck-/Open-VRP/blob/master/plots/solomon100-optimal.png?raw=true" alt="alt Optimal solution" title="Optimal solution"></p>
+
+<h2>
+<a name="todo" class="anchor" href="#todo"><span class="octicon octicon-link"></span></a>TODO</h2>
+
+<ul>
+<li>Extend VRP model to PDPTW</li>
+<li>Run logs/statistics for test-result gathering (including batch runs) </li>
+<li>User-interface (better macros)</li>
+<li>Plotting can be improved (real-time output instead of .png files)</li>
+<li>...</li>
+</ul><h2>
+<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
+
+<p>Open-VRP is licensed under the terms of the <a href="http://opensource.franz.com/preamble.html">Lisp Lesser GNU
+Public License</a>, known as
+the LLGPL.  The LLGPL consists of a preamble (see above URL) and the
+LGPL.  Where these conflict, the preamble takes precedence. 
+Open-VRP is referenced in the preamble as the "LIBRARY."</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/mck-">mck-</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-28897638-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
