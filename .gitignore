@@ -4,5 +4,6 @@
 *png
 # Ignore compiled list files
 *fasl
+.DS_Store
 
 profile-results.txt
