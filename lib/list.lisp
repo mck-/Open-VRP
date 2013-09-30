@@ -5,16 +5,16 @@
 ;; Simple list utils
 ;; --------------------
 (defun get-from-list (list pred &key key)
-  "Gets from list the value (max or min) while ignoring NIL's. Returns NIL if the whole list is nil. Use get-min or get-max!"
+  "Gets from list the value (max or min) while ignoring NIL's. Use get-min or get-max!"
   (let ((in-list (if key (mapcar key list) list)))
     (labels ((iter (ls ans)
-	       (if (null ls) (if ans ans (error 'list-of-nils :ls list :key key))
-		   (iter (cdr ls)
-			 (let ((x (car ls)))
-			   (cond ((null ans) x)
-				 ((null x) ans)
-				 ((funcall pred x ans) x)
-				 (t ans)))))))
+               (if (null ls) (if ans ans (error 'list-of-nils :ls list :key key))
+                   (iter (cdr ls)
+                         (let ((x (car ls)))
+                           (cond ((null ans) x)
+                                 ((null x) ans)
+                                 ((funcall pred x ans) x)
+                                 (t ans)))))))
       (iter (cdr in-list) (car in-list)))))
 
 (defun get-min (list &key key)
@@ -30,7 +30,7 @@
   (aif (funcall fn list :key key)
        (values (position it list :key key) it)
        nil))
-  
+
 (defun get-min-index (list &key key)
   "Returns index of the smallest value on list, while ignoring NIL. Returns index and its value (closest node and value)."
   (get-index-of list #'get-min :key key))
@@ -43,15 +43,15 @@
   "Sorts the sequence with #'< or #'> while passing all NIL values towards the end of result."
   (if (find-if-not #'null list :key key)
       (let ((ignore (cond ((eq predicate #'<) (1+ (get-max list :key key)))
-			  ((eq predicate #'>) (1- (get-min list :key key)))
-			  (t (error 'unaccepted-predicate :pred predicate)))))
-	(sort (copy-list list) predicate
-	      :key #'(lambda (x) (or (if key (funcall key x) x)
-				     ignore))))
+                          ((eq predicate #'>) (1- (get-min list :key key)))
+                          (t (error 'unaccepted-predicate :pred predicate)))))
+        (sort (copy-list list) predicate
+              :key #'(lambda (x) (or (if key (funcall key x) x)
+                                     ignore))))
       list))
 
 ;; --------------------------
-  
+
 ;; Single route
 ;; -------------------------
 
@@ -60,12 +60,12 @@
   (unless (<= 0 index (length list))
     (error 'index-out-of-bounds :index index :ls list))
   (labels ((iter (obj i ls)
-	     (if (= 0 i)
-		 (cons obj ls)
-		 (cons (car ls)
-		       (insert-before obj
-				      (1- i)
-				      (cdr ls))))))
+             (if (= 0 i)
+                 (cons obj ls)
+                 (cons (car ls)
+                       (insert-before obj
+                                      (1- i)
+                                      (cdr ls))))))
     (iter object index list)))
 
 (defun insert-at-end (object list)
@@ -78,18 +78,18 @@
     (error 'index-out-of-bounds :index index :ls list))
   (let ((item))
     (labels ((iter (n lst)
-	       (if (= 0 n) (progn (setf item (car lst))
-				  (cdr lst))
-		   (cons (car lst)
-			 (iter (1- n)
-			       (cdr lst))))))
+               (if (= 0 n) (progn (setf item (car lst))
+                                  (cdr lst))
+                   (cons (car lst)
+                         (iter (1- n)
+                               (cdr lst))))))
       (values (iter index list) item))))
 
 (defun mark-nill (list indices)
   "Marks the indices on list with NIL. DESTRUCTIVE."
   (mapcar #'(lambda (x) (setf (nth x list) nil)) indices)
   list)
-   
+
 (defmacro with-tabu-indices (tabu-indices fn arg-list)
   `(funcall ,fn (mark-nill (copy-list ,arg-list) ,tabu-indices)))
 
