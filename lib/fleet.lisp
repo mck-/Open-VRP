@@ -1,10 +1,10 @@
 ;;; Fleet related functions
 ;;; ---------------------------
-;;; - route-indices (<vehicle>/<problem>)- returns list of node IDs
-;;; - vehicle-with-node	(<Problem> int)  - returns <vehicle> that has the node-ID
-;;; - total-dist (<vehicle>/<problem>)	 - returns the total distance
-;;; - vehicle (<problem> int)		 - returns <Vehicle> with id
-;;; - new-vehicle			 - macro that creates a <Vehicle> according to input
+;;; - route-indices (<vehicle>/<problem>) - returns list of node IDs
+;;; - vehicle-with-node	(<Problem> int)   - returns <vehicle> that has the node-ID
+;;; - total-dist (<vehicle>/<problem>)    - returns the total distance
+;;; - vehicle (<problem> int)             - returns <Vehicle> with id
+;;; - new-vehicle                         - macro that creates a <Vehicle> according to input
 
 (in-package :open-vrp.util)
 
@@ -19,7 +19,7 @@
   (mapcar #'route-indices (problem-fleet p)))
 
 (defun node-on-routep (node-id vehicle)
-  "Returns NIL of <vehicle> does not have the node on its route."
+  "Returns NIL if <vehicle> does not have the node on its route."
   (member node-id (vehicle-route vehicle) :key #'node-id))
 
 (defun vehicle-with-node-ID (prob node-ID)
@@ -33,15 +33,15 @@
 (defmethod total-dist ((v vehicle) dist-array)
   (let ((route (vehicle-route v)))
     (labels ((iter (togo sum)
-	       (if (null (cdr togo)) sum
-		   (iter (cdr togo)
-			 (+ sum
-			    (handler-case (distance (node-id (car togo))
-						    (node-id (cadr togo))
-						    dist-array)
-			      (same-origin-destination () 0)))))))
+               (if (null (cdr togo)) sum
+                   (iter (cdr togo)
+                         (+ sum
+                            (handler-case (distance (node-id (car togo))
+                                                    (node-id (cadr togo))
+                                                    dist-array)
+                              (same-origin-destination () 0)))))))
       (iter route 0))))
-	       
+
 
 (defmethod total-dist ((p problem) dist-array)
   (sum (mapcar #'(lambda (v) (total-dist v dist-array)) (get-busy-vehicles p))))
