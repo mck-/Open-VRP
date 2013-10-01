@@ -71,3 +71,11 @@
   (assert-error 'index-out-of-bounds (insert-before 2 -1 '(1 3)))
   (assert-error 'index-out-of-bounds (insert-before 2 3 '(1 3)))
   (assert-equal '(1 "hello" 2) (insert-before "hello" 1 '(1 2))))
+
+(define-test insert-at-end
+  "Test insert-at-end util"
+  (:tag :util)
+  (assert-equal '(1 2 3) (insert-at-end 3 '(1 2)))
+  (assert-equal '(1 2 nil) (insert-at-end nil '(1 2)))
+  (assert-equal '(1) (insert-at-end 1 '()))
+  (assert-equal '(1 2 3 "hello") (insert-at-end "hello" '(1 2 3))))
