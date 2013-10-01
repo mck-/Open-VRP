@@ -46,3 +46,17 @@
   (assert-equal 5 (sum '(1 4 0 -1 -5 6)))
   (assert-error 'expect-number (sum '(nil 1 4 0)))
   (assert-error 'expect-number (sum '("hello" 1 4 0))))
+
+(define-test max-car
+  "Test max-car util"
+  (:tag :util)
+  (assert-equal 3 (max-car '((1 . 2) (3 . 4))))
+  (assert-equal 1 (max-car '((1 . 2) (-5 . 4) (-3 . 4))))
+  (assert-equal 3 (max-car '((1 . 2) (3 . 4)))))
+
+(define-test max-cdr
+  "Test max-cdr util"
+  (:tag :util)
+  (assert-equal 8 (max-cdr '((1 . 2) (3 . 8))))
+  (assert-equal 8 (max-cdr '((1 . 2) (-5 . 8) (-3 . 8))))
+  (assert-equal 8 (max-cdr '((1 . 2) (3 . 8)))))
