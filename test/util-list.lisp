@@ -90,3 +90,9 @@
   (assert-equal (list '(1 2 3) 4) (multiple-value-bind (list item)
                                       (remove-index 3 '(1 2 3 4))
                                     (list list item))))
+(define-test enumerate-interval
+  "Test enumerate-interval util"
+  (:tag :util)
+  (assert-equal '(1 2 3) (enumerate-interval 3))
+  (assert-equal '() (enumerate-interval 0))
+  (assert-equal '() (enumerate-interval -1)))

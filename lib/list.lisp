@@ -103,6 +103,13 @@
                                (cdr lst))))))
       (values (iter index list) item))))
 
+(defun enumerate-interval (n)
+  "Returns a list from 1 to n."
+  (map1-n #'(lambda (x) x) n))
+
+;; No unit tests for the below -- thinking to replace/deprecate these destructive utils..
+;; Gotta think of a more elegant way to handle tabu indices - @mck- Oct 1, 2013
+
 (defun mark-nill (list indices)
   "Marks the indices on list with NIL. DESTRUCTIVE."
   (mapcar #'(lambda (x) (setf (nth x list) nil)) indices)
@@ -110,10 +117,6 @@
 
 (defmacro with-tabu-indices (tabu-indices fn arg-list)
   `(funcall ,fn (mark-nill (copy-list ,arg-list) ,tabu-indices)))
-
-(defun enumerate-interval (n)
-  "Returns a list from 1 to n."
-  (map1-n #'(lambda (x) x) n))
 
 (defun random-list-permutation (length)
   "Randomly creates a permutation from 1 to length."
