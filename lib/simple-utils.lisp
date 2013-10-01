@@ -34,21 +34,6 @@
      ,@body))
 
 ;; ----------------------------------------------------------
-(defun sum (list)
-  "A quick list summer, 4 times as fast as (reduce #'+ list)"
-  (labels ((helper (todo ans)
-	     (if (null todo) ans
-		 (helper (cdr todo)
-			 (+ ans (car todo))))))
-    (helper list 0)))
-
-(defun max-car (list)
-  "Provided a list, return the maximum value considering the cars"
-  (reduce #'max list :key #'car))
-
-(defun max-cdr (list)
-  "Provided a list, return the maximum value considering the cdrs"
-  (reduce #'max list :key #'cdr))
 
 ;; Tue Nov 29, 2011
 ;; quick ugly tsp cloner - DUPLICATES NODES! Network nodes != Vehicle route !!!
@@ -61,17 +46,17 @@
 (defun copy-object (object)
   "A deep-cloner for CLOS."
   (let* ((i-class (class-of object))
-	 (clone (allocate-instance i-class)))
+         (clone (allocate-instance i-class)))
     (dolist (slot (class-slots i-class))
       (let ((slot-name (slot-definition-name slot)))
-	(when (slot-boundp object slot-name)
-	  (let ((value (slot-value object slot-name)))
-	    (setf (slot-value clone slot-name)
-		  (cond ((eq (type-of value) 'network)
-			 value)
-			((vrp-object value)
-			 (copy-object (slot-value object slot-name)))
-			((listp value)
-			 (mapcar #'copy-object value))
-			(t value)))))))
+        (when (slot-boundp object slot-name)
+          (let ((value (slot-value object slot-name)))
+            (setf (slot-value clone slot-name)
+                  (cond ((eq (type-of value) 'network)
+                         value)
+                        ((vrp-object value)
+                         (copy-object (slot-value object slot-name)))
+                        ((listp value)
+                         (mapcar #'copy-object value))
+                        (t value)))))))
     clone))

@@ -50,6 +50,22 @@
                                      ignore))))
       list))
 
+(defun sum (list)
+  "A quick list summer, 4 times as fast as (reduce #'+ list)"
+  (labels ((helper (todo ans)
+       (if (null todo) ans
+     (helper (cdr todo)
+       (+ ans (car todo))))))
+    (helper list 0)))
+
+(defun max-car (list)
+  "Provided a list, return the maximum value considering the cars"
+  (reduce #'max list :key #'car))
+
+(defun max-cdr (list)
+  "Provided a list, return the maximum value considering the cdrs"
+  (reduce #'max list :key #'cdr))
+
 ;; --------------------------
 
 ;; Single route
