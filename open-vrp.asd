@@ -1,9 +1,9 @@
 (defsystem :open-vrp
-  :description "open-vrp"
-  :version "0.6.3"
-  :author "Marc Kuo"
+  :description "Framework for modeling Vehicle Routing Problems"
+  :version "0.8.3"
+  :author "mck- <kuomarc2@gmail.com>"
   :licence "LLGPL"
-  :depends-on (vecto alexandria fiveam open-vrp-lib)
+  :depends-on (#:alexandria #:open-vrp-lib)
   :serial t
   :components ((:module :algo
                         :components
@@ -16,8 +16,4 @@
                          (:file "greedy-best-insertion")
                          (:file "TS-classdef")
                          (:file "TS-utils")
-                         (:file "TS")))
-               (:module :test-cases
-                        :components
-                        ((:file "test-cases")
-                         (:file "test-suite")))))
+                         (:file "TS")))))

@@ -253,28 +253,11 @@
    :TS-best-insertion-move
    :create-candidate-list))
 
-(defpackage :open-vrp.test
-  (:use :common-lisp
-        :open-vrp.classes
-        :open-vrp.util
-        :open-vrp.algo
-        :lisp-unit)
-  (:export :run!
-           :*node-coords*
-           ;; demos
-           :test-tsp
-           :test-vrp
-           :solomon25
-           :solomon100
-           :christofides-1
-           :christofides-2))
-
 (defpackage :open-vrp
   (:use :common-lisp
         :open-vrp.classes
         :open-vrp.util
-        :open-vrp.algo
-        :open-vrp.test)
+        :open-vrp.algo)
   (:import-from	:alexandria :shuffle :flatten :with-gensyms)
   (:export :define-problem
            :load-testcase-Solomon
@@ -288,13 +271,12 @@
            :tabu-search
            :greedy-NN
            :greedy-append
-           :greedy-best-insertion
+           :greedy-best-insertion))
 
            ;; demos
-           :run!
-           :test-tsp
-           :test-vrp
-           :solomon25
-           :solomon100
-           :christofides-1
-           :christofides-2))
+           ;; :test-tsp
+           ;; :test-vrp
+           ;; :solomon25
+           ;; :solomon100
+           ;; :christofides-1
+           ;; :christofides-2))
