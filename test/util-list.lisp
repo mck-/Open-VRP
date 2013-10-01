@@ -79,3 +79,14 @@
   (assert-equal '(1 2 nil) (insert-at-end nil '(1 2)))
   (assert-equal '(1) (insert-at-end 1 '()))
   (assert-equal '(1 2 3 "hello") (insert-at-end "hello" '(1 2 3))))
+
+(define-test remove-index
+  "Test remove index with edge cases"
+  (:tag :util)
+  (assert-equal '(1 2 3) (remove-index 3 '(1 2 3 4)))
+  (assert-equal '(1 2 3) (remove-index 0 '(0 1 2 3)))
+  (assert-error 'index-out-of-bounds (remove-index -1 '(1 2 3 4)))
+  (assert-error 'index-out-of-bounds (remove-index 5 '(1 2 3 4)))
+  (assert-equal (list '(1 2 3) 4) (multiple-value-bind (list item)
+                                      (remove-index 3 '(1 2 3 4))
+                                    (list list item))))
