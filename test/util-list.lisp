@@ -60,3 +60,14 @@
   (assert-equal 8 (max-cdr '((1 . 2) (3 . 8))))
   (assert-equal 8 (max-cdr '((1 . 2) (-5 . 8) (-3 . 8))))
   (assert-equal 8 (max-cdr '((1 . 2) (3 . 8)))))
+
+(define-test insert-before
+  "Test insert-before util, with edge cases and index out of bound errors"
+  (:tag :util)
+  (assert-equal '(1 2 3) (insert-before 2 1 '(1 3)))
+  (assert-equal '(1 2 3) (insert-before 1 0 '(2 3)))
+  (assert-equal '(1 2 3) (insert-before 3 2 '(1 2)))
+  (assert-equal '(1 2 3 4 5 6) (insert-before 5 4 '(1 2 3 4 6)))
+  (assert-error 'index-out-of-bounds (insert-before 2 -1 '(1 3)))
+  (assert-error 'index-out-of-bounds (insert-before 2 3 '(1 3)))
+  (assert-equal '(1 "hello" 2) (insert-before "hello" 1 '(1 2))))

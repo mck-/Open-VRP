@@ -169,6 +169,7 @@
    :same-origin-destination
    :list-of-nils
    :expect-number
+   :index-out-of-bounds
 
    ;; init macros
    :create-nodes
