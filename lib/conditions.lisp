@@ -17,6 +17,14 @@
    (key :initarg :key :reader key))
   (:report "Cannot get min/max from a list of NIL values."))
 
+(define-condition expect-number (error)
+  ((x :initarg :x :reader x)
+   (fun :initarg :fun :reader fun))
+  (:report (lambda (condition stream)
+             (format stream "Function ~a expects a number, but got ~a."
+                     (fun condition)
+                     (x condition)))))
+
 ;; lib/network.lisp
 (define-condition same-origin-destination (error)
   ((from :initarg :from :reader from)
@@ -40,7 +48,7 @@
 ;; lib/network.lisp lib/fleet.lisp
 (define-condition not-equal-length (error)
   ((lists :initarg :lists :reader lists))
-  (:report "Trying to create objects where input lists are of unequal length!"))  
+  (:report "Trying to create objects where input lists are of unequal length!"))
 
 ;; lib/init-macros.lisp
 (define-condition empty-network (error)()

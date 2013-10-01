@@ -38,3 +38,11 @@
   (assert-equal '(3 203948) (multiple-value-bind (i val)
                                 (get-max-index '(nil 10 nil 203948 3 1))
                               (list i val))))
+
+(define-test sum-list
+  "Test sum over list util"
+  (:tag :util)
+  (assert-equal 5 (sum '(1 4 0)))
+  (assert-equal 5 (sum '(1 4 0 -1 -5 6)))
+  (assert-error 'expect-number (sum '(nil 1 4 0)))
+  (assert-error 'expect-number (sum '("hello" 1 4 0))))
