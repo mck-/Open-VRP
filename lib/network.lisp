@@ -65,17 +65,6 @@
             (1- size))
     dist-array))
 
-(defun 2d-list-to-array (matrix)
-  "Given a list of lists, return a 2-dimensional array."
-  (make-array (list (length matrix) (length (car matrix)))
-              :initial-contents matrix))
-
-(defun 2d-array-to-list (array)
-  "Given a 2-dimensional array, return a list of lists."
-  (loop for i below (array-dimension array 0)
-     collect (loop for j below (array-dimension array 1)
-                collect (aref array i j))))
-
 ;; ----------------------------------------
 
 ;; Accessor functions
