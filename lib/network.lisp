@@ -52,16 +52,6 @@
       (distance-coords (car n1) (cdr n1)
                        (car n2) (cdr n2))))
 
-(defun node-distance (n1 n2)
-  "Given two node objects, calculate and return their distance (Cartesian)."
-  (when (= (node-id n1) (node-id n2)) (error 'same-origin-destination :from n1 :to n2))
-  (distance-coords (node-xcor n1) (node-ycor n1) (node-xcor n2) (node-ycor n2)))
-
-(defun get-array-row (array row-index)
-  "Given a 2-dimenstional array and a row-index, return the row as a list"
-  (loop for row to (1- (array-dimension array 0))
-     collect (aref array row-index row)))
-
 (defun generate-dist-array (coord-list)
   "Given a list of coord pairs, generate an array of distances."
   (let* ((size (length coord-list))

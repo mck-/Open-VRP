@@ -24,11 +24,11 @@
 (defmacro constraints-check (arglist init-forms next-forms testform &optional endtest)
   (let ((iter (gensym)))
     `(labels ((,iter ,arglist
-		(if ,@(if endtest `(,endtest) `((null ,(car arglist))))
-		    (values T ,@(cdr arglist))
-		    (and
-		     ,testform
-		     (,iter ,@next-forms)))))
+                (if ,@(if endtest `(,endtest) `((null ,(car arglist))))
+                    (values T ,@(cdr arglist))
+                    (and
+                     ,testform
+                     (,iter ,@next-forms)))))
        (,iter ,@init-forms))))
 ;; -------------------------
 
@@ -53,7 +53,7 @@
    ((problem-fleet pr))
    ((cdr flt))
    (in-capacityp (car flt))))
-	   
+
 ;; ------------------------------
 
 ;; 2. Time-window constraints
@@ -62,29 +62,26 @@
 (defun travel-time (n1 n2 &key dist-array (speed 1))
   "Given two <nodes> and optional speed, return the travel-time. When dist-array is not provided, calculate distance directly using coords."
   (handler-case
-      (/ (if dist-array
-	     (distance (node-id n1) (node-id n2) dist-array)
-	     (node-distance n1 n2))
-	 speed)
+      (/ (distance (node-id n1) (node-id n2) dist-array) speed)
     (same-origin-destination () 0)))
-	 
+
 (defun time-after-serving-node (node arrival-time)
   "Given a node to serve and the current time, return the new time (if on-time to begin with). When arrival-time is too early, wait till earliest start time."
   (cond ((> arrival-time (node-end node)) (error 'infeasible-solution :sol node :func arrival-time :msg "Arrival time is later than latest start-time of node"))
-	((< arrival-time (node-start node)) (+ (node-start node) (node-duration node))) ;wait
-	(t (+ arrival-time (node-duration node)))))
+        ((< arrival-time (node-start node)) (+ (node-start node) (node-duration node))) ;wait
+        (t (+ arrival-time (node-duration node)))))
 
 (defun veh-in-timep (v &optional dist-array)
   "Tests weather the route on <Vehicle> is complying with the time-window constraints. Returns T and the time of finishing its last task."
   (unless (vehicle-speed v) (error 'no-speed-vehicle :veh v))
   (symbol-macrolet ((to (car route))
-		    (arr-time (+ time (travel-time loc to :dist-array dist-array :speed (vehicle-speed v)))))
+                    (arr-time (+ time (travel-time loc to :dist-array dist-array :speed (vehicle-speed v)))))
     (constraints-check
      (route time loc)
      ((cdr (vehicle-route v)) 0 (car (vehicle-route v)))
      ((cdr route) (time-after-serving-node to arr-time) to)
      (<= arr-time (node-end to)))))
-    
+
 (defmethod in-timep ((pr VRPTW))
   (constraints-check
    (veh)
@@ -92,5 +89,3 @@
    ((cdr veh))
    (veh-in-timep (car veh) (aif (problem-dist-array pr) it))))
 ;; -------------------------
-
-
