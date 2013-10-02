@@ -18,18 +18,35 @@
   (:report "Cannot get min/max from a list of NIL values."))
 
 (define-condition expect-number (error)
-  ((x :initarg :x :reader x)
+  ((arg :initarg :arg :reader arg)
    (fun :initarg :fun :reader fun))
   (:report (lambda (condition stream)
              (format stream "Function ~a expects a number, but got ~a."
                      (fun condition)
-                     (x condition)))))
+                     (arg condition)))))
+
+(define-condition expect-keyword-arguments (error)
+  ((arg :initarg :arg :reader arg)
+   (fun :initarg :fun :reader fun))
+  (:report (lambda (condition stream)
+             (format stream "Function ~a expects a keyword, but got ~a."
+                     (fun condition)
+                     (arg condition)))))
+
+(define-condition expect-hash-table (error)
+  ((arg :initarg :arg :reader arg)
+   (fun :initarg :fun :reader fun))
+  (:report (lambda (condition stream)
+             (format stream "Function ~a expects a hash-table, but got ~a."
+                     (fun condition)
+                     (arg condition)))))
 
 ;; lib/network.lisp
 (define-condition same-origin-destination (error)
   ((from :initarg :from :reader from)
    (to :initarg :to :reader to))
   (:report "Trying to lookup distance for same origin and destination - NIL"))
+
 
 ;; lib/constraints.lisp
 (define-condition infeasible-solution (error)

@@ -113,6 +113,8 @@
    :last-node
 
    ;; network utils
+   :sethash
+   :alist-to-hash
    :distance
    :node-distance
    :generate-dist-array
@@ -170,6 +172,8 @@
    :list-of-nils
    :expect-number
    :index-out-of-bounds
+   :expect-keyword-arguments
+   :expect-hash-table
 
    ;; init macros
    :create-nodes
