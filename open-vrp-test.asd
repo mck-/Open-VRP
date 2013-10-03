@@ -9,4 +9,5 @@
                         ((:file "test-package")
                          (:file "util-list")
                          (:file "util-network")
-                         (:file "util-fleet")))))
+                         (:file "util-fleet")
+                         (:file "util-route")))))

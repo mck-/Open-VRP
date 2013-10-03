@@ -123,7 +123,7 @@
    :with-tabu-indices
 
    ;; route utils
-   :empty-routep
+   :no-visits-p
    :get-busy-vehicles
    :one-destinationp
    :insert-node

@@ -11,7 +11,8 @@
 ;; 0. Route utils
 ;; ---------------------
 (defun no-visits-p (route)
-  "Given a route, return T if the route only has base-nodes."
+  "Given a route, return T if the route does not contain any orders (pitstops do not count)."
+  (check-type route sequence)
   (not (some #'order-p route)))
 
 (defun get-busy-vehicles (problem)
