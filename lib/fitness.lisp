@@ -8,5 +8,5 @@
 
 (defmethod fitness ((prob problem))
   (values
-   (total-dist prob (problem-dist-array prob))
+   (total-dist prob)
    (constraintsp prob)))

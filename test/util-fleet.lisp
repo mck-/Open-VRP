@@ -65,4 +65,5 @@
     (assert-equal 10.7 (route-dist t2 dist))
     (assert-error 'simple-type-error (route-dist "hello" dist))
     (assert-error 'simple-type-error (route-dist t1 "hello"))
+    (assert-equal 18.4 (fitness prob))
     (assert-equal 18.4 (total-dist prob))))
