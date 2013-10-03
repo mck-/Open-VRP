@@ -10,17 +10,17 @@
 
 ;; 0. Route utils
 ;; ---------------------
-(defun empty-routep (route)
+(defun no-visits-p (route)
   "Given a route, return T if the route only has base-nodes."
-  (not (member 0 route :key #'node-id :test-not #'=)))
+  (not (some #'order-p route)))
 
 (defun get-busy-vehicles (problem)
   "Returns a list of <Vehicles> that are not empty, given a <Problem> object."
-  (remove-if #'empty-routep (problem-fleet problem) :key #'vehicle-route))
+  (remove-if #'no-visits-p (problem-fleet problem) :key #'vehicle-route))
 
 (defun one-destinationp (route)
-  "Return T if there is only one destination on route, excluding base nodes."
-  (= 1 (length (remove 0 route :key #'node-id))))
+  "Return T if there is only one order on route."
+  (= 1 (count-if #'order-p route)))
 
 (defmacro change-route (vehicle &body body)
   "Expands into binding the vehicles route to r and setting it to result of body."
@@ -40,14 +40,14 @@
   "Appends <Node> to the end of the route of <vehicle>. Wrapper of insert-node. If the route includes returning to-depot, then append before the last return to depot."
   (change-route veh
     (if (and (cdr (vehicle-route veh))
-	     (= 0 (node-id (car (last (vehicle-route veh))))))
-	(reverse (insert-before node 1 (reverse r)))
-	(insert-at-end node r))))
+             (= 0 (node-id (car (last (vehicle-route veh))))))
+        (reverse (insert-before node 1 (reverse r)))
+        (insert-at-end node r))))
 
 ;; -------------------------
 
 ;; 2. Remove Node
-;; ------------------------- 
+;; -------------------------
 (defun remove-node-at (veh index)
   "Removes the <node> from the route of <vehicle> at index"
   (change-route veh
@@ -60,9 +60,9 @@
 (defmethod remove-node-ID ((v vehicle) node-ID)
   (if (member node-ID (vehicle-route v) :key #'node-id)
       (change-route v
-	(remove node-ID r :key #'node-id :count 1)) ;count 1 for perform-move in TS.lisp.
+  (remove node-ID r :key #'node-id :count 1)) ;count 1 for perform-move in TS.lisp.
       nil))
-  
+
 (defmethod remove-node-ID ((prob problem) node-ID)
   (aif (vehicle-with-node-ID prob node-ID)
        (remove-node-ID (vehicle prob it) node-ID)
@@ -78,13 +78,10 @@
 (defmethod last-node (route)
   (let ((r (reverse route)))
     (if (= 0 (node-id (car r)))
-	(or (cadr r) (car r)) ;in case route has only one base-node.
-	(car r))))
+  (or (cadr r) (car r)) ;in case route has only one base-node.
+  (car r))))
 
 (defmethod last-node ((v vehicle))
   (last-node (vehicle-route v)))
 
 ;; ---------------------------
-      
-
-  
