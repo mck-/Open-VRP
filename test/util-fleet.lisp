@@ -25,8 +25,8 @@
     (assert-equal :2 (vehicle-with-node-id prob :O6))
     (assert-equal :2 (vehicle-with-node-id prob :O8))
     (assert-equal nil (vehicle-with-node-id prob :Q8))
-    (assert-error 'expect-problem (vehicle-with-node-id "hello" :O1))
-    (assert-error 'expect-keyword-arguments (vehicle-with-node-id prob "O1"))))
+    (assert-error 'simple-type-error (vehicle-with-node-id "hello" :O1))
+    (assert-error 'simple-type-error (vehicle-with-node-id prob "O1"))))
 
 (define-test node-on-route-p
   "Test node-on-route-p util"
@@ -38,9 +38,9 @@
     (assert-true T (node-on-route-p :O1 t1))
     (assert-true T (node-on-route-p :D1 t1))
     (assert-true T (node-on-route-p :D2 t1))
-    (assert-error 'expect-keyword-arguments (node-on-route-p "c" t1))
-    (assert-error 'expect-keyword-arguments (node-on-route-p 1 t1))
-    (assert-error 'expect-vehicle (node-on-route-p :D2 "hello"))))
+    (assert-error 'simple-type-error (node-on-route-p "c" t1))
+    (assert-error 'simple-type-error (node-on-route-p 1 t1))
+    (assert-error 'simple-type-error (node-on-route-p :D2 "hello"))))
 
 (define-test total-dist
   "Test route-dist and total-dist util, which calculates the total distance of a single vehicle and of the entire fleet respectively."

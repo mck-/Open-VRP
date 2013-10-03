@@ -20,15 +20,14 @@
 
 (defun node-on-route-p (node-id vehicle)
   "Returns NIL if <vehicle> does not have the node on its route."
-  (unless (eq (type-of node-id) 'keyword)
-    (error 'expect-keyword-arguments :arg node-id))
-  (unless (vehicle-p vehicle)
-    (error 'expect-vehicle :arg vehicle))
+  (check-type node-id symbol)
+  (check-type vehicle vehicle)
   (member node-id (vehicle-route vehicle) :key #'visit-node-id))
 
 (defun vehicle-with-node-id (prob node-id)
   "Given a node-id, return the vehicle-id that has the node in its route. Returns NIL if node-id cannot be found. Assumes only 1 presence of a node in the problem."
-  (unless (typep prob 'problem) (error 'expect-problem :arg prob))
+  (check-type prob problem)
+  (check-type node-id symbol)
   (labels ((iter (fleet)
              (cond ((null fleet) nil)
                    ((node-on-route-p node-id (car fleet)) (vehicle-id (car fleet)))
