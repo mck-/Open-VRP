@@ -37,6 +37,8 @@
 
 (defun route-dist (veh dist-matrix)
   "Returns total distance of the route(s) given a vehicle. Takes into account the start and end locations of the vehicle."
+  (check-type veh vehicle)
+  (check-type dist-matrix hash-table)
   (labels ((iter (togo sum)
              (if (null (cdr togo)) sum
                  (iter (cdr togo)

@@ -31,9 +31,9 @@
 (define-test node-on-route-p
   "Test node-on-route-p util"
   (:tag :fleet)
-  (let ((t1 (make-vehicle :id :1 :route (list (make-depot :node-id :D1)
+  (let ((t1 (make-vehicle :id :1 :route (list (make-order :node-id :D1)
                                               (make-order :node-id :O1)
-                                              (make-depot :node-id :D2)))))
+                                              (make-order :node-id :D2)))))
     (assert-equal nil (node-on-route-p :Q8 t1))
     (assert-true T (node-on-route-p :O1 t1))
     (assert-true T (node-on-route-p :D1 t1))
@@ -63,4 +63,6 @@
          (prob (make-instance 'problem :fleet (list t1 t2) :dist-matrix dist)))
     (assert-equal 7.7 (route-dist t1 dist))
     (assert-equal 10.7 (route-dist t2 dist))
+    (assert-error 'simple-type-error (route-dist "hello" dist))
+    (assert-error 'simple-type-error (route-dist t1 "hello"))
     (assert-equal 18.4 (total-dist prob))))
