@@ -27,8 +27,12 @@
   (member node-id (vehicle-route vehicle) :key #'visit-node-id))
 
 (defun vehicle-with-node-id (prob node-id)
-  "Given a node-id, return the vehicle-id that has the node in its route. Returns NIL if node-id cannot be found."
-  (position-if #'(lambda (veh) (node-on-routep node-id veh)) (problem-fleet prob)))
+  "Given a node-id, return the vehicle-id that has the node in its route. Returns NIL if node-id cannot be found. Assumes only 1 presence of a node in the problem."
+  (labels ((iter (fleet)
+             (cond ((null fleet) nil)
+                   ((node-on-route-p node-id (car fleet)) (vehicle-id (car fleet)))
+                   (t (iter (cdr fleet))))))
+    (iter (problem-fleet prob))))
 
 (defgeneric total-dist (veh/prob dist-array)
   (:method (veh/prob dist-array) "Expects <problem> as input!")
