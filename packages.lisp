@@ -146,7 +146,7 @@
    ;; fleet utils
    :route-indices
    :vehicle-with-node-ID
-   :node-on-routep
+   :node-on-route-p
    :total-dist
    :vehicle
    :new-vehicle
@@ -195,6 +195,7 @@
    :index-out-of-bounds
    :expect-keyword-arguments
    :expect-hash-table
+   :expect-vehicle
 
    ;; init macros
    :create-nodes

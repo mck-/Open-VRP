@@ -18,8 +18,12 @@
 (defmethod route-indices ((p problem))
   (mapcar #'route-indices (problem-fleet p)))
 
-(defun node-on-routep (node-id vehicle)
+(defun node-on-route-p (node-id vehicle)
   "Returns NIL if <vehicle> does not have the node on its route."
+  (unless (eq (type-of node-id) 'keyword)
+    (error 'expect-keyword-arguments :arg node-id))
+  (unless (vehicle-p vehicle)
+    (error 'expect-vehicle :arg vehicle))
   (member node-id (vehicle-route vehicle) :key #'visit-node-id))
 
 (defun vehicle-with-node-ID (prob node-ID)

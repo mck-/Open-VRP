@@ -13,7 +13,6 @@
          (t2 (make-vehicle :id :2 :route (list (make-order :node-id :O5)
                                                (make-order :node-id :O8)
                                                (make-order :node-id :O6))))
-
          (prob (make-instance 'problem :fleet (list t0 t1 t2))))
     (assert-equal nil (route-indices t0))
     (assert-equal '(:O1 :O2 :O3) (route-indices t1))

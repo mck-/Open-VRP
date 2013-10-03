@@ -36,6 +36,9 @@
    (to :initarg :to :reader to))
   (:report "Trying to lookup distance for same origin and destination - NIL"))
 
+;; lib/fleet.lisp
+
+(define-condition expect-vehicle (argument-type) ())
 
 ;; lib/constraints.lisp
 (define-condition infeasible-solution (error)
