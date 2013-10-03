@@ -36,17 +36,19 @@
     (iter (problem-fleet prob))))
 
 (defun route-dist (veh dist-matrix)
-  "Returns total distance of the route(s) given a vehicle"
-  (let ((route (vehicle-route veh)))
+  "Returns total distance of the route(s) given a vehicle. Takes into account the start and end locations of the vehicle."
     (labels ((iter (togo sum)
                (if (null (cdr togo)) sum
                    (iter (cdr togo)
                          (+ sum
-                            (handler-case (distance (visit-node-id (car togo))
-                                                    (visit-node-id (cadr togo))
-                                                    dist-matrix)
-                              (same-origin-destination () 0)))))))
-      (iter route 0))))
+                            (distance (car togo)
+                                      (cadr togo)
+                                      dist-matrix))))))
+      ;; Insert start-depot and end-depot into route
+      (iter (nconc (list (vehicle-start-depot veh))
+                   (route-indices veh)
+                   (list (vehicle-end-depot veh)))
+            0))))
 
 
 (defun total-dist (problem)
