@@ -35,6 +35,7 @@
            :node-name
            :node-xcor
            :node-ycor
+           :visit-node-id
            :order-start
            :order-end
            :order-duration

@@ -1,7 +1,7 @@
 ;;; Fleet related functions
 ;;; ---------------------------
 ;;; - route-indices (<vehicle>/<problem>) - returns list of node IDs
-;;; - vehicle-with-node	(<Problem> int)   - returns <vehicle> that has the node-ID
+;;; - vehicle-with-node-ID	(<Problem> int)   - returns <vehicle> that has the node-ID
 ;;; - total-dist (<vehicle>/<problem>)    - returns the total distance
 ;;; - vehicle (<problem> int)             - returns <Vehicle> with id
 ;;; - new-vehicle                         - macro that creates a <Vehicle> according to input
@@ -13,14 +13,14 @@
   (:documentation "When input is a <vehicle>, returns its route as a list of node IDs. When input is <fleet>/<problem>, list all routes."))
 
 (defmethod route-indices ((v vehicle))
-  (mapcar #'node-ID (vehicle-route v)))
+  (mapcar #'visit-node-id (vehicle-route v)))
 
 (defmethod route-indices ((p problem))
   (mapcar #'route-indices (problem-fleet p)))
 
 (defun node-on-routep (node-id vehicle)
   "Returns NIL if <vehicle> does not have the node on its route."
-  (member node-id (vehicle-route vehicle) :key #'node-id))
+  (member node-id (vehicle-route vehicle) :key #'visit-node-id))
 
 (defun vehicle-with-node-ID (prob node-ID)
   "Given a node-ID, return the vehicle-ID that has the node in its route. The function for the input of the base-node 0 is undefined. Returns NIL if node-ID cannot be found."
