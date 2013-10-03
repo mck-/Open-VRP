@@ -125,7 +125,7 @@
    ;; route utils
    :no-visits-p
    :get-busy-vehicles
-   :one-destinationp
+   :one-destination-p
    :insert-node
    :append-node
    :remove-node-at

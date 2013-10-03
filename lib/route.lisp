@@ -19,7 +19,7 @@
   "Returns a list of <Vehicles> that are not empty, given a <Problem> object."
   (remove-if #'no-visits-p (problem-fleet problem) :key #'vehicle-route))
 
-(defun one-destinationp (route)
+(defun one-destination-p (route)
   "Return T if there is only one order on route."
   (= 1 (count-if #'order-p route)))
 
