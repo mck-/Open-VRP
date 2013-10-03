@@ -18,8 +18,7 @@
   (:report "Cannot get min/max from a list of NIL values."))
 
 (define-condition argument-type (error)
-  ((arg :initarg :arg :reader arg)
-   (fun :initarg :fun :reader fun))
+  ((arg :initarg :arg :reader arg))
   (:report (lambda (condition stream)
              (format stream "Function ~a did not expect ~a, which is a wrong type!"
                      (fun condition)

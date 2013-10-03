@@ -54,7 +54,7 @@
   "A quick list summer, 4 times as fast as (reduce #'+ list)"
   (labels ((helper (todo ans)
        (cond ((null todo) ans)
-             ((not (numberp (car todo))) (error 'expect-number :fun 'sum :x (car todo)))
+             ((not (numberp (car todo))) (error 'expect-number :x (car todo)))
              (t
               (helper (cdr todo)
                       (+ ans (car todo)))))))

@@ -31,13 +31,13 @@
   (when (eq from to) (error 'same-origin-destination :from from :to to))
   (unless (and (eq (type-of from) 'keyword)
                (eq (type-of to) 'keyword))
-    (error 'expect-keyword-arguments :fun 'distance :arg (list from to)))
+    (error 'expect-keyword-arguments :arg (list from to)))
   (unless (eq (type-of dist-matrix) 'hash-table)
-    (error 'expect-hash-table :fun 'distance :arg dist-matrix))
+    (error 'expect-hash-table :arg dist-matrix))
   (let ((row (gethash from dist-matrix)))
     (if (eq (type-of row) 'hash-table)
         (gethash to row)
-        (error 'expect-hash-table :fun 'distance :arg row))))
+        (error 'expect-hash-table :arg row))))
 
 ;; -------------------------
 
