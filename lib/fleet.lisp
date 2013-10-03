@@ -28,6 +28,7 @@
 
 (defun vehicle-with-node-id (prob node-id)
   "Given a node-id, return the vehicle-id that has the node in its route. Returns NIL if node-id cannot be found. Assumes only 1 presence of a node in the problem."
+  (unless (typep prob 'problem) (error 'expect-problem :arg prob))
   (labels ((iter (fleet)
              (cond ((null fleet) nil)
                    ((node-on-route-p node-id (car fleet)) (vehicle-id (car fleet)))

@@ -31,7 +31,10 @@
 
 (define-condition expect-hash-table (argument-type) ())
 
+(define-condition expect-problem (argument-type) ())
+
 ;; lib/network.lisp
+
 (define-condition same-origin-destination (error)
   ((from :initarg :from :reader from)
    (to :initarg :to :reader to))

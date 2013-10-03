@@ -196,6 +196,7 @@
    :expect-keyword-arguments
    :expect-hash-table
    :expect-vehicle
+   :expect-problem
 
    ;; init macros
    :create-nodes
