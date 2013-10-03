@@ -17,32 +17,12 @@
    (key :initarg :key :reader key))
   (:report "Cannot get min/max from a list of NIL values."))
 
-;; argument conditions
-
-(define-condition argument-type (error)
-  ((arg :initarg :arg :reader arg))
-  (:report (lambda (condition stream)
-             (format stream "Function did not expect ~a, which is a wrong type!"
-                     (arg condition)))))
-
-(define-condition expect-number (argument-type) ())
-
-(define-condition expect-keyword-arguments (argument-type) ())
-
-(define-condition expect-hash-table (argument-type) ())
-
-(define-condition expect-problem (argument-type) ())
-
 ;; lib/network.lisp
 
 (define-condition same-origin-destination (error)
   ((from :initarg :from :reader from)
    (to :initarg :to :reader to))
   (:report "Trying to lookup distance for same origin and destination - NIL"))
-
-;; lib/fleet.lisp
-
-(define-condition expect-vehicle (argument-type) ())
 
 ;; lib/constraints.lisp
 (define-condition infeasible-solution (error)

@@ -44,8 +44,8 @@
   (:tag :util)
   (assert-equal 5 (sum '(1 4 0)))
   (assert-equal 5 (sum '(1 4 0 -1 -5 6)))
-  (assert-error 'expect-number (sum '(nil 1 4 0)))
-  (assert-error 'expect-number (sum '("hello" 1 4 0))))
+  (assert-error 'simple-type-error (sum '(nil 1 4 0)))
+  (assert-error 'simple-type-error (sum '("hello" 1 4 0))))
 
 (define-test max-car
   "Test max-car util"

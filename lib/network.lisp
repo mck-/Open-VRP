@@ -15,6 +15,7 @@
 
 (defun sethash (key val hash-table)
   "Setter for hash-table"
+  (check-type hash-table hash-table)
   (setf (gethash key hash-table) val))
 
 (defun alist-to-hash (alist)
@@ -28,16 +29,13 @@
 
 (defun distance (from to dist-matrix)
   "Read from the distance-matrix with two keys (location IDs). Expects dist-matrix to be a hash table of hash tables."
+  (check-type from symbol)
+  (check-type to symbol)
+  (check-type dist-matrix hash-table)
   (when (eq from to) (error 'same-origin-destination :from from :to to))
-  (unless (and (eq (type-of from) 'keyword)
-               (eq (type-of to) 'keyword))
-    (error 'expect-keyword-arguments :arg (list from to)))
-  (unless (eq (type-of dist-matrix) 'hash-table)
-    (error 'expect-hash-table :arg dist-matrix))
   (let ((row (gethash from dist-matrix)))
-    (if (eq (type-of row) 'hash-table)
-        (gethash to row)
-        (error 'expect-hash-table :arg row))))
+    (check-type row hash-table)
+    (gethash to row)))
 
 ;; -------------------------
 

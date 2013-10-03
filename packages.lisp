@@ -189,12 +189,7 @@
    ;; conditions
    :same-origin-destination
    :list-of-nils
-   :expect-number
    :index-out-of-bounds
-   :expect-keyword-arguments
-   :expect-hash-table
-   :expect-vehicle
-   :expect-problem
 
    ;; init macros
    :create-nodes
