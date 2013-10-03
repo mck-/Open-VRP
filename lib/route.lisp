@@ -39,10 +39,11 @@
 (defun append-node (veh node)
   "Appends <Node> to the end of the route of <vehicle>. Wrapper of insert-node. If the route includes returning to-depot, then append before the last return to depot."
   (change-route veh
-    (if (and (cdr (vehicle-route veh))
-             (= 0 (node-id (car (last (vehicle-route veh))))))
-        (reverse (insert-before node 1 (reverse r)))
-        (insert-at-end node r))))
+    (insert-before node 1 r)))
+                ;; (if (and (cdr (vehicle-route veh))
+                ;;          (= 0 (node-id (car (last (vehicle-route veh))))))
+                ;;     (reverse (insert-before node 1 (reverse r)))
+                ;;     (insert-at-end node r))))
 
 ;; -------------------------
 
@@ -60,7 +61,7 @@
 (defmethod remove-node-ID ((v vehicle) node-ID)
   (if (member node-ID (vehicle-route v) :key #'node-id)
       (change-route v
-  (remove node-ID r :key #'node-id :count 1)) ;count 1 for perform-move in TS.lisp.
+        (remove node-ID r :key #'node-id :count 1)) ;count 1 for perform-move in TS.lisp.
       nil))
 
 (defmethod remove-node-ID ((prob problem) node-ID)
@@ -75,11 +76,11 @@
   (:method (vehicle) "Expects <vehicle>")
   (:documentation "Returns the last <node> in its route. Depicts the current location (before returning to base)."))
 
-(defmethod last-node (route)
-  (let ((r (reverse route)))
-    (if (= 0 (node-id (car r)))
-  (or (cadr r) (car r)) ;in case route has only one base-node.
-  (car r))))
+;; (defmethod last-node (route)
+;;   (let ((r (reverse route)))
+;;     (if (= 0 (node-id (car r)))
+;;         (or (cadr r) (car r))   ;in case route has only one base-node.
+;;         (car r))))
 
 (defmethod last-node ((v vehicle))
   (last-node (vehicle-route v)))
