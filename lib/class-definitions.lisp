@@ -40,8 +40,8 @@
 (defstruct vehicle
   (id (gensym) :type symbol :read-only t)
   route
-  (start-depot :nil :type symbol :read-only t)
-  (end-depot :nil :type symbol :read-only t))
+  (start-location :nil :type symbol :read-only t)
+  (end-location :nil :type symbol :read-only t))
 
   ;; Todo:
   ;; (shift-start 0 :type fixnum :read-only t)

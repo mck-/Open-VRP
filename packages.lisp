@@ -6,7 +6,6 @@
   (:export :node
            :visit
            :order
-           :depot
            :pitstop
            :vehicle
            :problem
@@ -25,7 +24,6 @@
            ;; constructor functions
            :make-node
            :make-order
-           :make-depot
            :make-pitstop
            :make-vehicle
            :make-drawer
@@ -33,7 +31,6 @@
            ;; predicates
            :node-p
            :order-p
-           :depot-p
            :pitstop-p
            :vehicle-p
            :drawer-p
@@ -55,8 +52,8 @@
            :vehicle-route
            ;; :vehicle-capacity
            ;; :vehicle-speed
-           :vehicle-start-depot
-           :vehicle-end-depot
+           :vehicle-start-location
+           :vehicle-end-location
 
            :problem-name
            :problem-desc

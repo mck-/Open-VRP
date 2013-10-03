@@ -37,18 +37,18 @@
 
 (defun route-dist (veh dist-matrix)
   "Returns total distance of the route(s) given a vehicle. Takes into account the start and end locations of the vehicle."
-    (labels ((iter (togo sum)
-               (if (null (cdr togo)) sum
-                   (iter (cdr togo)
-                         (+ sum
-                            (distance (car togo)
-                                      (cadr togo)
-                                      dist-matrix))))))
-      ;; Insert start-depot and end-depot into route
-      (iter (nconc (list (vehicle-start-depot veh))
-                   (route-indices veh)
-                   (list (vehicle-end-depot veh)))
-            0))))
+  (labels ((iter (togo sum)
+             (if (null (cdr togo)) sum
+                 (iter (cdr togo)
+                       (+ sum
+                          (distance (car togo)
+                                    (cadr togo)
+                                    dist-matrix))))))
+    ;; Insert start and end-locations into route
+    (iter (nconc (list (vehicle-start-location veh))
+                 (route-indices veh)
+                 (list (vehicle-end-location veh)))
+          0)))
 
 
 (defun total-dist (problem)

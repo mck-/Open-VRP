@@ -45,11 +45,11 @@
 (define-test total-dist
   "Test route-dist and total-dist util, which calculates the total distance of a single vehicle and of the entire fleet respectively."
   (:tag :fleet)
-  (let* ((t1 (make-vehicle :id :1 :start-depot :D1 :end-depot :D2
+  (let* ((t1 (make-vehicle :id :1 :start-location :D1 :end-location :D2
                            :route (list (make-order :node-id :O1)
                                         (make-order :node-id :O2)
                                         (make-order :node-id :O3))))
-         (t2 (make-vehicle :id :2 :start-depot :D1 :end-depot :D1
+         (t2 (make-vehicle :id :2 :start-location :D1 :end-location :D1
                            :route (list (make-order :node-id :O5)
                                         (make-order :node-id :O8)
                                         (make-order :node-id :O6))))
