@@ -35,25 +35,25 @@
                    (t (iter (cdr fleet))))))
     (iter (problem-fleet prob))))
 
-(defgeneric total-dist (veh/prob dist-array)
-  (:method (veh/prob dist-array) "Expects <problem> as input!")
-  (:documentation "Returns total distance of the route(s) given a vehicle or a fleet."))
-
-(defmethod total-dist ((v vehicle) dist-array)
-  (let ((route (vehicle-route v)))
+(defun route-dist (veh dist-matrix)
+  "Returns total distance of the route(s) given a vehicle"
+  (let ((route (vehicle-route veh)))
     (labels ((iter (togo sum)
                (if (null (cdr togo)) sum
                    (iter (cdr togo)
                          (+ sum
-                            (handler-case (distance (node-id (car togo))
-                                                    (node-id (cadr togo))
-                                                    dist-array)
+                            (handler-case (distance (visit-node-id (car togo))
+                                                    (visit-node-id (cadr togo))
+                                                    dist-matrix)
                               (same-origin-destination () 0)))))))
       (iter route 0))))
 
 
-(defmethod total-dist ((p problem) dist-array)
-  (sum (mapcar #'(lambda (v) (total-dist v dist-array)) (get-busy-vehicles p))))
+(defun total-dist (problem)
+  (sum
+   (mapcar #'(lambda (v)
+               (route-dist v (problem-dist-matrix problem)))
+           (get-busy-vehicles problem))))
 
 ;; Accessor functions
 ;; ------------------

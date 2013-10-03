@@ -41,3 +41,18 @@
     (assert-error 'expect-keyword-arguments (node-on-route-p "c" t1))
     (assert-error 'expect-keyword-arguments (node-on-route-p 1 t1))
     (assert-error 'expect-vehicle (node-on-route-p :D2 "hello"))))
+
+(define-test total-dist
+  "Test route-dist and total-dist util, which calculates the total distance of a single vehicle and of the entire fleet respectively."
+  (:tag :fleet)
+  (let* ((t1 (make-vehicle :id :1 :route (list (make-order :node-id :O1)
+                                               (make-order :node-id :O2)
+                                               (make-order :node-id :O3))))
+         (t2 (make-vehicle :id :2 :route (list (make-order :node-id :O5)
+                                               (make-order :node-id :O8)
+                                               (make-order :node-id :O6))))
+         (dist (alist-to-hash '((:O1 (:O2 . 2)) (:O2 (:O3 . 3)) (:O5 (:O8 . 1)) (:O8 (:O6 . 5)))))
+         (prob (make-instance 'problem :fleet (list t1 t2) :dist-matrix dist)))
+    (assert-equal 5 (route-dist t1 dist))
+    (assert-equal 6 (route-dist t2 dist))
+    (assert-equal 11 (total-dist prob))))

@@ -147,6 +147,7 @@
    :route-indices
    :vehicle-with-node-ID
    :node-on-route-p
+   :route-dist
    :total-dist
    :vehicle
    :new-vehicle
