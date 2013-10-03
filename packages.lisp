@@ -30,6 +30,14 @@
            :make-vehicle
            :make-drawer
 
+           ;; predicates
+           :node-p
+           :order-p
+           :depot-p
+           :pitstop-p
+           :vehicle-p
+           :drawer-p
+
            ;; accessor functions
            :node-id
            :node-name
