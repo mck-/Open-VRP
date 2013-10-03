@@ -26,9 +26,9 @@
     (error 'expect-vehicle :arg vehicle))
   (member node-id (vehicle-route vehicle) :key #'visit-node-id))
 
-(defun vehicle-with-node-ID (prob node-ID)
-  "Given a node-ID, return the vehicle-ID that has the node in its route. The function for the input of the base-node 0 is undefined. Returns NIL if node-ID cannot be found."
-  (position-if #'(lambda (veh) (node-on-routep node-ID veh)) (problem-fleet prob)))
+(defun vehicle-with-node-id (prob node-id)
+  "Given a node-id, return the vehicle-id that has the node in its route. Returns NIL if node-id cannot be found."
+  (position-if #'(lambda (veh) (node-on-routep node-id veh)) (problem-fleet prob)))
 
 (defgeneric total-dist (veh/prob dist-array)
   (:method (veh/prob dist-array) "Expects <problem> as input!")
