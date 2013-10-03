@@ -121,13 +121,13 @@
     `(flet ((,func (,stream)
               ,@body))
        (ccase (problem-log-mode ,prob)
-         (0 nil)
-         (1 (with-open-file (,stream (ensure-directories-exist
+         (:none nil)
+         (:file (with-open-file (,stream (ensure-directories-exist
                                       (insert-time-stamp-in-path (problem-log-file ,prob) ,time))
                                      :direction :output
                                      :if-exists (if ,appendp :append :supersede))
               (,func ,stream)) t)
-         (2 (,func t) t)))))
+         (:repl (,func t) t)))))
 
 ;; --------------------------
 
@@ -152,7 +152,7 @@
   (:documentation "Returns T if :log-mode is set to 2, which is REPL."))
 
 (defmethod log-to-replp ((p problem))
-  (= (problem-log-mode p) 2))
+  (eq (problem-log-mode p) :repl))
 
 (defmethod log-to-replp ((a algo))
-  (= (problem-log-mode (algo-current-sol a)) 2))
+  (eq (problem-log-mode (algo-current-sol a)) :repl))

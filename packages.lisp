@@ -192,6 +192,7 @@
    :same-origin-destination
    :list-of-nils
    :index-out-of-bounds
+   :unknown-log-mode
 
    ;; init macros
    :create-nodes

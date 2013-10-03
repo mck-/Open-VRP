@@ -66,8 +66,8 @@
    (dist-matrix :accessor problem-dist-matrix :initarg :dist-matrix :initform nil)
    (fleet :reader problem-fleet :initarg :fleet)
    (log-file :accessor problem-log-file :initarg :log-file :initform nil)
-   (log-mode :accessor problem-log-mode :initarg :log-mode :initform 1)))
-   ;; log-mode 0 = off, 1 = output file, 2 = REPL
+   (log-mode :accessor problem-log-mode :initarg :log-mode :initform :file)))
+   ;; log-mode :none = off, :file = output file, :repl = REPL
 
    ;; @mck- Oct 2, 2013 -- does not belong here
    ;; (drawer :accessor problem-drawer :initarg :drawer :initform nil)

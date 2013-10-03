@@ -56,3 +56,8 @@
 (define-condition file-not-recognized (error)
   ((file :initarg :file :reader :file))
   (:report "Input file not recognized!"))
+
+;; lib/config-functions.lisp
+(define-condition unknown-log-mode (error)
+  ((arg :initarg :arg :reader :arg))
+  (:report "Log mode unknown! Choose either :none, :file, or :repl"))

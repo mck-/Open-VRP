@@ -14,7 +14,7 @@
   (aif (problem-drawer pr)
        (toggle (drawer-plotp it))
        (error 'missing-drawer-object :prob pr)))
-  
+
 (defmethod toggle-plot ((a algo))
   (toggle-plot (algo-best-sol a)))
 
@@ -41,7 +41,9 @@
 ;; Config for logging
 ;; -------------------
 (defun set-log-mode (prob x)
-  "Sets log-mode: 0 for no log, 1 for log to log-file, 2 for REPL log."
+  "Sets log-mode: :none for no log, :file for log to log-file, :repl for REPL log."
+  (unless (find x '(:none :file :repl))
+    (error 'unknown-log-mode :arg x))
   (setf (problem-log-mode prob) x))
 
 (defun set-log-file (prob path)
@@ -56,5 +58,5 @@
 (defun set-dist-array (problem dist-array)
   "Given a <problem> and a 2-dimensional list or array in dist-array, set it in <problem>"
   (setf (problem-dist-array problem) (if (listp dist-array)
-					 (2d-list-to-array dist-array)
-					 dist-array)))
+                                         (2d-list-to-array dist-array)
+                                         dist-array)))
