@@ -64,13 +64,13 @@
    (desc :reader problem-desc :initarg :desc :initform "Vehicle Routing Problem")
    (network :reader problem-network :initarg :network)
    (dist-matrix :accessor problem-dist-matrix :initarg :dist-matrix :initform nil)
-   (fleet :reader problem-fleet :initarg :fleet)))
+   (fleet :reader problem-fleet :initarg :fleet)
+   (log-file :accessor problem-log-file :initarg :log-file :initform nil)
+   (log-mode :accessor problem-log-mode :initarg :log-mode :initform 1)))
+   ;; log-mode 0 = off, 1 = output file, 2 = REPL
 
    ;; @mck- Oct 2, 2013 -- does not belong here
    ;; (drawer :accessor problem-drawer :initarg :drawer :initform nil)
-   ;; (log-file :accessor problem-log-file :initarg :log-file :initform nil)
-   ;; (log-mode :accessor problem-log-mode :initarg :log-mode :initform 1)))
-;; log-mode 0 = off, 1 = output file, 2 = REPL
 
 (defclass CVRP (problem)
   ((name :initform "CVRP")

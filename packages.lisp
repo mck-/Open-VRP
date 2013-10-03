@@ -60,6 +60,8 @@
            :problem-network
            :problem-dist-matrix
            :problem-fleet
+           :problem-log-file
+           :problem-log-mode
 
            :algo-name
            :algo-desc
