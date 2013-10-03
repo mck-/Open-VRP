@@ -29,8 +29,11 @@
 (defstruct (depot (:include visit))
   "Starting or ending location for a vehicle")
 
-(defstruct (break (:include visit))
-  "Location that a break may be taken at")
+(defstruct (pitstop (:include visit))
+  "Location that a break/pitstop may be taken at"
+  (start 0 :type fixnum :read-only t)
+  (end 0 :type fixnum :read-only t)
+  (duration 0 :type fixnum :read-only t))
 
 ;; --------------------------
 
@@ -40,10 +43,8 @@
 (defstruct vehicle
   (id (gensym) :type fixnum :read-only t)
   route
-  type
   (start-depot :nil :type symbol :read-only t)
-  (end-depot :nil :type symbol :read-only t)
-  (speed 1 :read-only t))
+  (end-depot :nil :type symbol :read-only t))
 
   ;; Todo:
   ;; (shift-start 0 :type fixnum :read-only t)
@@ -51,7 +52,9 @@
   ;; (break-start 1100 :type fixnum :read-only t)
   ;; (break-start 1400 :type fixnum :read-only t)
   ;; (break-duration 100 :type fixnum :read-only t)
+  ;; type
   ;; (capacity 0 :type fixnum :read-only t)
+  ;; (speed 1 :read-only t))
 
 ;; ----------------------------
 
@@ -64,11 +67,12 @@
    (desc :reader problem-desc :initarg :desc :initform "Vehicle Routing Problem")
    (network :reader problem-network :initarg :network)
    (dist-matrix :accessor problem-dist-matrix :initarg :dist-matrix :initform nil)
-   (fleet :reader problem-fleet :initarg :fleet)
-   (to-depot :accessor problem-to-depot :initarg :to-depot :initform T)
-   (drawer :accessor problem-drawer :initarg :drawer :initform nil)
-   (log-file :accessor problem-log-file :initarg :log-file :initform nil)
-   (log-mode :accessor problem-log-mode :initarg :log-mode :initform 1)))
+   (fleet :reader problem-fleet :initarg :fleet)))
+
+   ;; @mck- Oct 2, 2013 -- does not belong here
+   ;; (drawer :accessor problem-drawer :initarg :drawer :initform nil)
+   ;; (log-file :accessor problem-log-file :initarg :log-file :initform nil)
+   ;; (log-mode :accessor problem-log-mode :initarg :log-mode :initform 1)))
 ;; log-mode 0 = off, 1 = output file, 2 = REPL
 
 (defclass CVRP (problem)
@@ -111,5 +115,5 @@
    (best-fitness :accessor algo-best-fitness :initarg :best-fitness :initform nil)
    (best-iteration :accessor algo-best-iteration :initform 0)
    (current-sol :accessor algo-current-sol :initarg :current-sol :initform nil)
-   (iterations :accessor algo-iterations :initarg :iterations)
-   (animatep :accessor algo-animatep :initarg :animatep :initform nil)))
+   (iterations :accessor algo-iterations :initarg :iterations)))
+   ;; (animatep :accessor algo-animatep :initarg :animatep :initform nil)))

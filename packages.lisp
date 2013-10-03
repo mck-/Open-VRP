@@ -4,6 +4,10 @@
 (defpackage :open-vrp.classes
   (:use :common-lisp)
   (:export :node
+           :visit
+           :order
+           :depot
+           :pitstop
            :vehicle
            :problem
            :VRP
@@ -20,30 +24,37 @@
 
            ;; constructor functions
            :make-node
+           :make-order
+           :make-depot
+           :make-pitstop
            :make-vehicle
            :make-drawer
 
            ;; accessor functions
            :node-id
+           :node-name
            :node-xcor
            :node-ycor
-           :node-demand
-           :node-start
-           :node-end
-           :node-duration
+           :order-start
+           :order-end
+           :order-duration
+           :pitstop-start
+           :pitstop-end
+           :pitstop-duration
+
            :vehicle-id
            :vehicle-route
-           :vehicle-capacity
-           :vehicle-speed
+           ;; :vehicle-capacity
+           ;; :vehicle-speed
+           :vehicle-start-depot
+           :vehicle-end-depot
+
            :problem-name
            :problem-desc
            :problem-network
-           :problem-dist-array
+           :problem-dist-matrix
            :problem-fleet
-           :problem-to-depot
-           :problem-drawer
-           :problem-log-file
-           :problem-log-mode
+
            :algo-name
            :algo-desc
            :algo-best-sol
@@ -52,6 +63,7 @@
            :algo-current-sol
            :algo-iterations
            :algo-animatep
+
            :drawer-min-coord
            :drawer-max-coord
            :drawer-legendp
