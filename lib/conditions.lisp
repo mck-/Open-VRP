@@ -17,29 +17,19 @@
    (key :initarg :key :reader key))
   (:report "Cannot get min/max from a list of NIL values."))
 
-(define-condition expect-number (error)
+(define-condition argument-type (error)
   ((arg :initarg :arg :reader arg)
    (fun :initarg :fun :reader fun))
   (:report (lambda (condition stream)
-             (format stream "Function ~a expects a number, but got ~a."
+             (format stream "Function ~a did not expect ~a, which is a wrong type!"
                      (fun condition)
                      (arg condition)))))
 
-(define-condition expect-keyword-arguments (error)
-  ((arg :initarg :arg :reader arg)
-   (fun :initarg :fun :reader fun))
-  (:report (lambda (condition stream)
-             (format stream "Function ~a expects a keyword, but got ~a."
-                     (fun condition)
-                     (arg condition)))))
+(define-condition expect-number (argument-type) ())
 
-(define-condition expect-hash-table (error)
-  ((arg :initarg :arg :reader arg)
-   (fun :initarg :fun :reader fun))
-  (:report (lambda (condition stream)
-             (format stream "Function ~a expects a hash-table, but got ~a."
-                     (fun condition)
-                     (arg condition)))))
+(define-condition expect-keyword-arguments (argument-type) ())
+
+(define-condition expect-hash-table (argument-type) ())
 
 ;; lib/network.lisp
 (define-condition same-origin-destination (error)
