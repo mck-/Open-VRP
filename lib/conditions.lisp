@@ -17,11 +17,12 @@
    (key :initarg :key :reader key))
   (:report "Cannot get min/max from a list of NIL values."))
 
+;; argument conditions
+
 (define-condition argument-type (error)
   ((arg :initarg :arg :reader arg))
   (:report (lambda (condition stream)
-             (format stream "Function ~a did not expect ~a, which is a wrong type!"
-                     (fun condition)
+             (format stream "Function did not expect ~a, which is a wrong type!"
                      (arg condition)))))
 
 (define-condition expect-number (argument-type) ())
