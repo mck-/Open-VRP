@@ -14,7 +14,7 @@
 
 (defstruct visit
   "These are the actual places on the network that need to be visited, and can be depots, orders, or breaks -- they are linked to a location by node ID"
-  (node-id nil :type keyword :read-only t))
+  (node-id nil :type symbol :read-only t))
 
 (defstruct (order (:include visit))
   "Order that needs to be visited."
@@ -41,7 +41,7 @@
 ;; ---------------------------
 
 (defstruct vehicle
-  (id (gensym) :type fixnum :read-only t)
+  (id (gensym) :type symbol :read-only t)
   route
   (start-depot :nil :type symbol :read-only t)
   (end-depot :nil :type symbol :read-only t))
