@@ -26,9 +26,6 @@
   ;; (demand 0 :type fixnum :read-only t)
   ;; type
 
-(defstruct (depot (:include visit))
-  "Starting or ending location for a vehicle")
-
 (defstruct (pitstop (:include visit))
   "Location that a break/pitstop may be taken at"
   (start 0 :type fixnum :read-only t)
