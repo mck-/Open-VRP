@@ -25,7 +25,7 @@
     (assert-equal :2 (vehicle-with-node-id prob :O6))
     (assert-equal :2 (vehicle-with-node-id prob :O8))
     (assert-equal nil (vehicle-with-node-id prob :Q8))
-    (assert-equal nil (vehicle-with-node-id prob "O1"))
+    (assert-error 'expect-keyword-arguments (vehicle-with-node-id prob "O1"))))
 
 (define-test node-on-route-p
   "Test node-on-route-p util"

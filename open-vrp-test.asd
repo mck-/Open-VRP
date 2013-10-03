@@ -8,4 +8,5 @@
                         :components
                         ((:file "test-package")
                          (:file "util-list")
-                         (:file "util-network")))))
+                         (:file "util-network")
+                         (:file "util-fleet")))))
