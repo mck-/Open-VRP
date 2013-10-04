@@ -13,7 +13,7 @@
 (defun no-visits-p (route)
   "Given a route, return T if the route does not contain any orders (pitstops do not count)."
   (check-type route sequence)
-  (notany #'order-p route)))
+  (notany #'order-p route))
 
 (defun get-busy-vehicles (problem)
   "Returns a list of <Vehicles> that are not empty, given a <Problem> object."
@@ -55,12 +55,12 @@
 
 (defgeneric remove-node-id (veh/prob node-id)
   (:method (vehicle node-id) "Expects <vehicle>/<problem> and int as inputs!")
-  (:documentation "Removes the <node> with node-id from the route of <vehicle>. Returns NIL if failed to find node-id."))
+  (:documentation "Removes the <node> with node-id from the route of <vehicle>. Returns NIL if failed to find node-id. When <problem> is given, remove the node from the first vehicle that holds it (should not occur more than once anyway)"))
 
 (defmethod remove-node-id ((v vehicle) node-id)
-  (if (member node-id (vehicle-route v) :key #'visit-node-id)
+  (if (node-on-route-p node-id v)
       (with-changing-route (r v)
-        (remove node-id r :key #'node-id :count 1)) ;count 1 for perform-move in TS.lisp.
+        (remove node-id r :key #'visit-node-id :count 1)) ;count 1 for perform-move in TS.lisp.
       nil))
 
 (defmethod remove-node-id ((prob problem) node-id)
