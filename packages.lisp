@@ -155,7 +155,7 @@
    ;; constraint utils
    :constraints-check
    :constraints-p
-   :in-capacityp
+   :in-capacity-p
    :travel-time
    :time-after-serving-node
    :veh-in-timep

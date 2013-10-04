@@ -15,7 +15,7 @@
 
 (defmethod constraints-p and ((prob problem)) T)
 
-(defmethod constraints-p and ((sol CVRP)) (in-capacityp sol))
+(defmethod constraints-p and ((sol CVRP)) (in-capacity-p sol))
 
 (defmethod constraints-p and ((sol VRPTW)) (in-timep sol))
 
@@ -35,11 +35,11 @@
 ;; 1. Capacity Constraints
 ;; ------------------------
 
-(defgeneric in-capacityp (veh/cvrp)
+(defgeneric in-capacity-p (veh/cvrp)
   (:method (obj) "Expects a <Vehicle>/<CVRP> object!")
   (:documentation "Tests weather the route on <vehicle> is complying with the capacity constraint. Returns T and the remaining capacity if it does. When <CVRP> is provided, test all vehicles."))
 
-(defmethod in-capacityp ((v vehicle))
+(defmethod in-capacity-p ((v vehicle))
   (unless (vehicle-capacity v) (error 'no-capacities-vehicle :veh v))
   (constraints-check
    (route cap)
@@ -47,12 +47,12 @@
    ((cdr route) (- cap (node-demand (car route))))
    (<= (node-demand (car route)) cap)))
 
-(defmethod in-capacityp ((pr CVRP))
+(defmethod in-capacity-p ((pr CVRP))
   (constraints-check
    (flt)
    ((problem-fleet pr))
    ((cdr flt))
-   (in-capacityp (car flt))))
+   (in-capacity-p (car flt))))
 
 ;; ------------------------------
 

@@ -44,31 +44,31 @@
     (let ((veh (vehicle sol vehicle-ID)))
       ; if node is already on the route, moving intra-route is feasible
       (if (node-on-routep node-ID veh) T
-	  (multiple-value-bind (comply cap-left) (in-capacityp veh)
-	    (unless comply (error 'infeasible-solution :sol sol :func #'in-capacityp))
-	    (<= (node-demand (node sol node-ID)) cap-left))))))
+          (multiple-value-bind (comply cap-left) (in-capacity-p veh)
+            (unless comply (error 'infeasible-solution :sol sol :func #'in-capacity-p))
+            (<= (node-demand (node sol node-ID)) cap-left))))))
 
 (defmethod feasible-movep and ((sol VRPTW) (m insertion-move))
   (let ((node-id (move-node-id m))
-	(veh-id (move-vehicle-id m))
-	(index (move-index m)))
+        (veh-id (move-vehicle-id m))
+        (index (move-index m)))
     (symbol-macrolet ((full-route (vehicle-route (vehicle sol veh-id)))
-		      (ins-node (node sol node-ID))
-		      (to (if (= 1 i) ins-node (car route)))
-		      (arr-time (+ time (travel-time loc to :dist-array (problem-dist-array sol)))))
+                      (ins-node (node sol node-ID))
+                      (to (if (= 1 i) ins-node (car route)))
+                      (arr-time (+ time (travel-time loc to :dist-array (problem-dist-array sol)))))
       (constraints-check
        (route time loc i)
        ((cdr full-route) 0 (car full-route) index)
        ((if (= 1 i) route (cdr route)) ;don't skip after inserting new node
-	(time-after-serving-node to arr-time) ;set time after new node
-	to (1- i))   
+        (time-after-serving-node to arr-time) ;set time after new node
+        to (1- i))
        (<= arr-time (node-end to))
        (and (null route) (< i 1)))))) ; case of append, need to check once more
 
 ;; for debugging (insert in test-form with progn)
 ;       (format t "Route: ~A~% Loc: ~A~% To: ~A~% Time: ~A~% Arr-time: ~A~% Node-start: ~A~% Node-end: ~A~% Duration: ~A~% ins-node-end: ~A~% i: ~A~%" (mapcar #'node-id route) (node-id loc) (node-id to) time arr-time (node-start to) (node-end to) (node-duration to) (node-end ins-node) i)
 ;; -----------------------------
-	      
+
 ;; ----------------------------
 
 ;; 2. Tools for solution building heuristics
@@ -84,10 +84,10 @@
 (defun get-closest-node (prob veh-id &optional tabu)
   "Returns the closest node from the last location of vehicle. Requires <problem> and vehicle-ID. A tabu list of node-IDs is optional to exclude consideration of some nodes."
   (let* ((loc (last-node (vehicle prob veh-id)))
-	 (dists (get-array-row (problem-dist-array prob) (node-id loc))))
+         (dists (get-array-row (problem-dist-array prob) (node-id loc))))
     (aif (get-min-index-with-tabu dists tabu)
-	 (node prob it)
-	 nil)))
+         (node prob it)
+         nil)))
 ;; --------------------------
 
 ;; Closest Vehicle (used by Greedy Append)
@@ -95,9 +95,9 @@
 (defun dists-to-vehicles (node prob)
   "Given a <Node> and a <Problem>, return the list of all the distances from the <Node> to the current positions of the fleet. Used by get-closest-(feasible)-vehicle."
   (mapcar #'(lambda (x) (distance (node-id (last-node x))
-				  (node-id node)
-				  (problem-dist-array prob)))
-	  (problem-fleet prob)))
+                                  (node-id node)
+                                  (problem-dist-array prob)))
+          (problem-fleet prob)))
 
 ;; challenge: what if the vehicle is located on the node n - use only for initial insertion?
 (defun get-closest-vehicle (n prob)
@@ -114,38 +114,38 @@
 (defun capacities-left (prob)
   "Returns a list of all capacities left on the vehicles given the present solution."
   (mapcar #'(lambda (x) (multiple-value-bind (c cap)
-			    (in-capacityp x) (when c cap)))
-	  (problem-fleet prob)))
+                            (in-capacity-p x) (when c cap)))
+          (problem-fleet prob)))
 
 (defmethod get-closest-feasible-vehicle ((n node) (prob CVRP))
   "Returns the vehicle closest to the node and has enough capacity."
-  (handler-case  
+  (handler-case
       (vehicle prob (get-min-index
-		     (mapcar #'(lambda (dist cap)
-				 (unless (> (node-demand n) cap) dist))
-			     (dists-to-vehicles n prob)
-			     (capacities-left prob))))
+                     (mapcar #'(lambda (dist cap)
+                                 (unless (> (node-demand n) cap) dist))
+                             (dists-to-vehicles n prob)
+                             (capacities-left prob))))
     (list-of-nils () (error 'no-feasible-move :moves n))))
-  
+
 
 ;; Time-window check
 (defun times-of-arriving (node prob)
   "Returns a list of arrival times of the vehicles to node given the present solution."
   (mapcar #'(lambda (x)
-	      (multiple-value-bind (c time)
-		  (veh-in-timep x) (when c (+ time (travel-time (last-node x) node :dist-array (problem-dist-array prob))))))
-	  (problem-fleet prob)))
+              (multiple-value-bind (c time)
+                  (veh-in-timep x) (when c (+ time (travel-time (last-node x) node :dist-array (problem-dist-array prob))))))
+          (problem-fleet prob)))
 
 ;; Feasiblility of appending at the end only.
 (defmethod get-closest-feasible-vehicle ((n node) (prob VRPTW))
   "Returns the vehicle closest to the node that has enough time at the end of its route. Used for appending nodes. Use get-optimal-insertion instead for inserting feasibly into routes."
   (handler-case
-      (vehicle prob (get-min-index 
-		     (mapcar #'(lambda (dist arr-time cap)
-				 (unless (or (> (node-demand n) cap)
-					     (> arr-time (node-end n)))
-				   dist))
-			     (dists-to-vehicles n prob)
-			     (times-of-arriving n prob)
-			     (capacities-left prob))))
+      (vehicle prob (get-min-index
+                     (mapcar #'(lambda (dist arr-time cap)
+                                 (unless (or (> (node-demand n) cap)
+                                             (> arr-time (node-end n)))
+                                   dist))
+                             (dists-to-vehicles n prob)
+                             (times-of-arriving n prob)
+                             (capacities-left prob))))
     (list-of-nils () (error 'no-feasible-move :moves n))))
