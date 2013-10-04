@@ -3,13 +3,11 @@
 ;; Route utilities
 ;; --------------------
 
-(define-test no-visits-p
-  "Test the no-visits-p util, which tests if the route contains any order visits."
+(define-test route-utils
+  "Test the no-visits-p/get-busy-vehicles/one-destination-p utils"
   (:tag :route)
   (let* ((t0 (make-vehicle :id :0))
-         (t1 (make-vehicle :id :1 :route (list (make-order :node-id :O1)
-                                               (make-order :node-id :O2)
-                                               (make-order :node-id :O3))))
+         (t1 (make-vehicle :id :1 :route (list (make-order :node-id :O1))))
          (t2 (make-vehicle :id :2 :route (list (make-order :node-id :O5)
                                                (make-order :node-id :O8)
                                                (make-order :node-id :O6))))
@@ -19,4 +17,6 @@
     (assert-true (no-visits-p (vehicle-route t3)))
     (assert-false (no-visits-p (vehicle-route t1)))
     (assert-false (no-visits-p (vehicle-route t2)))
+    (assert-true (one-destination-p (vehicle-route t1)))
+    (assert-false (one-destination-p (vehicle-route t2)))
     (assert-equal 2 (length (get-busy-vehicles prob)))))
