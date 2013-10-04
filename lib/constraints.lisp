@@ -44,15 +44,15 @@
   (constraints-check
    (route cap)
    ((vehicle-route v) (vehicle-capacity v))
-   ((cdr route) (- cap (node-demand (car route))))
-   (<= (node-demand (car route)) cap)))
+   ((cdr route) (- cap (order-demand (car route))))
+   (<= (order-demand (car route)) cap)))
 
 (defmethod in-capacity-p ((pr CVRP))
-  (constraints-check
-   (flt)
-   ((problem-fleet pr))
-   ((cdr flt))
-   (in-capacity-p (car flt))))
+  (reduce
+   (lambda (x y)
+     (and x (in-capacity-p y)))
+   (problem-fleet pr)
+   :initial-value T))
 
 ;; ------------------------------
 
