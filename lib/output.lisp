@@ -7,10 +7,12 @@
 
 (defmethod print-routes ((prob problem) &optional (stream t))
   (format stream "~&---------------")
-  (format stream "~&Fitness: ~A" (fitness prob))
+  (if (problem-dist-matrix prob)
+      (format stream "~&Fitness: ~A" (fitness prob))
+      (format stream "~&Fitness unknown; missing distance matrix!"))
   (format stream "~&---------------")
   (dolist (busy-veh (get-busy-vehicles prob))
-    (format stream "~&[~2A]: ~A~%" (vehicle-id busy-veh) (route-indices busy-veh)))
+    (format stream "~&[~5@A]: ~A~%" (vehicle-id busy-veh) (route-indices busy-veh)))
   (format stream "~&---------------~%"))
 
 (defmethod print-routes ((a algo) &optional (stream t))
