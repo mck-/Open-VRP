@@ -6,18 +6,18 @@
 ;;; - multi-run (int algo-call)          - Run algo int times - collect all results
 ;;; - get-best-solution-from-multi-run   - returns the best solution from collection
 ;;; - multi-run-algo                     - Calls multi-run, prints stats and returns best
-;;; - iterate (<algo>)			 - run one iteration on <algo>
-;;; - iterate-more (<algo> int)		 - reset number of iterations and call run-algo
+;;; - iterate (<algo>)                   - run one iteration on <algo>
+;;; - iterate-more (<algo> int)          - reset number of iterations and call run-algo
 ;;; ----------------------------
 (in-package :open-vrp.util)
 
 ;; Run Algo
 ;; -------------------------
 (defun init-algo (sol algo)
-  "Given a solution, sets the :current-sol, :best-fitness and :best-sol slots of the <algo> object. Returns <algo>."
+  "Given a solution, sets the :current-sol, :best-fitness and :best-sol slots of the <algo> object. Makes a copy of the solution for :best-sol. Returns <algo>."
   (setf (algo-current-sol algo) sol
-	(algo-best-fitness algo) (fitness sol)
-	(algo-best-sol algo) (copy-object sol))
+        (algo-best-fitness algo) (fitness sol)
+        (algo-best-sol algo) (copy-object sol))
   algo)
 
 
@@ -44,13 +44,13 @@
 (defparameter *start-time* nil)
 (defparameter *finish-time* nil)
 
-;; a wrapper method to prevent destructive behaviour of CLOS. 
+;; a wrapper method to prevent destructive behaviour of CLOS.
 (defgeneric solve-prob (problem algo)
   (:method (problem algo)
     "solve-prob: Either problem or algo is not defined/correct")
   (:documentation "Solves the problem with the algo. Uses run-algo, but leaves the <problem> object untouched (<Algo> will suffer side-effects). Works with a clone (copy-object in lib/simple-utils.lisp). NON-destructive wrapper to the run-algo method."))
 
-(defmethod solve-prob ((problem problem) (algo algo))						
+(defmethod solve-prob ((problem problem) (algo algo))
   (let ((clone (copy-object problem)))
     (run-algo clone algo)))
 
@@ -61,7 +61,7 @@
   (setq *start-time* (get-universal-time))
   (with-log-or-print (str p *start-time* nil)
     (print-header p a str)))
-    
+
 ;; When all logging is done in file, at least print the final solution in repl
 (defmethod solve-prob :after ((p problem) (a algo))
   (unless (log-to-replp p)
@@ -81,31 +81,31 @@
      ;so it won't override the first log-file made by solve-prob use -1 seconds
      (setq *multi-run-start-time* (- (get-universal-time) 1))
      (loop for ,(gensym) below ,times collect ,@algo-call
-	finally (setq *multi-run-finish-time* (get-universal-time)))))
-  
+        finally (setq *multi-run-finish-time* (get-universal-time)))))
+
 (defun get-best-solution-from-multi-run (solutions)
   "Given a list of solutions (from multi-run), return the best solution."
   (labels ((iter (sols best)
-	     (if sols
-		 (iter (cdr sols)
-		       (if (< (algo-best-fitness (car sols)) (algo-best-fitness best))
-			   (car sols)
-			   best))
-		 best)))
+             (if sols
+                 (iter (cdr sols)
+                       (if (< (algo-best-fitness (car sols)) (algo-best-fitness best))
+                           (car sols)
+                           best))
+                 best)))
     (iter (cdr solutions) (car solutions))))
 
 (defmacro multi-run-algo (times &body algo-call)
   "Run algo x times, print multi-run-stats and return the best result."
   (with-gensyms (prob results best)
     `(let* ((,prob ,(cadar algo-call))
-	    (,results (multi-run ,times ,@algo-call))
-	    (,best (get-best-solution-from-multi-run ,results)))
+            (,results (multi-run ,times ,@algo-call))
+            (,best (get-best-solution-from-multi-run ,results)))
        (with-log-or-print (str ,prob *multi-run-start-time* nil)
-	 (print-multi-run-stats ,results str)
-	 (print-routes ,best str))
+         (print-multi-run-stats ,results str)
+         (print-routes ,best str))
        (unless (log-to-replp ,prob)
-	 (print-multi-run-stats ,results)
-	 (print-routes ,best))
+         (print-multi-run-stats ,results)
+         (print-routes ,best))
        ,best)))
 ;; -------------------
 
@@ -135,21 +135,21 @@
 
     ;; Checking if new best solution
     (let ((new-fitness (fitness sol))
-	  (best-fitness (algo-best-fitness a)))
+          (best-fitness (algo-best-fitness a)))
       (when (or (null best-fitness)
-		(< new-fitness best-fitness))
-	(setf (algo-best-fitness a) new-fitness
-	      (algo-best-sol a) (copy-object sol)
-	      (algo-best-iteration a) (algo-iterations a))))
-  
+                (< new-fitness best-fitness))
+        (setf (algo-best-fitness a) new-fitness
+              (algo-best-sol a) (copy-object sol)
+              (algo-best-iteration a) (algo-iterations a))))
+
     ;; Plot frame if animatep is set to T
     (when (algo-animatep a)
       (plot-solution sol (merge-pathnames
-			  (with-output-to-string (s)
-			    (princ "run-frames/Iteration " s)
-			    (princ (algo-iterations a) s)
-			    (princ ".png" s))
-			  (asdf:system-source-directory 'open-vrp))))))
+                          (with-output-to-string (s)
+                            (princ "run-frames/Iteration " s)
+                            (princ (algo-iterations a) s)
+                            (princ ".png" s))
+                          (asdf:system-source-directory 'open-vrp))))))
 
 ;; Resume run - add some more iterations
 ;; ------------------------
@@ -159,7 +159,7 @@
 
 (defmethod iterate-more ((a algo) int)
   (setf (algo-iterations a) int
-	(algo-best-iteration a) int)
+        (algo-best-iteration a) int)
   (run-algo (algo-current-sol a) a))
 
 (defmethod iterate-more :after ((a algo) int)
