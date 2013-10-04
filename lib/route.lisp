@@ -71,17 +71,9 @@
 
 ;; 3. Last location
 ;; ----------------------------
-(defgeneric last-node (vehicle)
-  (:method (vehicle) "Expects <vehicle>")
-  (:documentation "Returns the last <node> in its route. Depicts the current location (before returning to base)."))
-
-;; (defmethod last-node (route)
-;;   (let ((r (reverse route)))
-;;     (if (= 0 (node-id (car r)))
-;;         (or (cadr r) (car r))   ;in case route has only one base-node.
-;;         (car r))))
-
-(defmethod last-node ((v vehicle))
-  (last-node (vehicle-route v)))
+(defun last-visit (vehicle)
+  "Returns the last <visit> in its route."
+  (check-type vehicle vehicle)
+  (car (last (vehicle-route vehicle))))
 
 ;; ---------------------------

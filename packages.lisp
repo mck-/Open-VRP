@@ -130,7 +130,7 @@
    :append-node
    :remove-node-at
    :remove-node-id
-   :last-node
+   :last-visit
 
    ;; network utils
    :sethash
