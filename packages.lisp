@@ -153,7 +153,7 @@
 
    ;; constraint utils
    :constraints-check
-   :constraintsp
+   :constraints-p
    :in-capacityp
    :travel-time
    :time-after-serving-node

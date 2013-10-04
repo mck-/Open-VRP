@@ -9,4 +9,4 @@
 (defmethod fitness ((prob problem))
   (values
    (total-dist prob)
-   (constraintsp prob)))
+   (constraints-p prob)))

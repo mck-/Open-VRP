@@ -9,15 +9,15 @@
 ;; 0. General tools/definitions
 ;; ----------------------------
 
-(defgeneric constraintsp (prob)
+(defgeneric constraints-p (prob)
   (:documentation "Tests weather the solution in the <problem> is complying with the constraints. If the problem is a CVRP, check for capacity. If it is a VRPTW, check for time-windows. For CVRPTW, that inherits from both classes, check both constraints.")
   (:method-combination and))
 
-(defmethod constraintsp and ((prob problem)) T)
+(defmethod constraints-p and ((prob problem)) T)
 
-(defmethod constraintsp and ((sol CVRP)) (in-capacityp sol))
+(defmethod constraints-p and ((sol CVRP)) (in-capacityp sol))
 
-(defmethod constraintsp and ((sol VRPTW)) (in-timep sol))
+(defmethod constraints-p and ((sol VRPTW)) (in-timep sol))
 
 ;; Helper macro for defining constraints-checking methods below
 ;; Returns NIL as soon as it finds out that a constraint is violated
