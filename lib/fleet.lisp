@@ -22,17 +22,18 @@
   "Returns NIL if <vehicle> does not have the node on its route."
   (check-type node-id symbol)
   (check-type vehicle vehicle)
-  (member node-id (vehicle-route vehicle) :key #'visit-node-id))
+  (find node-id (vehicle-route vehicle) :key #'visit-node-id))
 
 (defun vehicle-with-node-id (prob node-id)
   "Given a node-id, return the vehicle-id that has the node in its route. Returns NIL if node-id cannot be found. Assumes only 1 presence of a node in the problem."
   (check-type prob problem)
   (check-type node-id symbol)
-  (labels ((iter (fleet)
-             (cond ((null fleet) nil)
-                   ((node-on-route-p node-id (car fleet)) (vehicle-id (car fleet)))
-                   (t (iter (cdr fleet))))))
-    (iter (problem-fleet prob))))
+  (reduce
+   (lambda (x y)
+     (or x (when (node-on-route-p node-id y)
+             (vehicle-id y))))
+   (problem-fleet prob)
+   :initial-value nil))
 
 (defun route-dist (veh dist-matrix)
   "Returns total distance of the route(s) given a vehicle. Takes into account the start and end locations of the vehicle."
@@ -62,7 +63,7 @@
 ;; Accessor functions
 ;; ------------------
 (defmethod vehicle ((p problem) id)
-  (nth id (problem-fleet p)))
+  (find id (problem-fleet p) :key #'vehicle-id))
 ;; ------------------
 
 ;; Create Vehicle macro
