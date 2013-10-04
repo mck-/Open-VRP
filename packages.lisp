@@ -129,7 +129,7 @@
    :insert-node
    :append-node
    :remove-node-at
-   :remove-node-ID
+   :remove-node-id
    :last-node
 
    ;; network utils
@@ -144,7 +144,7 @@
 
    ;; fleet utils
    :route-indices
-   :vehicle-with-node-ID
+   :vehicle-with-node-id
    :node-on-route-p
    :route-dist
    :total-dist

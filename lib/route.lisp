@@ -25,9 +25,9 @@
   (check-type route sequence)
   (= 1 (count-if #'order-p route)))
 
-(defmacro change-route (vehicle &body body)
-  "Expands into binding the vehicles route to r and setting it to result of body."
-  `(let ((r (vehicle-route ,vehicle)))
+(defmacro with-changing-route ((var vehicle) &body body)
+  "Expands into binding the vehicles route to var and setting it to result of body."
+  `(let ((,var (vehicle-route ,vehicle)))
      (setf (vehicle-route ,vehicle) ,@body)))
 ;; ------------------
 
@@ -36,17 +36,13 @@
 
 (defun insert-node (veh node index)
   "Adds the <Node> object before the index of the route of <vehicle>. An index of 0 implies inserting in front, length of list implies at the end."
-  (change-route veh
+  (with-changing-route (r veh)
     (insert-before node index r)))
 
 (defun append-node (veh node)
-  "Appends <Node> to the end of the route of <vehicle>. Wrapper of insert-node. If the route includes returning to-depot, then append before the last return to depot."
-  (change-route veh
-    (insert-before node 1 r)))
-                ;; (if (and (cdr (vehicle-route veh))
-                ;;          (= 0 (node-id (car (last (vehicle-route veh))))))
-                ;;     (reverse (insert-before node 1 (reverse r)))
-                ;;     (insert-at-end node r))))
+  "Appends <Node> to the end of the route of <vehicle>. Wrapper of insert-node."
+  (with-changing-route (r veh)
+    (insert-before node (length r) r)))
 
 ;; -------------------------
 
@@ -54,22 +50,22 @@
 ;; -------------------------
 (defun remove-node-at (veh index)
   "Removes the <node> from the route of <vehicle> at index"
-  (change-route veh
+  (with-changing-route (r veh)
     (remove-index index r)))
 
-(defgeneric remove-node-ID (veh/prob node-ID)
-  (:method (vehicle node-ID) "Expects <vehicle>/<problem> and int as inputs!")
-  (:documentation "Removes the <node> with node-ID from the route of <vehicle>. Returns NIL if failed to find node-ID."))
+(defgeneric remove-node-id (veh/prob node-id)
+  (:method (vehicle node-id) "Expects <vehicle>/<problem> and int as inputs!")
+  (:documentation "Removes the <node> with node-id from the route of <vehicle>. Returns NIL if failed to find node-id."))
 
-(defmethod remove-node-ID ((v vehicle) node-ID)
-  (if (member node-ID (vehicle-route v) :key #'node-id)
-      (change-route v
-        (remove node-ID r :key #'node-id :count 1)) ;count 1 for perform-move in TS.lisp.
+(defmethod remove-node-id ((v vehicle) node-id)
+  (if (member node-id (vehicle-route v) :key #'visit-node-id)
+      (with-changing-route (r v)
+        (remove node-id r :key #'node-id :count 1)) ;count 1 for perform-move in TS.lisp.
       nil))
 
-(defmethod remove-node-ID ((prob problem) node-ID)
-  (aif (vehicle-with-node-ID prob node-ID)
-       (remove-node-ID (vehicle prob it) node-ID)
+(defmethod remove-node-id ((prob problem) node-id)
+  (aif (vehicle-with-node-id prob node-id)
+       (remove-node-id (vehicle prob it) node-id)
        nil))
 ;; ----------------------------
 
