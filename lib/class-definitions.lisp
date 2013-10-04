@@ -20,11 +20,8 @@
   "Order that needs to be visited."
   (start 0 :type fixnum :read-only t)
   (end 0 :type fixnum :read-only t)
+  (demand 0 :type fixnum :read-only t)
   (duration 0 :type fixnum :read-only t))
-
-  ;; Todo:
-  ;; (demand 0 :type fixnum :read-only t)
-  ;; type
 
 (defstruct (pitstop (:include visit))
   "Location that a break/pitstop may be taken at"
@@ -42,7 +39,8 @@
   (id (gensym) :type symbol :read-only t)
   (route nil :type list)
   (start-location :nil :type symbol :read-only t)
-  (end-location :nil :type symbol :read-only t))
+  (end-location :nil :type symbol :read-only t)
+  (capacity 0 :type fixnum :read-only t))
 
   ;; Todo:
   ;; (shift-start 0 :type fixnum :read-only t)
@@ -51,7 +49,7 @@
   ;; (break-start 1400 :type fixnum :read-only t)
   ;; (break-duration 100 :type fixnum :read-only t)
   ;; type
-  ;; (capacity 0 :type fixnum :read-only t)
+  ;;
   ;; (speed 1 :read-only t))
 
 ;; ----------------------------

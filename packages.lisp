@@ -44,13 +44,14 @@
            :order-start
            :order-end
            :order-duration
+           :order-demand
            :pitstop-start
            :pitstop-end
            :pitstop-duration
 
            :vehicle-id
            :vehicle-route
-           ;; :vehicle-capacity
+           :vehicle-capacity
            ;; :vehicle-speed
            :vehicle-start-location
            :vehicle-end-location
