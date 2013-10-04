@@ -36,10 +36,11 @@
 
 ;; The vehicle object
 ;; ---------------------------
+;; - route is a list of visit-ids
 
 (defstruct vehicle
   (id (gensym) :type symbol :read-only t)
-  route
+  (route nil :type list)
   (start-location :nil :type symbol :read-only t)
   (end-location :nil :type symbol :read-only t))
 
