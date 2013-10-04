@@ -74,7 +74,7 @@
 ;; -------------------------
 
 (defun insert-before (object index list)
-  "Insert object before index of list. 0 implies inserting in front, length of list implies appending at the end. Throws index out of bounds when index is larger."
+  "Insert object before index of list. 0 implies inserting in front, length of list implies appending at the end. Throws index out of bounds when index is larger. Returns the resulting list."
   (unless (<= 0 index (length list))
     (error 'index-out-of-bounds :index index :ls list))
   (labels ((iter (obj i ls)
