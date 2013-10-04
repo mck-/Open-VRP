@@ -17,10 +17,12 @@
 
 (defun get-busy-vehicles (problem)
   "Returns a list of <Vehicles> that are not empty, given a <Problem> object."
+  (check-type problem problem)
   (remove-if #'no-visits-p (problem-fleet problem) :key #'vehicle-route))
 
 (defun one-destination-p (route)
   "Return T if there is only one order on route."
+  (check-type route sequence)
   (= 1 (count-if #'order-p route)))
 
 (defmacro change-route (vehicle &body body)
