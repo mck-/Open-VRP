@@ -13,7 +13,7 @@
 (defun no-visits-p (route)
   "Given a route, return T if the route does not contain any orders (pitstops do not count)."
   (check-type route sequence)
-  (not (some #'order-p route)))
+  (notany #'order-p route)))
 
 (defun get-busy-vehicles (problem)
   "Returns a list of <Vehicles> that are not empty, given a <Problem> object."
