@@ -59,11 +59,10 @@
 ;; 2. Time-window constraints
 ;; -------------------------
 
-(defun travel-time (n1 n2 &key dist-array (speed 1))
-  "Given two <nodes> and optional speed, return the travel-time. When dist-array is not provided, calculate distance directly using coords."
-  (handler-case
-      (/ (distance (node-id n1) (node-id n2) dist-array) speed)
-    (same-origin-destination () 0)))
+(defun travel-time (n1 n2 dist-matrix &key (speed 1))
+  "Given two node-ids and optional speed, return the travel-time. By default, speed is 1, hence distance-matrix can also be the time-matrix."
+  (check-type speed number)
+  (/ (distance n1 n2 dist-matrix) speed))
 
 (defun time-after-serving-node (node arrival-time)
   "Given a node to serve and the current time, return the new time (if on-time to begin with). When arrival-time is too early, wait till earliest start time."
