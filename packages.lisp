@@ -152,6 +152,10 @@
    :vehicle
    :new-vehicle
 
+   ;; time utils
+   :time-to-minutes
+   :minutes-to-time
+
    ;; constraint utils
    :constraints-check
    :constraints-p
