@@ -133,7 +133,7 @@
   "Returns a list of arrival times of the vehicles to node given the present solution."
   (mapcar #'(lambda (x)
               (multiple-value-bind (c time)
-                  (veh-in-timep x) (when c (+ time (travel-time (last-node x) node :dist-array (problem-dist-array prob))))))
+                  (veh-in-time-p x) (when c (+ time (travel-time (last-node x) node :dist-array (problem-dist-array prob))))))
           (problem-fleet prob)))
 
 ;; Feasiblility of appending at the end only.

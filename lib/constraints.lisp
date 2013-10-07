@@ -17,7 +17,7 @@
 
 (defmethod constraints-p and ((sol CVRP)) (in-capacity-p sol))
 
-(defmethod constraints-p and ((sol VRPTW)) (in-timep sol))
+(defmethod constraints-p and ((sol VRPTW)) (in-time-p sol))
 
 ;; Helper macro for defining constraints-checking methods below
 ;; Returns NIL as soon as it finds out that a constraint is violated
@@ -72,21 +72,21 @@
         ((< arrival-time (visit-start visit)) (+ (visit-start visit) (visit-duration visit))) ;wait
         (t (+ arrival-time (visit-duration visit)))))
 
-(defun veh-in-timep (v &optional dist-array)
+(defun veh-in-time-p (v dist-matrix)
   "Tests weather the route on <Vehicle> is complying with the time-window constraints. Returns T and the time of finishing its last task."
   (unless (vehicle-speed v) (error 'no-speed-vehicle :veh v))
   (symbol-macrolet ((to (car route))
-                    (arr-time (+ time (travel-time loc to :dist-array dist-array :speed (vehicle-speed v)))))
+                    (arr-time (+ time (travel-time loc to dist-matrix :speed (vehicle-speed v)))))
     (constraints-check
      (route time loc)
      ((cdr (vehicle-route v)) 0 (car (vehicle-route v)))
      ((cdr route) (time-after-visit to arr-time) to)
-     (<= arr-time (node-end to)))))
+     (<= arr-time (visit-end to)))))
 
-(defmethod in-timep ((pr VRPTW))
+(defmethod in-time-p ((pr VRPTW))
   (constraints-check
    (veh)
    ((problem-fleet pr))
    ((cdr veh))
-   (veh-in-timep (car veh) (aif (problem-dist-array pr) it))))
+   (veh-in-time-p (car veh) (aif (problem-dist-matrix pr) it))))
 ;; -------------------------
