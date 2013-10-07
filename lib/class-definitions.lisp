@@ -14,20 +14,17 @@
 
 (defstruct visit
   "These are the actual places on the network that need to be visited, and can be depots, orders, or breaks -- they are linked to a location by node ID"
-  (node-id (gensym) :type symbol :read-only t))
+  (node-id (gensym) :type symbol :read-only t)
+  (start 0 :type fixnum :read-only t)
+  (end 0 :type fixnum :read-only t)
+  (duration 0 :type fixnum :read-only t))
 
 (defstruct (order (:include visit))
   "Order that needs to be visited."
-  (start 0 :type fixnum :read-only t)
-  (end 0 :type fixnum :read-only t)
-  (demand 0 :type fixnum :read-only t)
-  (duration 0 :type fixnum :read-only t))
+  (demand 0 :type fixnum :read-only t))
 
 (defstruct (pitstop (:include visit))
-  "Location that a break/pitstop may be taken at"
-  (start 0 :type fixnum :read-only t)
-  (end 0 :type fixnum :read-only t)
-  (duration 0 :type fixnum :read-only t))
+  "Location that a break/pitstop may be taken at")
 
 ;; --------------------------
 

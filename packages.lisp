@@ -41,9 +41,9 @@
            :node-xcor
            :node-ycor
            :visit-node-id
-           :order-start
-           :order-end
-           :order-duration
+           :visit-start
+           :visit-end
+           :visit-duration
            :order-demand
            :pitstop-start
            :pitstop-end
