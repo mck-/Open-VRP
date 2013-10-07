@@ -13,7 +13,12 @@
   (:documentation "When input is a <vehicle>, returns its route as a list of node IDs. When input is <fleet>/<problem>, list all routes."))
 
 (defmethod route-indices ((v vehicle))
-  (mapcar #'visit-node-id (vehicle-route v)))
+  (if (or (eq :nil (vehicle-start-location v))
+          (eq :nil (vehicle-end-location v)))
+      (mapcar #'visit-node-id (vehicle-route v))
+      (nconc (list (vehicle-start-location v))
+             (mapcar #'visit-node-id (vehicle-route v))
+             (list (vehicle-end-location v)))))
 
 (defmethod route-indices ((p problem))
   (mapcar #'route-indices (problem-fleet p)))
@@ -47,10 +52,7 @@
                                     (cadr togo)
                                     dist-matrix))))))
     ;; Insert start and end-locations into route
-    (iter (nconc (list (vehicle-start-location veh))
-                 (route-indices veh)
-                 (list (vehicle-end-location veh)))
-          0)))
+    (iter (route-indices veh) 0)))
 
 
 (defun total-dist (problem)
