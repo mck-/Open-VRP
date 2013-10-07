@@ -52,7 +52,7 @@
            :vehicle-id
            :vehicle-route
            :vehicle-capacity
-           ;; :vehicle-speed
+           :vehicle-speed
            :vehicle-start-location
            :vehicle-end-location
 
@@ -161,9 +161,9 @@
    :constraints-p
    :in-capacity-p
    :travel-time
-   :time-after-serving-node
-   :veh-in-timep
-   :in-timep
+   :time-after-visit
+   :veh-in-time-p
+   :in-time-p
 
    :fitness
 
@@ -198,6 +198,7 @@
    :list-of-nils
    :index-out-of-bounds
    :unknown-log-mode
+   :too-late-arrival
 
    ;; init macros
    :create-nodes

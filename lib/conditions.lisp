@@ -25,6 +25,10 @@
   (:report "Trying to lookup distance for same origin and destination - NIL"))
 
 ;; lib/constraints.lisp
+(define-condition too-late-arrival (error)
+  ((visit :initarg :visit :reader visit))
+  (:report "Arriving too late at location; infeasible solution?"))
+
 (define-condition infeasible-solution (error)
   ((sol :initarg :sol :reader sol)
    (func :initarg :func :reader func))

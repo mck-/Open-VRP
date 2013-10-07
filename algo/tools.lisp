@@ -60,7 +60,7 @@
        (route time loc i)
        ((cdr full-route) 0 (car full-route) index)
        ((if (= 1 i) route (cdr route)) ;don't skip after inserting new node
-        (time-after-serving-node to arr-time) ;set time after new node
+        (time-after-visit to arr-time) ;set time after new node
         to (1- i))
        (<= arr-time (node-end to))
        (and (null route) (< i 1)))))) ; case of append, need to check once more

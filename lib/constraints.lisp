@@ -64,11 +64,13 @@
   (check-type speed number)
   (/ (distance n1 n2 dist-matrix) speed))
 
-(defun time-after-serving-node (node arrival-time)
-  "Given a node to serve and the current time, return the new time (if on-time to begin with). When arrival-time is too early, wait till earliest start time."
-  (cond ((> arrival-time (node-end node)) (error 'infeasible-solution :sol node :func arrival-time :msg "Arrival time is later than latest start-time of node"))
-        ((< arrival-time (node-start node)) (+ (node-start node) (node-duration node))) ;wait
-        (t (+ arrival-time (node-duration node)))))
+(defun time-after-visit (visit arrival-time)
+  "Given a visit to serve and the current time, return the new time (if on-time to begin with). When arrival-time is too early, wait till earliest start time. Time is given in minutes since midnight."
+  (check-type visit visit)
+  (check-type arrival-time (integer 0 1439))
+  (cond ((> arrival-time (visit-end visit)) (error 'too-late-arrival :visit visit))
+        ((< arrival-time (visit-start visit)) (+ (visit-start visit) (visit-duration visit))) ;wait
+        (t (+ arrival-time (visit-duration visit)))))
 
 (defun veh-in-timep (v &optional dist-array)
   "Tests weather the route on <Vehicle> is complying with the time-window constraints. Returns T and the time of finishing its last task."
@@ -78,7 +80,7 @@
     (constraints-check
      (route time loc)
      ((cdr (vehicle-route v)) 0 (car (vehicle-route v)))
-     ((cdr route) (time-after-serving-node to arr-time) to)
+     ((cdr route) (time-after-visit to arr-time) to)
      (<= arr-time (node-end to)))))
 
 (defmethod in-timep ((pr VRPTW))

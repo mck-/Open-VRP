@@ -37,6 +37,7 @@
   (route nil :type list)
   (start-location :nil :type symbol :read-only t)
   (end-location :nil :type symbol :read-only t)
+  (speed 1 :type number :read-only t)
   capacity)
 
   ;; Todo:
