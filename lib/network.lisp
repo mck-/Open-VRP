@@ -35,7 +35,9 @@
   (when (eq from to) (error 'same-origin-destination :from from :to to))
   (let ((row (gethash from dist-matrix)))
     (check-type row hash-table)
-    (gethash to row)))
+    (aif (gethash to row)
+         it
+         (error 'distance-between-nodes-undefined :from from :to to))))
 
 ;; -------------------------
 

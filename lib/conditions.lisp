@@ -24,6 +24,11 @@
    (to :initarg :to :reader to))
   (:report "Trying to lookup distance for same origin and destination - NIL"))
 
+(define-condition distance-between-nodes-undefined (error)
+  ((from :initarg :from :reader from)
+   (to :initarg :to :reader to))
+  (:report "Distance is not defined between these two points!"))
+
 ;; lib/constraints.lisp
 (define-condition too-late-arrival (error)
   ((visit :initarg :visit :reader visit))

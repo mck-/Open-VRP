@@ -199,6 +199,7 @@
 
    ;; conditions
    :same-origin-destination
+   :distance-between-nodes-undefined
    :list-of-nils
    :index-out-of-bounds
    :unknown-log-mode
