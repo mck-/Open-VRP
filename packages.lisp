@@ -230,15 +230,13 @@
         :open-vrp.classes
         :open-vrp.util)
   (:import-from :alexandria :shuffle :flatten)
-  (:export ;; tools
-   :get-closest-vehicle
-   :get-closest-feasible-vehicle
+  (:export
+   ;; tools
    :get-optimal-insertion
    :fitness-before-after
    :insertion-move
    :get-best-insertion-move
    :get-best-insertion-move-in-vehicle
-   :get-closest-node
    :feasible-move-p
 
    ;; iterator
