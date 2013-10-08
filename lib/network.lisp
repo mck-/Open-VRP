@@ -43,7 +43,10 @@
 ;;--------------------------
 
 (defmethod node ((prob problem) id)
-  (aref (problem-network prob) id))
+  (gethash id (problem-network prob)))
+
+(defmethod visit-node ((prob problem) id)
+  (gethash id (problem-visits prob)))
 
 ;; -------------------------
 

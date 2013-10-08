@@ -65,6 +65,7 @@
   ((name :reader problem-name :initarg :name :initform "VRP")
    (desc :reader problem-desc :initarg :desc :initform "Vehicle Routing Problem")
    (network :reader problem-network :initarg :network :type hash-table)
+   (visits :reader problem-visits :initarg :visits :type hash-table)
    (dist-matrix :accessor problem-dist-matrix :initarg :dist-matrix :initform nil :type hash-table)
    (fleet :reader problem-fleet :initarg :fleet :type (simple-vector *))
    (log-file :accessor problem-log-file :initarg :log-file :initform nil)

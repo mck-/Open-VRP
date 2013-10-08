@@ -61,6 +61,7 @@
            :problem-name
            :problem-desc
            :problem-network
+           :problem-visits
            :problem-dist-matrix
            :problem-fleet
            :problem-log-file
@@ -143,6 +144,7 @@
    :generate-dist-array
    :get-array-row
    :node
+   :visit-node
    :new-node
 
    ;; fleet utils
