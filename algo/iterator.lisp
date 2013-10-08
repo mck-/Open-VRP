@@ -38,18 +38,18 @@
 (defun fitness-before-after (sol operation)
   "Given <Problem> object and an #'operation function that takes the <problem> as input, return the difference of fitness between after and before."
   (let* ((before (fitness sol))
-	 (clone (copy-object sol)))
+         (clone (copy-object sol)))
     (funcall operation clone)
     (- (fitness clone) before)))
-    
+
 (defmethod assess-move ((sol problem) (m move))
   "Assesses the effect on fitness when <move> is performed on <problem> (on a clone - undestructive)."
   (setf (move-fitness m)
-	(fitness-before-after sol #'(lambda (x) (perform-move x m)))))
+        (fitness-before-after sol #'(lambda (x) (perform-move x m)))))
 
 ;; feasibility check
 (defmethod assess-move :around ((sol problem) (m move))
-  (if (or (typep m 'TS-best-insertion-move) (feasible-movep sol m))
+  (if (or (typep m 'TS-best-insertion-move) (feasible-move-p sol m))
       (call-next-method)
       (setf (move-fitness m) nil)))
 

@@ -27,22 +27,22 @@
 ;; 1. Feasibility check of moves
 ;; ---------------------------
 
-(defgeneric feasible-movep (sol move)
+(defgeneric feasible-move-p (sol move)
   (:documentation "Given a current solution, assess feasibility of the <Move>. For CVRP, just check if it fits in the total vehicle capacity. For VRPTW, check for TW feasibility of the whole route. For CVRPTW, checks both by means of multiple-inheritance and method-combination.")
   (:method-combination and))
 
-(defmethod feasible-movep and ((sol problem) (m move)) T)
+(defmethod feasible-move-p and ((sol problem) (m move)) T)
 
-(defmethod feasible-movep and ((sol CVRP) (m insertion-move))
-  (with-slots (node-ID vehicle-ID) m
-    (let ((veh (vehicle sol vehicle-ID)))
+(defmethod feasible-move-p and ((sol CVRP) (m insertion-move))
+  (with-slots (node-id vehicle-id) m
+    (let ((veh (vehicle sol vehicle-id)))
       ; if node is already on the route, moving intra-route is feasible
-      (if (node-on-routep node-ID veh) T
+      (if (node-on-route-p node-id veh) T
           (multiple-value-bind (comply cap-left) (in-capacity-p veh)
             (unless comply (error 'infeasible-solution :sol sol :func #'in-capacity-p))
-            (<= (node-demand (node sol node-ID)) cap-left))))))
+            (<= (order-demand (visit-node sol node-id)) cap-left))))))
 
-(defmethod feasible-movep and ((sol VRPTW) (m insertion-move))
+(defmethod feasible-move-p and ((sol VRPTW) (m insertion-move))
   (let ((node-id (move-node-id m))
         (veh-id (move-vehicle-id m))
         (index (move-index m)))

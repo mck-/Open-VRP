@@ -238,7 +238,7 @@
    :get-best-insertion-move
    :get-best-insertion-move-in-vehicle
    :get-closest-node
-   :feasible-movep
+   :feasible-move-p
 
    ;; iterator
    :initialize
