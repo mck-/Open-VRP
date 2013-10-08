@@ -13,4 +13,5 @@
                          (:file "util-route")
                          (:file "constraints")
                          (:file "time")
-                         (:file "algo-tools")))))
+                         (:file "algo-tools")
+                         (:file "algo-best-insertion")))))

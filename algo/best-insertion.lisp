@@ -9,17 +9,17 @@
 (defun generate-insertion-moves (sol vehicle-id node-id)
   "Given the <solution> object, vehicle-id and node-id (integers), create all possible insertion-moves, and return them in a list. Avoid generating moves that won't do anything (when doing intra-route insertion)."
   (let* ((route (vehicle-route (vehicle sol vehicle-id)))
-         (pos (position node-id route :key #'node-id)) ;check if we do intra-route insertion
+         (pos (position node-id route :key #'visit-node-id)) ;check if we do intra-route insertion
          (moves '()))
-    (do ((index 1 (1+ index)))
-        ((> index (if (problem-to-depot sol) (1- (length route)) (length route))))
+    (do ((index 0 (1+ index)))
+        ((> index (length route)))
       (unless (and pos (or (= index pos) (= index (1+ pos)))) ;useless moves avoided
         (push (make-insertion-move
                :index index
                :vehicle-id vehicle-id
                :node-id node-id)
               moves)))
-    (nreverse moves)))
+    moves))
 
 ;; calculates the added distance of performing the insertion-move
 ;; when appending to the end, it's just the distance from last location to the node
