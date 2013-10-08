@@ -55,6 +55,8 @@
            :vehicle-speed
            :vehicle-start-location
            :vehicle-end-location
+           :vehicle-shift-start
+           :vehicle-shift-end
 
            :problem-name
            :problem-desc

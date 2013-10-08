@@ -48,3 +48,31 @@
   (assert-error 'simple-type-error (time-after-visit "visit?" 10))
   (assert-error 'simple-type-error (time-after-visit (make-order :start 5 :end 10 :duration 1) "8")))
 
+(define-test time-window-constraints
+  "Test the time-window constraints checkers"
+  (:tag :constraints)
+  (let* ((t1 (make-vehicle :id :on-time :start-location :1 :end-location :4
+                           :route (list (make-order :node-id :2 :start 0 :end 2 :duration 1)
+                                        (make-order :node-id :3 :start 5 :end 8 :duration 2))))
+         (t2 (make-vehicle :id :too-late :start-location :1 :end-location :4
+                           :route (list (make-order :node-id :2 :start 0 :end 2 :duration 10)
+                                        (make-order :node-id :3 :start 5 :end 8 :duration 2))))
+         (t3 (make-vehicle :id :on-time-speed :speed 2  :start-location :1 :end-location :4 :shift-end 7
+                           :route (list (make-order :node-id :2 :start 0 :end 2 :duration 1)
+                                        (make-order :node-id :3 :start 5 :end 8 :duration 1))))
+         (t4 (make-vehicle :id :late-home :start-location :1 :end-location :4 :shift-end 6
+                           :route (list (make-order :node-id :2 :start 0 :end 2 :duration 1)
+                                        (make-order :node-id :3 :start 5 :end 8 :duration 2))))
+         (t5 (make-vehicle :id :late-start :start-location :1 :end-location :4 :shift-end 7 :shift-start 3
+                           :route (list (make-order :node-id :2 :start 0 :end 2 :duration 1)
+                                        (make-order :node-id :3 :start 5 :end 8 :duration 1))))
+         (dist-matrix (alist-to-hash '((:1 (:2 . 1)) (:2 (:3 . 1)) (:3 (:4 . 1)))))
+         (on-time (make-instance 'vrptw :fleet (vector t1 t1 t1) :dist-matrix dist-matrix))
+         (too-late (make-instance 'vrptw :fleet (vector t1 t2 t3) :dist-matrix dist-matrix)))
+    (assert-true (veh-in-time-p t1 dist-matrix))
+    (assert-false (veh-in-time-p t2 dist-matrix))
+    (assert-true (veh-in-time-p t3 dist-matrix))
+    (assert-false (veh-in-time-p t4 dist-matrix))
+    (assert-false (veh-in-time-p t5 dist-matrix))
+    (assert-true (in-time-p on-time))
+    (assert-false (in-time-p too-late))))

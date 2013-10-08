@@ -38,9 +38,9 @@
   ((veh :initarg :veh :reader veh))
   (:report "Trying to check capacities for a vehicle that has no defined capacity."))
 
-(define-condition no-speed-vehicle (error)
-  ((veh :initarg :veh :reader veh))
-  (:report "Trying to check TW constraints for a vehicle that has no defined speed."))
+;; (define-condition no-speed-vehicle (error)
+;;   ((veh :initarg :veh :reader veh))
+;;   (:report "Trying to check TW constraints for a vehicle that has no defined speed."))
 
 ;; lib/network.lisp lib/fleet.lisp
 (define-condition not-equal-length (error)

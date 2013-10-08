@@ -67,26 +67,28 @@
 (defun time-after-visit (visit arrival-time)
   "Given a visit to serve and the current time, return the new time (if on-time to begin with). When arrival-time is too early, wait till earliest start time. Time is given in minutes since midnight."
   (check-type visit visit)
-  (check-type arrival-time (integer 0 1439))
+  (check-type arrival-time number)
   (cond ((> arrival-time (visit-end visit)) (error 'too-late-arrival :visit visit))
         ((< arrival-time (visit-start visit)) (+ (visit-start visit) (visit-duration visit))) ;wait
         (t (+ arrival-time (visit-duration visit)))))
 
 (defun veh-in-time-p (v dist-matrix)
   "Tests weather the route on <Vehicle> is complying with the time-window constraints. Returns T and the time of finishing its last task."
-  (unless (vehicle-speed v) (error 'no-speed-vehicle :veh v))
-  (symbol-macrolet ((to (car route))
-                    (arr-time (+ time (travel-time loc to dist-matrix :speed (vehicle-speed v)))))
-    (constraints-check
-     (route time loc)
-     ((cdr (vehicle-route v)) 0 (car (vehicle-route v)))
-     ((cdr route) (time-after-visit to arr-time) to)
-     (<= arr-time (visit-end to)))))
+  (labels ((iter (route time loc)
+             (if (null route)
+                 (values (<= (+ time (travel-time loc (vehicle-end-location v) dist-matrix :speed (vehicle-speed v)))
+                             (vehicle-shift-end v))
+                         time loc)
+                 (let ((arr-time (+ time (travel-time loc (visit-node-id (car route)) dist-matrix :speed (vehicle-speed v)))))
+                   (and
+                    (<= arr-time (visit-end (car route)))
+                    (iter (cdr route) (time-after-visit (car route) arr-time) (visit-node-id (car route))))))))
+    (iter (vehicle-route v) (vehicle-shift-start v) (vehicle-start-location v))))
 
 (defmethod in-time-p ((pr VRPTW))
-  (constraints-check
-   (veh)
-   ((problem-fleet pr))
-   ((cdr veh))
-   (veh-in-time-p (car veh) (aif (problem-dist-matrix pr) it))))
+  (reduce
+   (lambda (x y)
+     (and x (veh-in-time-p y (problem-dist-matrix pr))))
+   (problem-fleet pr)
+   :initial-value T))
 ;; -------------------------

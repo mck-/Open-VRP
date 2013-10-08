@@ -37,12 +37,12 @@
   (route nil :type list)
   (start-location :nil :type symbol :read-only t)
   (end-location :nil :type symbol :read-only t)
-  (speed 1 :type number :read-only t)
+  (speed 1 :type fixnum :read-only t)
+  (shift-start 0 :type fixnum :read-only t)
+  (shift-end 2359 :type fixnum :read-only t)
   capacity)
 
   ;; Todo:
-  ;; (shift-start 0 :type fixnum :read-only t)
-  ;; (shift-end 2359 :type fixnum :read-only t)
   ;; (break-start 1100 :type fixnum :read-only t)
   ;; (break-start 1400 :type fixnum :read-only t)
   ;; (break-duration 100 :type fixnum :read-only t)
