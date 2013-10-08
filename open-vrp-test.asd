@@ -12,4 +12,5 @@
                          (:file "util-fleet")
                          (:file "util-route")
                          (:file "constraints")
-                         (:file "time")))))
+                         (:file "time")
+                         (:file "algo-tools")))))

@@ -10,11 +10,13 @@
 ;; -------------------------
 (defstruct move fitness)
 
-(defstruct (insertion-move (:include move) (:conc-name move-)) node-ID vehicle-ID index)
+(defstruct (insertion-move (:include move) (:conc-name move-)) node-id vehicle-id index)
 
 (defun route-from (ins-move sol)
-  "Returns the route that contains the node that will be moved."
-  (vehicle-route (vehicle sol (vehicle-with-node-ID sol (move-node-id ins-move)))))
+  "Returns the route that contains the node that will be moved. Returns NIL if it cannot be found in any vehicle."
+  (aif (vehicle-with-node-id sol (move-node-id ins-move))
+       (vehicle-route (vehicle sol it))
+       nil))
 
 (defun route-to (ins-move sol)
   "Returns the route that will be affected by the insertion-move."
