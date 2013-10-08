@@ -22,14 +22,6 @@
   "Returns the route that will be affected by the insertion-move."
   (vehicle-route (vehicle sol (move-vehicle-ID ins-move))))
 
-(defun num-nodes (prob)
-  "Given a problem, return the number of nodes in the network."
-  (length (problem-network prob)))
-
-(defun num-veh (prob)
-  "Given a problem, return size of the fleet."
-  (length (problem-fleet prob)))
-
 ;; --------------------------
 
 ;; 1. Feasibility check of moves
