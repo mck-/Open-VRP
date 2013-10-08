@@ -8,6 +8,7 @@
                (:module :lib
                         :components
                         ((:file "class-definitions")
+                         (:file "hash-table")
                          (:file "simple-utils")
                          (:file "list")
                          (:file "network")
