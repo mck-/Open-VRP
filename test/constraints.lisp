@@ -76,3 +76,28 @@
     (assert-false (veh-in-time-p t5 dist-matrix))
     (assert-true (in-time-p on-time))
     (assert-false (in-time-p too-late))))
+
+
+;; Capacity AND Time Windows
+;; --------------------------------
+
+
+(define-test CVRPTW-constraints
+  "Test the capacity AND time-window constraints checkers"
+  (:tag :constraints)
+  (let* ((t1 (make-vehicle :id :on-time-in-cap :capacity 10 :start-location :1 :end-location :4
+                           :route (list (make-order :node-id :2 :demand 3 :start 0 :end 2 :duration 1)
+                                        (make-order :node-id :3 :demand 3 :start 5 :end 8 :duration 2))))
+         (t2 (make-vehicle :id :on-time-overfull :capacity 2 :start-location :1 :end-location :4
+                           :route (list (make-order :node-id :2 :demand 2 :start 0 :end 2 :duration 1)
+                                        (make-order :node-id :3 :demand 2 :start 5 :end 8 :duration 2))))
+         (t3 (make-vehicle :id :late-in-cap :capacity 20 :start-location :1 :end-location :4 :shift-end 6
+                           :route (list (make-order :node-id :2 :demand 2 :start 0 :end 2 :duration 1)
+                                        (make-order :node-id :3 :demand 2 :start 5 :end 8 :duration 2))))
+         (dist-matrix (alist-to-hash '((:1 (:2 . 1)) (:2 (:3 . 1)) (:3 (:4 . 1)))))
+         (on-time-in-cap (make-instance 'cvrptw :fleet (vector t1 t1 t1) :dist-matrix dist-matrix))
+         (on-time-overfull (make-instance 'cvrptw :fleet (vector t2 t2) :dist-matrix dist-matrix))
+         (late-in-cap  (make-instance 'cvrptw :fleet (vector t3 t3) :dist-matrix dist-matrix)))
+    (assert-true (constraints-p on-time-in-cap))
+    (assert-false (constraints-p on-time-overfull))
+    (assert-false (constraints-p late-in-cap))))
