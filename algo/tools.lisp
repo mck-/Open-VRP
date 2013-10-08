@@ -43,24 +43,31 @@
             (<= (order-demand (visit-node sol node-id)) cap-left))))))
 
 (defmethod feasible-move-p and ((sol VRPTW) (m insertion-move))
-  (let ((node-id (move-node-id m))
-        (veh-id (move-vehicle-id m))
-        (index (move-index m)))
-    (symbol-macrolet ((full-route (vehicle-route (vehicle sol veh-id)))
-                      (ins-node (node sol node-ID))
-                      (to (if (= 1 i) ins-node (car route)))
-                      (arr-time (+ time (travel-time loc to :dist-array (problem-dist-array sol)))))
-      (constraints-check
-       (route time loc i)
-       ((cdr full-route) 0 (car full-route) index)
-       ((if (= 1 i) route (cdr route)) ;don't skip after inserting new node
-        (time-after-visit to arr-time) ;set time after new node
-        to (1- i))
-       (<= arr-time (node-end to))
-       (and (null route) (< i 1)))))) ; case of append, need to check once more
+  (with-slots (node-id vehicle-id index) m
+    (let* ((v (vehicle sol vehicle-id))
+           (route (vehicle-route v))
+           (ins-node (visit-node sol node-id)))
+      (labels ((iter (route time loc i)
+                 (if (and (null route) (< i 0))
+                     (values (<= (+ time (travel-time loc (vehicle-end-location v) (problem-dist-matrix sol) :speed (vehicle-speed v)))
+                                 (vehicle-shift-end v))
+                             time loc)
+                     (let* ((to (if (= 0 i) ins-node (car route)))
+                            (arr-time (+ time (travel-time loc (visit-node-id to) (problem-dist-matrix sol)))))
+                       (and
+                        (<= arr-time (visit-end to))
+                        (iter (if (= 0 i) route (cdr route))
+                              (time-after-visit to arr-time)
+                              (visit-node-id to)
+                              (1- i)))))))
+        (iter route (vehicle-shift-start v) (vehicle-start-location v) index)))))
 
 ;; for debugging (insert in test-form with progn)
 ;       (format t "Route: ~A~% Loc: ~A~% To: ~A~% Time: ~A~% Arr-time: ~A~% Node-start: ~A~% Node-end: ~A~% Duration: ~A~% ins-node-end: ~A~% i: ~A~%" (mapcar #'node-id route) (node-id loc) (node-id to) time arr-time (node-start to) (node-end to) (node-duration to) (node-end ins-node) i)
+
+;; (progn
+;;   (format t "OK! Time: ~A~% Arrival at home: ~A~% Shift-end: ~A~% Return: ~A~%" time (+ time (travel-time loc (vehicle-end-location v) (problem-dist-matrix sol) :speed (vehicle-speed v))) (vehicle-shift-end v) (<= (+ time (travel-time loc (vehicle-end-location v) (problem-dist-matrix sol) :speed (vehicle-speed v))) (vehicle-shift-end v)))
+
 ;; -----------------------------
 
 ;; ----------------------------
