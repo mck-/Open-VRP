@@ -14,7 +14,7 @@
                                                                (make-order :demand 1))))
          (t1 (make-vehicle :id :full :capacity 2 :route (list (make-order :demand 1)
                                                               (make-order :demand 2))))
-         (t2 (make-vehicle :id :full :capacity 10 :route (list (make-order :demand 1)
+         (t2 (make-vehicle :id :not-full :capacity 10 :route (list (make-order :demand 1)
                                                                (make-order :demand 2))))
          (prob-overfull (make-instance 'problem :fleet (vector t0 t1)))
          (cvrp-overfull (make-instance 'cvrp :fleet (vector t0 t1)))
