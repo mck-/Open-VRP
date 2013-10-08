@@ -22,22 +22,24 @@
     moves))
 
 ;; calculates the added distance of performing the insertion-move
-;; when appending to the end, it's just the distance from last location to the node
-;; otherwise it is the distance to the nodes before and after, minus their direct connection
+;; it is the distance to the nodes before and after, minus their direct connection
 (defmethod assess-move ((sol problem) (m insertion-move))
-  (with-slots (node-ID vehicle-ID index) m
-    (let* ((route (route-to m sol))
-           (dist-array (problem-dist-array sol))
-           (node-before (node-id (nth (1- index) route))))
+  (with-slots (node-id vehicle-id index) m
+    (let* ((veh (vehicle sol vehicle-id))
+           (route (vehicle-route veh))
+           (dist-matrix (problem-dist-matrix sol))
+           (node-before (if (= index 0)
+                            (vehicle-start-location veh)
+                            (visit-node-id (nth (1- index) route))))
+           (node-after (if (= index (length route))
+                           (vehicle-end-location veh)
+                           (visit-node-id (nth index route)))))
       (setf (move-fitness m)
-            (if (= index (length route)) ;if appending to end of route
-                (distance (node-id (last-node route)) node-ID dist-array)
-                (let ((node-after (node-id (nth index route))))
-                  (-
-                   (+ (distance node-before node-ID dist-array)
-                      (distance node-ID node-after dist-array))
-                   (handler-case (distance node-before node-after dist-array)
-                     (same-origin-destination () 0)))))))))
+            (-
+             (+ (distance node-before node-id dist-matrix)
+                (distance node-id node-after dist-matrix))
+             (handler-case (distance node-before node-after dist-matrix)
+               (same-origin-destination () 0)))))))
 
 (defmethod perform-move ((sol problem) (m insertion-move))
   "Performs the <move> on <problem>."
