@@ -35,11 +35,13 @@
                            (vehicle-end-location veh)
                            (visit-node-id (nth index route)))))
       (setf (move-fitness m)
-            (-
-             (+ (distance node-before node-id dist-matrix)
-                (distance node-id node-after dist-matrix))
-             (handler-case (distance node-before node-after dist-matrix)
-               (same-origin-destination () 0)))))))
+            (handler-case
+                (-
+                 (+ (distance node-before node-id dist-matrix)
+                    (distance node-id node-after dist-matrix))
+                 (handler-case (distance node-before node-after dist-matrix)
+                   (same-origin-destination () 0)))
+              (distance-between-nodes-undefined () nil))))))
 
 (defmethod perform-move ((sol problem) (m insertion-move))
   "Performs the <move> on <problem>."
