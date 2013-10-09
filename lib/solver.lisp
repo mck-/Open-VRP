@@ -65,9 +65,11 @@
 ;; When all logging is done in file, at least print the final solution in repl
 (defmethod solve-prob :after ((p problem) (a algo))
   (unless (log-to-replp p)
-    (print-final-results p a))
-  (when (and (problem-drawer p) (drawer-plotp (problem-drawer p)))
-    (plot-solution (algo-best-sol a))))
+    (print-final-results p a)))
+
+  ;; @mck- Oct 9, 2013 - disable drawing for now
+  ;; (when (and (problem-drawer p) (drawer-plotp (problem-drawer p)))
+  ;;   (plot-solution (algo-best-sol a))))
 ;; ---------------------------
 
 ;; Multi-run
