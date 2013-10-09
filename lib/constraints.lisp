@@ -85,6 +85,11 @@
                     (iter (cdr route) (time-after-visit (car route) arr-time) (visit-node-id (car route))))))))
     (iter (vehicle-route v) (vehicle-shift-start v) (vehicle-start-location v))))
 
+;; Debugging code (insert before the (and form)
+                   ;; (progn
+                   ;;   (format t "Route: ~A~% Loc: ~A~% Time: ~A~% Arr-time: ~A~% Node-start: ~A~% Node-end: ~A~% Duration: ~A~%" (mapcar #'visit-node-id route) loc time arr-time (visit-start (car route)) (visit-end (car route)) (visit-duration (car route)))
+
+
 (defmethod in-time-p ((pr VRPTW))
   (reduce
    (lambda (x y)
