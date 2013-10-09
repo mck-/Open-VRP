@@ -63,7 +63,9 @@
         (iter route (vehicle-shift-start v) (vehicle-start-location v) index)))))
 
 ;; for debugging (insert in test-form with progn)
-;       (format t "Route: ~A~% Loc: ~A~% To: ~A~% Time: ~A~% Arr-time: ~A~% Node-start: ~A~% Node-end: ~A~% Duration: ~A~% ins-node-end: ~A~% i: ~A~%" (mapcar #'node-id route) (node-id loc) (node-id to) time arr-time (node-start to) (node-end to) (node-duration to) (node-end ins-node) i)
+                       ;; (progn
+                       ;;   (format t "Route: ~A~% Loc: ~A~% To: ~A~% Time: ~A~% Arr-time: ~A~% Node-start: ~A~% Node-end: ~A~% Duration: ~A~% ins-node-end: ~A~% i: ~A~%" (mapcar #'visit-node-id route) loc (visit-node-id to) time arr-time (visit-start to) (visit-end to) (visit-duration to) (visit-end ins-node) i)
 
-;; (progn
-;;   (format t "OK! Time: ~A~% Arrival at home: ~A~% Shift-end: ~A~% Return: ~A~%" time (+ time (travel-time loc (vehicle-end-location v) (problem-dist-matrix sol) :speed (vehicle-speed v))) (vehicle-shift-end v) (<= (+ time (travel-time loc (vehicle-end-location v) (problem-dist-matrix sol) :speed (vehicle-speed v))) (vehicle-shift-end v)))
+;; for debugging arrival at home (insert in return form with progn)
+;;                      (progn
+                       ;; (format t "OK! Time: ~A~% Arrival at home: ~A~% Shift-end: ~A~% Return: ~A~%" time (+ time (travel-time loc (vehicle-end-location v) (problem-dist-matrix sol) :speed (vehicle-speed v))) (vehicle-shift-end v) (<= (+ time (travel-time loc (vehicle-end-location v) (problem-dist-matrix sol) :speed (vehicle-speed v))) (vehicle-shift-end v)))
