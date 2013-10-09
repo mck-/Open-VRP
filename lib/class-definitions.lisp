@@ -59,7 +59,7 @@
 ;; Data structures:
 ;; - network is a Hash Table
 ;; - dist-matrix is a Hash Table of Hash Tables
-;; - fleet is a vector
+;; - fleet is a vector (see optimization notes)
 
 (defclass problem ()
   ((name :reader problem-name :initarg :name :initform "VRP")

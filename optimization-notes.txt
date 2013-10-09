@@ -1,0 +1,36 @@
+@mck- Oct 9, 2013 (maybe a list is more efficient, since we iterate a lot):
+
+CL-USER> (time (dotimes (x 1234) (loop for x in *list* sum x)))
+ Evaluation took:
+   0.632 seconds of real time
+   0.633619 seconds of total run time (0.630884 user, 0.002735 system)
+   100.32% CPU
+   1,450,388,150 processor cycles
+   0 bytes consed
+
+
+CL-USER> (time (dotimes (x 1234) (loop for x across *vector* sum x)))
+ Evaluation took:
+   1.160 seconds of real time
+   1.162114 seconds of total run time (1.157540 user, 0.004574 system)
+   100.17% CPU
+   2,663,521,905 processor cycles
+   0 bytes consed
+
+
+CL-USER> (time (dotimes (x 1234) (sum *list*)))
+ Evaluation took:
+   0.859 seconds of real time
+   0.861542 seconds of total run time (0.857181 user, 0.004361 system)
+   100.35% CPU
+   1,970,987,577 processor cycles
+   51,968 bytes consed
+
+
+CL-USER> (time (dotimes (x 1234) (reduce #'+ *list*)))
+ Evaluation took:
+   2.352 seconds of real time
+   2.354652 seconds of total run time (2.343541 user, 0.011111 system)
+   100.13% CPU
+   5,397,409,345 processor cycles
+   0 bytes consed
