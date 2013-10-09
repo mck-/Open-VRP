@@ -43,8 +43,8 @@
 
 (defmethod perform-move ((sol problem) (m insertion-move))
   "Performs the <move> on <problem>."
-  (with-slots (node-ID vehicle-ID index) m
-    (insert-node (vehicle sol vehicle-ID) (node sol node-ID) index)
+  (with-slots (node-id vehicle-id index) m
+    (insert-node (vehicle sol vehicle-id) (visit-node sol node-id) index)
     sol))
 
 ;; logging
