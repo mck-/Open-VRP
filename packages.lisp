@@ -239,6 +239,10 @@
    :get-best-insertion-move-in-vehicle
    :feasible-move-p
 
+   ;; conditions
+   :no-initial-feasible-solution
+   :no-feasible-move
+
    ;; iterator
    :initialize
    :generate-moves
@@ -283,7 +287,8 @@
    :is-tabup
    :is-tabu-movep
    :TS-best-insertion-move
-   :create-candidate-list))
+   :create-candidate-list
+   :all-moves-tabu))
 
 (defpackage :open-vrp
   (:use :common-lisp

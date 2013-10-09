@@ -14,4 +14,5 @@
                          (:file "constraints")
                          (:file "time")
                          (:file "algo-tools")
-                         (:file "algo-best-insertion")))))
+                         (:file "algo-best-insertion")
+                         (:file "greedy-best-insertion")))))
