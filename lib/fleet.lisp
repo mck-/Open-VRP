@@ -57,10 +57,7 @@
 
 (defun total-dist (problem)
   "Returns total distance of all routes combined. Includes to and from start and end locations."
-  (sum
-   (mapcar #'(lambda (v)
-               (route-dist v (problem-dist-matrix problem)))
-           (get-busy-vehicles problem))))
+  (loop for v across (get-busy-vehicles problem) sum (route-dist v (problem-dist-matrix problem))))
 
 ;; Accessor functions
 ;; ------------------
