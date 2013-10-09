@@ -65,23 +65,22 @@
     (car sorted)))
 
 ;; Step 2: find best vehicle, given node
-(defgeneric get-best-insertion-move (prob node)
-  (:method (prob node) "optimal-insertion: Expects <Problem> and <Node>.")
-  (:documentation "Given a node and a solution (that does not have this node yet), return the best <insertion-move>."))
-
-(defmethod get-best-insertion-move ((sol problem) (n node))
+(defun get-best-insertion-move (sol node-id)
+  "Given a node-id and a solution (that does not have this node yet), return the best <insertion-move>."
+  (check-type sol problem)
+  (check-type node-id symbol)
   (labels ((iter (flt best-move)
              (if (null flt) (or best-move (error 'no-feasible-move))
                  (iter (cdr flt)
                        (handler-case
                            (let ((new (get-best-insertion-move-in-vehicle sol
                                                                           (vehicle-id (car flt))
-                                                                          (node-id n))))
+                                                                          node-id)))
                              (if (or (null best-move) ;first move
                                      (< (move-fitness new) (move-fitness best-move))) ;better?
                                  new
                                  best-move))
-                         (no-feasible-move () (or best-move)))))))
+                         (no-feasible-move () best-move))))))
     (iter (problem-fleet sol) nil)))
 
 ;; -------------------------
