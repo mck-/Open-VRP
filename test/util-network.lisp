@@ -16,7 +16,8 @@
     (assert-error 'same-origin-destination (distance :c :c matrix))
     (assert-error 'simple-type-error (distance "c" "a" matrix))
     (assert-error 'simple-type-error (distance :a :c '((:a (:c . 2)))))
-    (assert-error 'simple-type-error (distance :d :c matrix))))
+    (assert-error 'distance-between-nodes-undefined (distance :d :c matrix))
+    (assert-error 'distance-between-nodes-undefined (distance :c :d matrix))))
 
 (define-test travel-time
   "Test the travel-time util, which is the same as dist-matrix if the speed is 1."
@@ -31,7 +32,7 @@
     (assert-error 'same-origin-destination (travel-time :c :c matrix))
     (assert-error 'simple-type-error (travel-time "c" "a" matrix))
     (assert-error 'simple-type-error (travel-time :a :c '((:a (:c . 2)))))
-    (assert-error 'simple-type-error (travel-time :d :c matrix))
+    (assert-error 'distance-between-nodes-undefined (travel-time :d :c matrix))
 
     ;; With speed
     (assert-equalp 10 (travel-time :b :c matrix :speed 0.5))
