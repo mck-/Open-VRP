@@ -69,7 +69,7 @@
    (dist-matrix :accessor problem-dist-matrix :initarg :dist-matrix :initform nil :type hash-table)
    (fleet :reader problem-fleet :initarg :fleet :type (simple-vector *))
    (log-file :accessor problem-log-file :initarg :log-file :initform nil)
-   (log-mode :accessor problem-log-mode :initarg :log-mode :initform :file)))
+   (log-mode :accessor problem-log-mode :initarg :log-mode :initform :repl)))
    ;; log-mode :none = off, :file = output file, :repl = REPL
 
    ;; @mck- Oct 2, 2013 -- does not belong here
