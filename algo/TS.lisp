@@ -44,19 +44,19 @@
              (eq (visit-node-id (cadr route)) (move-node-id mv)))
         (and (no-visits-p route) (one-destination-p (route-from mv prob))))))
 
-(defmethod generate-moves ((ts tabu-search))
-  "Generates a list of <move> instances (depending on what was defined in the ts slot) for all nodes and vehicles."
-  (flet ((symb (a b)
-           (intern (format nil "~a-~a" (symbol-name a) (symbol-name b)) :open-vrp.algo)))
-    (let ((prob (algo-current-sol ts)))
-      (remove-if #'(lambda (mv) (useless-move mv prob))
-                 (flatten
-                  (for-node-ID (node-ID prob)
-                    (for-veh-ID (veh-ID prob)
-                      (funcall
-                       (symb 'make (ts-move-type ts))
-                       :node-ID node-ID
-                       :vehicle-ID veh-ID))))))))
+;; (defmethod generate-moves ((ts tabu-search))
+;;   "Generates a list of <move> instances (depending on what was defined in the ts slot) for all nodes and vehicles."
+;;   (flet ((symb (a b)
+;;            (intern (format nil "~a-~a" (symbol-name a) (symbol-name b)) :open-vrp.algo)))
+;;     (let ((prob (algo-current-sol ts)))
+;;       (remove-if #'(lambda (mv) (useless-move mv prob))
+;;                  (flatten
+;;                   (for-node-ID (node-ID prob)
+;;                     (for-veh-ID (veh-ID prob)
+;;                       (funcall
+;;                        (symb 'make (ts-move-type ts))
+;;                        :node-ID node-ID
+;;                        :vehicle-ID veh-ID))))))))
 
 ;; the difference between cost (inserting) and saving (removing)
 ;; cost of inserting is calculated by (get-best-insertion-move)
@@ -64,7 +64,7 @@
 (defmethod assess-move ((sol problem) (mv TS-best-insertion-move))
   (with-slots (node-id vehicle-id fitness) mv
     (handler-case
-        (let* ((dist-array (problem-dist-array sol))
+        (let* ((dist-array (problem-dist-matrix sol))
                (route (route-from mv sol))
                (pos (position node-id route :key #'node-id))
                (node-before (node-id (nth (1- pos) route)))

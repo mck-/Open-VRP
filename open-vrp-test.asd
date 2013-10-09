@@ -2,7 +2,7 @@
   :description "open-vrp-test"
   :author "mck- <kuomarc2@gmail.com>"
   :licence "LLGPL"
-  :depends-on (#:lisp-unit #:open-vrp-lib)
+  :depends-on (#:lisp-unit #:open-vrp)
   :serial t
   :components ((:module :test
                         :components
