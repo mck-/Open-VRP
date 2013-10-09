@@ -34,3 +34,40 @@ CL-USER> (time (dotimes (x 1234) (reduce #'+ *list*)))
    100.13% CPU
    5,397,409,345 processor cycles
    0 bytes consed
+
+
+-- Comparing vector vs list on total-dist
+
+- List (loop):
+
+TEST> (time (dotimes (x 1234567) (total-dist prob)))
+Evaluation took:
+  1.293 seconds of real time
+  1.298293 seconds of total run time (1.286200 user, 0.012093 system)
+  [ Run times consist of 0.046 seconds GC time, and 1.253 seconds non-GC time. ]
+  100.39% CPU
+  2,966,816,682 processor cycles
+  335,813,776 bytes consed
+
+- Vector:
+
+TEST> (time (dotimes (x 1234567) (total-dist **)))
+Evaluation took:
+  1.527 seconds of real time
+  1.532844 seconds of total run time (1.520057 user, 0.012787 system)
+  [ Run times consist of 0.051 seconds GC time, and 1.482 seconds non-GC time. ]
+  100.39% CPU
+  3,503,704,546 processor cycles
+  335,827,248 bytes consed
+
+- Tail-recursion on list:
+
+Evaluation took:
+  1.227 seconds of real time
+  1.232452 seconds of total run time (1.221381 user, 0.011071 system)
+  [ Run times consist of 0.048 seconds GC time, and 1.185 seconds non-GC time. ]
+  100.41% CPU
+  2,816,019,361 processor cycles
+  335,813,872 bytes consed
+
+--> Not much performance gain between loop and tail-recursion, but loop is a one-liner

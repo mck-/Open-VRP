@@ -60,7 +60,7 @@
                                 (:O5 (:O8 . 1))
                                 (:O8 (:O6 . 5))
                                 (:O6 (:D1 . 2.2)))))
-         (prob (make-instance 'problem :fleet (vector t1 t2) :dist-matrix dist)))
+         (prob (make-instance 'problem :fleet (list t1 t2) :dist-matrix dist)))
     (assert-equal 7.7 (route-dist t1 dist))
     (assert-equal 10.7 (route-dist t2 dist))
     (assert-error 'simple-type-error (route-dist "hello" dist))

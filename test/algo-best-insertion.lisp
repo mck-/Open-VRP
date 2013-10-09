@@ -19,7 +19,7 @@
                 :o5 {:o1 4 :o2 3 :o3 2 :o4 1       :A 6 :B 2}
                 :A  {:o1 1 :o2 2 :o3 3 :o4 4 :o5 6      :B 5}
                 :B  {:o1 4 :o2 3 :o3 2 :o4 1 :o5 2 :A 5     }})
-         (prob (make-instance 'problem :fleet (vector t1)
+         (prob (make-instance 'problem :fleet (list t1)
                               :dist-matrix dist
                               :visits {:o1 o1 :o2 o2 :o3 o3 :o4 o4 :o5 o5})))
     (assert-equalp (list (make-insertion-move :node-id :o5 :vehicle-id :t1 :index 4)
@@ -51,7 +51,7 @@
                 :o5 {:o1 4 :o2 3 :o3 2 :o4 1       :A 6 :B 2}
                 :A  {:o1 1 :o2 2 :o3 3 :o4 4 :o5 6      :B 5}
                 :B  {:o1 4 :o2 3 :o3 2 :o4 1 :o5 2 :A 5     }})
-         (cvrp (make-instance 'cvrp :fleet (vector t1 t2)
+         (cvrp (make-instance 'cvrp :fleet (list t1 t2)
                               :dist-matrix dist
                               :visits {:o1 o1 :o2 o2 :o3 o3 :o4 o4 :o5 o5})))
     (assert-equal 9 (assess-move cvrp (make-insertion-move :node-id :o5 :vehicle-id :t1 :index 0)))
@@ -78,10 +78,10 @@
                 :o5 {:o1 4 :o2 3 :o3 2 :o4 1       :A 6 :B 2}
                 :A  {:o1 1 :o2 2 :o3 3 :o4 4 :o5 6      :B 5}
                 :B  {:o1 4 :o2 3 :o3 2 :o4 1 :o5 2 :A 5     }})
-         (vrptw (make-instance 'vrptw :fleet (vector t1 t2)
+         (vrptw (make-instance 'vrptw :fleet (list t1 t2)
                                :dist-matrix dist
                                :visits {:o1 o1 :o2 o2 :o3 o3 :o4 o4 :o5 o5}))
-         (cvrptw (make-instance 'cvrptw :fleet (vector t1 t2)
+         (cvrptw (make-instance 'cvrptw :fleet (list t1 t2)
                                :dist-matrix dist
                                :visits {:o1 o1 :o2 o2 :o3 o3 :o4 o4 :o5 o5})))
     (assert-equal nil (assess-move vrptw (make-insertion-move :node-id :o5 :vehicle-id :t1 :index 0)))
@@ -113,7 +113,7 @@
                 :o5 {:o1 4 :o2 3 :o3 2 :o4 1       :A 6 :B 2}
                 :A  {:o1 1 :o2 2 :o3 3 :o4 4 :o5 6      :B 5}
                 :B  {:o1 4 :o2 3 :o3 2 :o4 1 :o5 2 :A 5     }})
-         (prob (make-instance 'problem :fleet (vector t1 t2)
+         (prob (make-instance 'problem :fleet (list t1 t2)
                               :dist-matrix dist
                               :visits {:o1 o1 :o2 o2 :o3 o3 :o4 o4 :o5 o5})))
     (assert-equal '(:A :o1 :o2 :B) (route-indices t1))

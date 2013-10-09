@@ -11,8 +11,8 @@
          (a (make-vehicle :id :A :route (list (make-order :node-id :1)
                                               (make-order :node-id :2))))
          (b (make-vehicle :id :B :route (list (make-order :node-id :3))))
-         (prob (make-instance 'problem :fleet (vector a b)))
-         (prob2 (make-instance 'problem :fleet (vector b))))
+         (prob (make-instance 'problem :fleet (list a b)))
+         (prob2 (make-instance 'problem :fleet (list b))))
     (assert-equal '(:1 :2) (mapcar #'visit-node-id (open-vrp.algo::route-from ins-move prob)))
     (assert-false (open-vrp.algo::route-from ins-move prob2))
     (assert-equal '(:1 :2) (mapcar #'visit-node-id (open-vrp.algo::route-to ins-move prob)))
@@ -31,8 +31,8 @@
            (o4 (make-order :node-id :4 :demand 2))
            (t1 (make-vehicle :id :full :capacity 3 :route (list o1 o2)))
            (t2 (make-vehicle :id :space :capacity 10 :route (list o3 o4)))
-           (prob (make-instance 'problem :fleet (vector t1 t2) :visits {:1 o1 :2 o2 :3 o3 :4 o4}))
-           (cvrp (make-instance 'cvrp :fleet (vector t1 t2) :visits {:1 o1 :2 o2 :3 o3 :4 o4})))
+           (prob (make-instance 'problem :fleet (list t1 t2) :visits {:1 o1 :2 o2 :3 o3 :4 o4}))
+           (cvrp (make-instance 'cvrp :fleet (list t1 t2) :visits {:1 o1 :2 o2 :3 o3 :4 o4})))
     ;; Capacity is ignored for non-CVRP problems
     (assert-true (feasible-move-p prob (make-insertion-move :node-id :4 :vehicle-id :full :index 1)))
     (assert-true (feasible-move-p prob (make-insertion-move :node-id :1 :vehicle-id :space :index 1)))
@@ -54,7 +54,7 @@
                 :2 {:A 1 :3 1 :4 5}
                 :3 {:A 1 :1 5 :2 2 :4 1}
                 :4 {:A 1 :1 8}})
-         (vrptw (make-instance 'vrptw :fleet (vector t1 t2) :visits {:1 o1 :2 o2 :3 o3 :4 o4} :dist-matrix dist)))
+         (vrptw (make-instance 'vrptw :fleet (list t1 t2) :visits {:1 o1 :2 o2 :3 o3 :4 o4} :dist-matrix dist)))
     (assert-true (feasible-move-p vrptw (make-insertion-move :node-id :3 :vehicle-id :time :index 2)))
     (assert-true (feasible-move-p vrptw (make-insertion-move :node-id :3 :vehicle-id :time :index 1)))
     (assert-false (feasible-move-p vrptw (make-insertion-move :node-id :3 :vehicle-id :time :index 0)))

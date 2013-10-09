@@ -59,7 +59,7 @@
 ;; Data structures:
 ;; - network is a Hash Table
 ;; - dist-matrix is a Hash Table of Hash Tables
-;; - fleet is a vector (see optimization notes)
+;; - fleet is a list (see optimization notes)
 
 (defclass problem ()
   ((name :reader problem-name :initarg :name :initform "VRP")
@@ -67,7 +67,7 @@
    (network :reader problem-network :initarg :network :type hash-table)
    (visits :reader problem-visits :initarg :visits :type hash-table)
    (dist-matrix :accessor problem-dist-matrix :initarg :dist-matrix :initform nil :type hash-table)
-   (fleet :reader problem-fleet :initarg :fleet :type (simple-vector *))
+   (fleet :reader problem-fleet :initarg :fleet :type list)
    (log-file :accessor problem-log-file :initarg :log-file :initform nil)
    (log-mode :accessor problem-log-mode :initarg :log-mode :initform :repl)))
    ;; log-mode :none = off, :file = output file, :repl = REPL

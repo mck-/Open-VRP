@@ -12,7 +12,7 @@
                                                (make-order :node-id :O8)
                                                (make-order :node-id :O6))))
          (t3 (make-vehicle :id :3 :route (list (make-pitstop :node-id :P1))))
-         (prob (make-instance 'problem :fleet (vector t0 t1 t2 t3))))
+         (prob (make-instance 'problem :fleet (list t0 t1 t2 t3))))
     (assert-true (no-visits-p (vehicle-route t0)))
     (assert-true (no-visits-p (vehicle-route t3)))
     (assert-false (no-visits-p (vehicle-route t1)))

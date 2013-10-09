@@ -57,7 +57,7 @@
 
 (defun total-dist (problem)
   "Returns total distance of all routes combined. Includes to and from start and end locations."
-  (loop for v across (get-busy-vehicles problem) sum (route-dist v (problem-dist-matrix problem))))
+  (loop for v in (get-busy-vehicles problem) sum (route-dist v (problem-dist-matrix problem))))
 
 ;; Accessor functions
 ;; ------------------
