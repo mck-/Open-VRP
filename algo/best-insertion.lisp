@@ -63,7 +63,7 @@
 (defun get-best-insertion-move-in-vehicle (sol vehicle-id node-id)
   "Given the <solution> object, vehicle-id and node-id (integers), return the best <insertion-move> (i.e. with the lowest fitness) for inserting node-id in vehicle-id. When no move is feasible, throws error."
   (let ((sorted (sort-moves (assess-moves sol (generate-insertion-moves sol vehicle-id node-id)))))
-    (unless (move-fitness (car sorted)) (error 'no-feasible-move :moves sorted))
+    (unless sorted (error 'no-feasible-move :moves sorted))
     (car sorted)))
 
 ;; Step 2: find best vehicle, given node
