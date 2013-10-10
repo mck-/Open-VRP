@@ -45,7 +45,7 @@
 (define-test candidate-lists
   (:tag :ts-util)
   "Test candidate-lists utilities"
-  (let* ((ts (make-instance 'tabu-search :aspiration-p nil))
+  (let* ((ts (make-instance 'tabu-search))
          (moves (list (make-insertion-move :fitness nil :node-id 1)
                       (make-insertion-move :fitness -8 :node-id 2)
                       (make-insertion-move :fitness 7 :node-id 3)
@@ -73,3 +73,33 @@
     ;; When all moves are tabu, select best tabu-move
     (assert-equalp (list (make-insertion-move :fitness -10 :node-id 9))
                    (create-candidate-list ts (sort-moves moves)))))
+
+(define-test remove-affected-moves
+  (:tag :ts-util)
+  "Test remove-affected-moves"
+  (let* ((o1 (make-order :node-id :1))
+         (o2 (make-order :node-id :2))
+         (o3 (make-order :node-id :3))
+         (o4 (make-order :node-id :4))
+         (o5 (make-order :node-id :5))
+         (o6 (make-order :node-id :6))
+         (sol (make-instance 'problem :fleet (list (make-vehicle :route (list o1 o2 o3) :id :t1)
+                                                   (make-vehicle :route (list o4 o5 o6) :id :t2))))
+         (ts (make-instance 'tabu-search :current-sol sol))
+         (moves (list (make-insertion-move :fitness nil :node-id :1 :vehicle-id :t1)
+                      (make-insertion-move :fitness -8 :node-id :2 :vehicle-id :t1)
+                      (make-insertion-move :fitness 7 :node-id :3 :vehicle-id :t1)
+                      (make-insertion-move :fitness -2 :node-id :4 :vehicle-id :t2)
+                      (make-insertion-move :fitness nil :node-id :5 :vehicle-id :t2)
+                      (make-insertion-move :fitness 12 :node-id :6 :vehicle-id :t2)
+                      (make-insertion-move :fitness 8 :node-id :1 :vehicle-id :t2)
+                      (make-insertion-move :fitness 10 :node-id :2 :vehicle-id :t2)
+                      (make-insertion-move :fitness -10 :node-id :3 :vehicle-id :t2))))
+    (setf (ts-candidate-list ts) (create-candidate-list ts (sort-moves moves)))
+    (assert-equalp (list (make-insertion-move :fitness -10 :node-id :3 :vehicle-id :t2)
+                         (make-insertion-move :fitness -8 :node-id :2 :vehicle-id :t1)
+                         (make-insertion-move :fitness -2 :node-id :4 :vehicle-id :t2))
+                   (ts-candidate-list ts))
+    (open-vrp.algo::remove-affected-moves ts (make-insertion-move :node-id :3 :vehicle-id :t1))
+    (assert-equalp (list (make-insertion-move :fitness -2 :node-id :4 :vehicle-id :t2))
+                   (ts-candidate-list ts))))

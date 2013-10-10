@@ -204,6 +204,7 @@
    :index-out-of-bounds
    :unknown-log-mode
    :too-late-arrival
+   :vehicle-not-found
 
    ;; init macros
    :create-nodes

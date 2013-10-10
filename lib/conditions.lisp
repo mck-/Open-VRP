@@ -52,6 +52,13 @@
   ((lists :initarg :lists :reader lists))
   (:report "Trying to create objects where input lists are of unequal length!"))
 
+(define-condition vehicle-not-found (error)
+  ((id :initarg :id :reader id)
+   (prob :initarg :prob :reader prob))
+  (:report "Vehicle with the given id not found in the given problem!"))
+
+
+
 ;; lib/init-macros.lisp
 (define-condition empty-network (error)()
   (:report "Network is empty! To create a network requires at least one parameter!"))

@@ -20,7 +20,7 @@
 
 (defun route-to (ins-move sol)
   "Returns the route that will be affected by the insertion-move."
-  (vehicle-route (vehicle sol (move-vehicle-ID ins-move))))
+  (vehicle-route (vehicle sol (move-vehicle-id ins-move))))
 
 ;; --------------------------
 

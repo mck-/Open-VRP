@@ -62,7 +62,10 @@
 ;; Accessor functions
 ;; ------------------
 (defmethod vehicle ((p problem) id)
-  (find id (problem-fleet p) :key #'vehicle-id))
+  (aif (find id (problem-fleet p) :key #'vehicle-id)
+       it
+       (error 'vehicle-not-found :id id)))
+
 ;; ------------------
 
 ;; Create Vehicle macro
