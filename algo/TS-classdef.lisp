@@ -34,6 +34,13 @@
 
 ;; ------------------------
 
+;; Tabu-parameter-f functions
+(defun ts-pars-n (mv)
+  (move-node-id mv))
+
+(defun ts-pars-nv (mv)
+  (list (move-node-id mv) (move-vehicle-ID mv)))
+
 ;; Default stopping condition
 ;; -------------------------
 
