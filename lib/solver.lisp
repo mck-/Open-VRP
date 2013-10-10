@@ -11,6 +11,9 @@
 ;;; ----------------------------
 (in-package :open-vrp.util)
 
+(defparameter *start-time* nil)
+(defparameter *finish-time* nil)
+
 ;; Run Algo
 ;; -------------------------
 (defun init-algo (sol algo)
@@ -41,8 +44,6 @@
 
 ;; Solve Prob
 ;; ---------------------------------
-(defparameter *start-time* nil)
-(defparameter *finish-time* nil)
 
 ;; a wrapper method to prevent destructive behaviour of CLOS.
 (defgeneric solve-prob (problem algo)
@@ -115,7 +116,7 @@
 ;; -------------------
 (defgeneric iterate (algo)
   (:method (algo) "iterate: This algo is not defined.")
-  (:documentation "Runs the algo one iteration. Implementation of this method should use the algo's slot current-sol as current solution and destructively adjust it to a new solution. When algo's slot iterations is 0, then print the best solution found by this algo object. Returns the <algo> object. After each iterate, will automatically check if a new best solution has been found and adjust the :best-sol and :best-fitness slots for you. When :animatep is set to T, will plot current solution in run-frames/"))
+  (:documentation "Runs the algo one iteration. Implementation of this method should use the algo's slot current-sol as current solution and destructively adjust it to a new solution. When algo's slot iterations is 0, then print the best solution found by this algo object. Returns the <algo> object. After each iterate, will automatically check if a new best solution has been found and adjust the :best-sol and :best-fitness slots for you."))
 
 (defmethod iterate :around ((a algo))
   (if (< (algo-iterations a) 1)
@@ -142,16 +143,16 @@
                 (< new-fitness best-fitness))
         (setf (algo-best-fitness a) new-fitness
               (algo-best-sol a) (copy-object sol)
-              (algo-best-iteration a) (algo-iterations a))))
+              (algo-best-iteration a) (algo-iterations a))))))
 
     ;; Plot frame if animatep is set to T
-    (when (algo-animatep a)
-      (plot-solution sol (merge-pathnames
-                          (with-output-to-string (s)
-                            (princ "run-frames/Iteration " s)
-                            (princ (algo-iterations a) s)
-                            (princ ".png" s))
-                          (asdf:system-source-directory 'open-vrp))))))
+    ;; (when (algo-animatep a)
+    ;;   (plot-solution sol (merge-pathnames
+    ;;                       (with-output-to-string (s)
+    ;;                         (princ "run-frames/Iteration " s)
+    ;;                         (princ (algo-iterations a) s)
+    ;;                         (princ ".png" s))
+    ;;                       (asdf:system-source-directory 'open-vrp))))))
 
 ;; Resume run - add some more iterations
 ;; ------------------------
