@@ -37,3 +37,39 @@
     (assert-true (is-tabu-move-p ts-nv (make-insertion-move :node-id :3 :vehicle-id :1 :index 1)))
     (assert-false (is-tabu-move-p ts-nv (make-insertion-move :node-id :2 :vehicle-id :2 :index 1)))
     (assert-false (is-tabu-move-p ts-nv (make-insertion-move :node-id :3 :vehicle-id :2 :index 1)))))
+
+
+;; Tabu Search Candidate Lists
+;; --------------------
+
+(define-test candidate-lists
+  (:tag :ts-util)
+  "Test candidate-lists utilities"
+  (let* ((ts (make-instance 'tabu-search :aspiration-p nil))
+         (moves (list (make-insertion-move :fitness nil :node-id 1)
+                      (make-insertion-move :fitness -8 :node-id 2)
+                      (make-insertion-move :fitness 7 :node-id 3)
+                      (make-insertion-move :fitness -2 :node-id 4)
+                      (make-insertion-move :fitness nil :node-id 5)
+                      (make-insertion-move :fitness 12 :node-id 6)
+                      (make-insertion-move :fitness 8 :node-id 7)
+                      (make-insertion-move :fitness 10 :node-id 8)
+                      (make-insertion-move :fitness -10 :node-id 9))))
+    (assert-equalp (list (make-insertion-move :fitness -10 :node-id 9)
+                         (make-insertion-move :fitness -8 :node-id 2)
+                         (make-insertion-move :fitness -2 :node-id 4))
+                   (create-candidate-list ts (sort-moves moves)))
+    (add-move-to-tabu ts (make-insertion-move :fitness -10 :node-id 9))
+    (add-move-to-tabu ts (make-insertion-move :fitness -8 :node-id 2))
+    (assert-equalp (list (make-insertion-move :fitness -2 :node-id 4))
+                   (create-candidate-list ts (sort-moves moves)))
+    (add-move-to-tabu ts (make-insertion-move :fitness -2 :node-id 4))
+    (assert-equalp (list (make-insertion-move :fitness 7 :node-id 3))
+                   (create-candidate-list ts (sort-moves moves)))
+    (add-move-to-tabu ts (make-insertion-move :fitness 7 :node-id 3))
+    (add-move-to-tabu ts (make-insertion-move :fitness 8 :node-id 7))
+    (add-move-to-tabu ts (make-insertion-move :fitness 10 :node-id 8))
+    (add-move-to-tabu ts (make-insertion-move :fitness 12 :node-id 6))
+    ;; When all moves are tabu, select best tabu-move
+    (assert-equalp (list (make-insertion-move :fitness -10 :node-id 9))
+                   (create-candidate-list ts (sort-moves moves)))))

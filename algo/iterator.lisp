@@ -67,8 +67,8 @@
   (:documentation "Given an <Algo> object and the list of <Moves>, select a move. By default, sort the moves and select the best one, but e.g. for tabu-search, check first of the <Move> is tabu."))
 
 (defun sort-moves (moves)
-  "Given a list of <Move>s, sort them according to fitness (ascending). Undestructive."
-  (sort-ignore-nil moves #'< :key #'move-fitness))
+  "Given a list of <Move>s, sort them according to fitness (ascending). Undestructive. Removes all infeasible moves."
+  (remove-if #'null (sort-ignore-nil moves #'< :key #'move-fitness) :key #'move-fitness))
 
 (defmethod select-move ((a algo) moves)
   (unless (move-fitness (car moves)) (error 'no-feasible-move :moves moves))

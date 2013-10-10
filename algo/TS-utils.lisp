@@ -52,15 +52,13 @@
 (defun create-candidate-list (ts sorted-moves)
   "Given a list of sorted moves, return the list with non-tabu improving moves. Will always at least return one (non-tabu) move."
   (labels ((iter (moves ans)
-       (if (or (null moves) (not (improving-move-p (car moves))))
-     (nreverse ans)
-     (iter (cdr moves)
-           (if (is-tabu-p ts (funcall (ts-parameter-f ts) (car moves)))
-         ans
-         (push (car moves) ans)))))) ;only add if move is non-tabu
-    (iter (cdr sorted-moves)
-    (handler-bind ((all-moves-tabu #'select-best-tabu))
-      (list (select-move ts sorted-moves))))))
+             (if (or (null moves) (and ans (not (improving-move-p (car moves)))))
+                 (or (nreverse ans) (list (car sorted-moves)))
+                 (iter (cdr moves)
+                       (if (is-tabu-move-p ts (car moves))
+                           ans
+                           (push (car moves) ans)))))) ;only add if move is non-tabu
+    (iter sorted-moves '())))
 
 (defmethod remove-affected-moves ((ts tabu-search) move)
   "Given a <Tabu-search> and one <Move> (to be performed), remove all the moves from the candidate-list that do not apply anymore after the selected move is performed."

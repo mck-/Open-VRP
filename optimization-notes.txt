@@ -1,3 +1,9 @@
+Optimization ideas:
+
+- sort-ignore-nil should remove all NILs instead of pushing to the back (maybe also instead of copy-list, just tail-recurse cons the new list?) --> this needs to be updated in sort-moves
+
+PERF results:
+
 @mck- Oct 9, 2013 (maybe a list is more efficient, since we iterate a lot):
 
 CL-USER> (time (dotimes (x 1234) (loop for x in *list* sum x)))
