@@ -114,5 +114,6 @@
    (best-sol :accessor algo-best-sol :initarg :best-sol :initform nil)
    (best-fitness :accessor algo-best-fitness :initarg :best-fitness :initform nil)
    (best-iteration :accessor algo-best-iteration :initform 0)
-   (current-sol :accessor algo-current-sol :initarg :current-sol :initform nil)))
+   (current-sol :accessor algo-current-sol :initarg :current-sol :initform nil)
+   (iterations :accessor algo-iterations :initarg :iterations)))
    ;; (animatep :accessor algo-animatep :initarg :animatep :initform nil)))
