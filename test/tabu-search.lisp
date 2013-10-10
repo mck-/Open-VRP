@@ -3,103 +3,30 @@
 ;; Tabu Search tests
 ;; --------------------
 
-(define-test tabu-list
-  (:tag :ts-util)
-  "Test tabu-list utilities"
-  (let ((ts (make-instance 'tabu-search :tabu-tenure 2))
-        (ts-nv (make-instance 'tabu-search :tabu-tenure 2 :tabu-parameter-f #'open-vrp.algo::ts-pars-nv)))
-    (add-to-tabu ts 1)
-    (add-to-tabu ts 2)
-    (add-to-tabu ts 3)
-    (add-to-tabu ts 4)
-    (assert-false (is-tabu-p ts 1))
-    (assert-false (is-tabu-p ts 2))
-    (assert-true (is-tabu-p ts 3))
-    (assert-true (is-tabu-p ts 4))
-    (clear-tabu-list ts)
-    (assert-false (is-tabu-p ts 1))
-    (assert-false (is-tabu-p ts 2))
-    (assert-false (is-tabu-p ts 3))
-    (assert-false (is-tabu-p ts 4))
-    (add-move-to-tabu ts (make-insertion-move :node-id :1 :vehicle-id :1 :index 1))
-    (add-move-to-tabu ts (make-insertion-move :node-id :2 :vehicle-id :1 :index 1))
-    (add-move-to-tabu ts (make-insertion-move :node-id :3 :vehicle-id :1 :index 1))
-    (assert-false (is-tabu-move-p ts (make-insertion-move :node-id :1 :vehicle-id :1 :index 1)))
-    (assert-true (is-tabu-move-p ts (make-insertion-move :node-id :2 :vehicle-id :1 :index 1)))
-    (assert-true (is-tabu-move-p ts (make-insertion-move :node-id :3 :vehicle-id :1 :index 1)))
-
-    ;; Add tabu moves with vehicle id and node id
-    (add-move-to-tabu ts-nv (make-insertion-move :node-id :1 :vehicle-id :1 :index 1))
-    (add-move-to-tabu ts-nv (make-insertion-move :node-id :2 :vehicle-id :1 :index 1))
-    (add-move-to-tabu ts-nv (make-insertion-move :node-id :3 :vehicle-id :1 :index 1))
-    (assert-false (is-tabu-move-p ts-nv (make-insertion-move :node-id :1 :vehicle-id :1 :index 1)))
-    (assert-true (is-tabu-move-p ts-nv (make-insertion-move :node-id :2 :vehicle-id :1 :index 1)))
-    (assert-true (is-tabu-move-p ts-nv (make-insertion-move :node-id :3 :vehicle-id :1 :index 1)))
-    (assert-false (is-tabu-move-p ts-nv (make-insertion-move :node-id :2 :vehicle-id :2 :index 1)))
-    (assert-false (is-tabu-move-p ts-nv (make-insertion-move :node-id :3 :vehicle-id :2 :index 1)))))
-
-
-;; Tabu Search Candidate Lists
-;; --------------------
-
-(define-test candidate-lists
-  (:tag :ts-util)
-  "Test candidate-lists utilities"
-  (let* ((ts (make-instance 'tabu-search))
-         (moves (list (make-insertion-move :fitness nil :node-id 1)
-                      (make-insertion-move :fitness -8 :node-id 2)
-                      (make-insertion-move :fitness 7 :node-id 3)
-                      (make-insertion-move :fitness -2 :node-id 4)
-                      (make-insertion-move :fitness nil :node-id 5)
-                      (make-insertion-move :fitness 12 :node-id 6)
-                      (make-insertion-move :fitness 8 :node-id 7)
-                      (make-insertion-move :fitness 10 :node-id 8)
-                      (make-insertion-move :fitness -10 :node-id 9))))
-    (assert-equalp (list (make-insertion-move :fitness -10 :node-id 9)
-                         (make-insertion-move :fitness -8 :node-id 2)
-                         (make-insertion-move :fitness -2 :node-id 4))
-                   (create-candidate-list ts (sort-moves moves)))
-    (add-move-to-tabu ts (make-insertion-move :fitness -10 :node-id 9))
-    (add-move-to-tabu ts (make-insertion-move :fitness -8 :node-id 2))
-    (assert-equalp (list (make-insertion-move :fitness -2 :node-id 4))
-                   (create-candidate-list ts (sort-moves moves)))
-    (add-move-to-tabu ts (make-insertion-move :fitness -2 :node-id 4))
-    (assert-equalp (list (make-insertion-move :fitness 7 :node-id 3))
-                   (create-candidate-list ts (sort-moves moves)))
-    (add-move-to-tabu ts (make-insertion-move :fitness 7 :node-id 3))
-    (add-move-to-tabu ts (make-insertion-move :fitness 8 :node-id 7))
-    (add-move-to-tabu ts (make-insertion-move :fitness 10 :node-id 8))
-    (add-move-to-tabu ts (make-insertion-move :fitness 12 :node-id 6))
-    ;; When all moves are tabu, select best tabu-move
-    (assert-equalp (list (make-insertion-move :fitness -10 :node-id 9))
-                   (create-candidate-list ts (sort-moves moves)))))
-
-(define-test remove-affected-moves
-  (:tag :ts-util)
-  "Test remove-affected-moves"
-  (let* ((o1 (make-order :node-id :1))
-         (o2 (make-order :node-id :2))
-         (o3 (make-order :node-id :3))
-         (o4 (make-order :node-id :4))
-         (o5 (make-order :node-id :5))
-         (o6 (make-order :node-id :6))
-         (sol (make-instance 'problem :fleet (list (make-vehicle :route (list o1 o2 o3) :id :t1)
-                                                   (make-vehicle :route (list o4 o5 o6) :id :t2))))
-         (ts (make-instance 'tabu-search :current-sol sol))
-         (moves (list (make-insertion-move :fitness nil :node-id :1 :vehicle-id :t1)
-                      (make-insertion-move :fitness -8 :node-id :2 :vehicle-id :t1)
-                      (make-insertion-move :fitness 7 :node-id :3 :vehicle-id :t1)
-                      (make-insertion-move :fitness -2 :node-id :4 :vehicle-id :t2)
-                      (make-insertion-move :fitness nil :node-id :5 :vehicle-id :t2)
-                      (make-insertion-move :fitness 12 :node-id :6 :vehicle-id :t2)
-                      (make-insertion-move :fitness 8 :node-id :1 :vehicle-id :t2)
-                      (make-insertion-move :fitness 10 :node-id :2 :vehicle-id :t2)
-                      (make-insertion-move :fitness -10 :node-id :3 :vehicle-id :t2))))
-    (setf (ts-candidate-list ts) (create-candidate-list ts (sort-moves moves)))
-    (assert-equalp (list (make-insertion-move :fitness -10 :node-id :3 :vehicle-id :t2)
-                         (make-insertion-move :fitness -8 :node-id :2 :vehicle-id :t1)
-                         (make-insertion-move :fitness -2 :node-id :4 :vehicle-id :t2))
-                   (ts-candidate-list ts))
-    (open-vrp.algo::remove-affected-moves ts (make-insertion-move :node-id :3 :vehicle-id :t1))
-    (assert-equalp (list (make-insertion-move :fitness -2 :node-id :4 :vehicle-id :t2))
-                   (ts-candidate-list ts))))
+(define-test initialize
+  (:tag :ts)
+  "Test initialize algorithm to generate initial feasible solutions"
+  (let* ((o1 (make-order :duration 1 :start 0 :end 11 :node-id :o1 :demand 1))
+         (o2 (make-order :duration 2 :start 0 :end 20 :node-id :o2 :demand 1))
+         (o3 (make-order :duration 3 :start 10 :end 13 :node-id :o3 :demand 1))
+         (o4 (make-order :duration 4 :start 10 :end 14 :node-id :o4 :demand 1))
+         (o5 (make-order :duration 5 :start 10 :end 20 :node-id :o5 :demand 1))
+         (t1 (make-vehicle :id :t1 :start-location :A :end-location :B :shift-end 25 :capacity 2))
+         (t2 (make-vehicle :id :t2 :start-location :A :end-location :B :shift-start 10 :shift-end 25 :capacity 20 :speed 0.1))
+         (t3 (make-vehicle :id :t3 :start-location :A :end-location :B :shift-start 0 :shift-end 100 :capacity 20 :speed 10))
+         (dist {:o1 {      :o2 1 :o3 2 :o4 3 :o5 5 :A 1 :B 4}
+                :o2 {:o1 1       :o3 1 :o4 2 :o5 4 :A 2 :B 3}
+                :o3 {:o1 2 :o2 1       :o4 1 :o5 3 :A 3 :B 2}
+                :o4 {:o1 3 :o2 2 :o3 1       :o5 1 :A 4 :B 1}
+                :o5 {:o1 4 :o2 3 :o3 2 :o4 1       :A 6 :B 2}
+                :A  {:o1 1 :o2 2 :o3 3 :o4 4 :o5 6      :B 5}
+                :B  {:o1 4 :o2 3 :o3 2 :o4 1 :o5 2 :A 5     }})
+         (prob (make-instance 'problem :fleet (list t1 t2)
+                              :dist-matrix dist
+                              :visits {:o1 o1 :o2 o2 :o3 o3 :o4 o4 :o5 o5}))
+         (algo (initialize prob (make-instance 'tabu-search))))
+    (assert-equal 7 (algo-best-fitness algo))
+    (assert-equal '((:A :O1 :O2 :O3 :O4 :O5 :B) (:A :B))
+                  (route-indices (algo-current-sol algo)))
+    (assert-equal '((:A :O1 :O2 :O3 :O4 :O5 :B) (:A :B))
+                  (route-indices (algo-best-sol algo)))))

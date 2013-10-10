@@ -15,4 +15,5 @@
                          (:file "time")
                          (:file "algo-tools")
                          (:file "algo-best-insertion")
-                         (:file "greedy-best-insertion")))))
+                         (:file "greedy-best-insertion")
+                         (:file "tabu-search-utils")))))
