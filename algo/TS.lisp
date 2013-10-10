@@ -108,7 +108,7 @@
                 (algo-best-fitness ts)))
         (car sorted-moves)
         (restart-case
-            (aif (find-if-not #'(lambda (mv) (is-tabu-movep ts mv)) sorted-moves) it
+            (aif (find-if-not #'(lambda (mv) (is-tabu-move-p ts mv)) sorted-moves) it
                  (error 'all-moves-tabu :moves all-moves :tabu-list (ts-tabu-list ts)))
           (select-best-tabu-move ()
             :report "Choost the best move, you'll need to move somehow, right?"

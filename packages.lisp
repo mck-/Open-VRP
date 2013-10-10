@@ -271,8 +271,8 @@
    ;; Tabu Search object
    :ts-move-type
    :ts-init-heur
-   :ts-aspirationp
-   :ts-elite-listp
+   :ts-aspiration-p
+   :ts-elite-list-p
    :ts-tabu-list
    :ts-tenure
    :ts-parameter-f
@@ -284,8 +284,9 @@
    :toggle-elite-list
    :add-to-tabu
    :add-move-to-tabu
-   :is-tabup
-   :is-tabu-movep
+   :clear-tabu-list
+   :is-tabu-p
+   :is-tabu-move-p
    :TS-best-insertion-move
    :create-candidate-list
    :all-moves-tabu))
