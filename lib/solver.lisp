@@ -35,6 +35,10 @@
        (call-next-method)
     (defparameter *algo-backup* a)))
 
+;; Before method to start the timer
+(defmethod run-algo :before ((p problem) (a algo))
+  (setq *start-time* (get-universal-time)))
+
 ;; After method that makes all algos print the final solution
 (defmethod run-algo :after ((p problem) (a algo))
   (setq *finish-time* (get-universal-time))
@@ -59,8 +63,7 @@
 ;; This method is not part of the run-algo :before, because that would cause iterate-more
 ;; which calls run-algo to supersede instead of append to file.
 (defmethod solve-prob :before ((p problem) (a algo))
-  (setq *start-time* (get-universal-time))
-  (with-log-or-print (str p *start-time* nil)
+  (with-log-or-print (str p (get-universal-time) nil)
     (print-header p a str)))
 
 ;; When all logging is done in file, at least print the final solution in repl
