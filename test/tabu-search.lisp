@@ -3,9 +3,9 @@
 ;; Tabu Search tests
 ;; --------------------
 
-(define-test initialize
+(define-test initialize/generate/assess
   (:tag :ts)
-  "Test initialize algorithm to generate initial feasible solutions"
+  "Test initialize algorithm to generate initial feasible solutions, generate all possible moves"
   (let* ((o1 (make-order :duration 1 :start 0 :end 11 :node-id :o1 :demand 1))
          (o2 (make-order :duration 2 :start 0 :end 20 :node-id :o2 :demand 1))
          (o3 (make-order :duration 3 :start 10 :end 13 :node-id :o3 :demand 1))
@@ -24,9 +24,20 @@
          (prob (make-instance 'problem :fleet (list t1 t2)
                               :dist-matrix dist
                               :visits {:o1 o1 :o2 o2 :o3 o3 :o4 o4 :o5 o5}))
-         (algo (initialize prob (make-instance 'tabu-search))))
+         (prob2 (make-instance 'problem
+                               :fleet (list (make-vehicle :id :t1 :start-location :A :end-location :B :route (list o1 o2 o3 o4))
+                                            (make-vehicle :id :t2 :start-location :A :end-location :A :route (list o5))
+                                            (make-vehicle :id :t3 :start-location :A :end-location :A))
+                               :dist-matrix dist
+                               :visits {:o1 o1 :o2 o2 :o3 o3 :o4 o4 :o5 o5}))
+         (algo (initialize prob (make-instance 'tabu-search)))
+         (algo2 (make-instance 'tabu-search :current-sol prob2 :best-sol prob2)))
     (assert-equal 7 (algo-best-fitness algo))
     (assert-equal '((:A :O1 :O2 :O3 :O4 :O5 :B) (:A :B))
                   (route-indices (algo-current-sol algo)))
     (assert-equal '((:A :O1 :O2 :O3 :O4 :O5 :B) (:A :B))
-                  (route-indices (algo-best-sol algo)))))
+                  (route-indices (algo-best-sol algo)))
+
+    ;; Generate moves
+    (assert-equal 10 (length (generate-moves algo)))
+    (assert-equal 13 (length (generate-moves algo2)))))

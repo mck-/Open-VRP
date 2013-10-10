@@ -24,39 +24,28 @@
 
 ;; Original attempt was to make generate-moves a general method - using the move-type slot of ts - which can be used to generate all sorts of moves e.g. swap moves.. but the method below enumerates only along node-id (excluding 0) and vehicle-id. This may only be useful for TS-best-insertion-move?? For other moves, we need to define other defmethods?
 
-(defmacro for-node-ID ((node-ID prob) &body body)
-  "Map over all node-IDs, except for base."
-  `(map1-n #'(lambda (,node-ID)
-               ,@body)
-           (1- (num-nodes ,prob))))
-
-(defmacro for-veh-ID ((veh-ID prob) &body body)
-  "Map over all veh-IDs capped at fleet-size. Will consider only busy vehicles and one extra idle vehicle."
-  `(map0-n #'(lambda (,veh-ID)
-               ,@body)
-           (min (1+ (vehicle-id (car (last (get-busy-vehicles ,prob)))))
-                (1- (num-veh ,prob)))))
-
-(defun useless-move (mv prob)
-  "Returns T if move is useless. Two options: 1. move concerns node and vehicle that has the node as it's only destination, e.g. (0 2 0). 2. Moving node from one-destination vehicle to empty-vehicle, which becomes another one-destination vehicle."
-  (let ((route (route-to mv prob)))
-    (or (and (one-destination-p route)
-             (eq (visit-node-id (cadr route)) (move-node-id mv)))
-        (and (no-visits-p route) (one-destination-p (route-from mv prob))))))
-
-;; (defmethod generate-moves ((ts tabu-search))
-;;   "Generates a list of <move> instances (depending on what was defined in the ts slot) for all nodes and vehicles."
-;;   (flet ((symb (a b)
-;;            (intern (format nil "~a-~a" (symbol-name a) (symbol-name b)) :open-vrp.algo)))
-;;     (let ((prob (algo-current-sol ts)))
-;;       (remove-if #'(lambda (mv) (useless-move mv prob))
-;;                  (flatten
-;;                   (for-node-ID (node-ID prob)
-;;                     (for-veh-ID (veh-ID prob)
-;;                       (funcall
-;;                        (symb 'make (ts-move-type ts))
-;;                        :node-ID node-ID
-;;                        :vehicle-ID veh-ID))))))))
+(defmethod generate-moves ((ts tabu-search))
+  "Generates a list of <move> instances (depending on what was defined in the ts slot) for all nodes and vehicles."
+  (flet ((symb (a b)
+           (intern (format nil "~a-~a" (symbol-name a) (symbol-name b)) :open-vrp.algo)))
+    (let ((prob (algo-current-sol ts)))
+      (loop for veh in (problem-fleet prob)
+         for veh-id = (vehicle-id veh) append
+           (loop for node-id being the hash-keys of (problem-visits prob)
+              unless (or ;; Do not generate moves that are not changing anything
+                      (and (one-destination-p (vehicle-route veh))
+                              (eq (cadr (route-indices veh)) node-id))
+                         ;; Avoid moves that transfers a single node to an other empty vehicle
+                      (let ((vehicle-to (vehicle prob (vehicle-with-node-id prob node-id))))
+                        (and (no-visits-p (vehicle-route veh))
+                             (one-destination-p (vehicle-route vehicle-to))
+                             (eq (vehicle-start-location veh) (vehicle-start-location vehicle-to))
+                             (eq (vehicle-end-location veh) (vehicle-end-location vehicle-to)))))
+              collect
+                (funcall
+                 (symb 'make (ts-move-type ts))
+                 :node-ID node-id
+                 :vehicle-ID veh-id))))))
 
 ;; the difference between cost (inserting) and saving (removing)
 ;; cost of inserting is calculated by (get-best-insertion-move)
