@@ -109,4 +109,11 @@
                   (route-indices (algo-current-sol algo-no-a)))
     (iterate algo-no-a)
     (assert-equal '((:A :O2 :O3 :B) (:A :O4 :O5 :O1 :A) (:A :A))
-                  (route-indices (algo-current-sol algo-no-a)))))
+                  (route-indices (algo-current-sol algo-no-a)))
+
+
+    ;; Stopping condition
+    ;; pretend we found best solution at iteration 100 -- time to stop now
+    (setf (algo-best-iteration algo-a) 100)
+    (assert-prints "Stopping condition met.
+No more iterations left." (iterate algo-a))))
