@@ -49,15 +49,25 @@
   "Returns T if move is an improving one, i.e. has a negative fitness."
   (< (move-fitness move) 0))
 
+(defun best-solution-found-p (ts move)
+  "Returns T if the current move would get us to a solution that is better than the best found so far"
+  (< (+ (fitness (algo-current-sol ts))
+        (move-fitness move))
+     (algo-best-fitness ts)))
+
 (defun create-candidate-list (ts sorted-moves)
   "Given a list of sorted moves, return the list with non-tabu improving moves. Will always at least return one (non-tabu) move."
   (labels ((iter (moves ans)
              (if (or (null moves) (and ans (not (improving-move-p (car moves)))))
                  (or (nreverse ans) (list (car sorted-moves)))
                  (iter (cdr moves)
-                       (if (is-tabu-move-p ts (car moves))
-                           ans
-                           (push (car moves) ans)))))) ;only add if move is non-tabu
+                       (if (or (not (is-tabu-move-p ts (car moves)))
+                               (and (ts-aspiration-p ts)
+                                    (algo-current-sol ts)
+                                    (algo-best-fitness ts)
+                                    (best-solution-found-p ts (car sorted-moves))))
+                           (push (car moves) ans) ;add if move is non-tabu -- or if aspiration is T
+                           ans)))))
     (iter sorted-moves '())))
 
 (defmethod remove-affected-moves ((ts tabu-search) move)

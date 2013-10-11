@@ -88,22 +88,22 @@
 
 (defmethod select-move ((ts tabu-search) all-moves)
   "This function selects best non-tabu move from a list of assessed moves. When aspiration criteria is set to T, then if by performing the move we get a new best solution, circumvent the tabu-list."
-  (let ((sorted-moves (sort-moves all-moves)))
+  (let* ((sorted-moves (sort-moves all-moves))
+         (top-move (car sorted-moves)))
     (unless sorted-moves (error 'no-feasible-move :moves all-moves))
     (if (and (ts-aspiration-p ts)
-             (< (+ (fitness (algo-current-sol ts)) (move-fitness (car sorted-moves)))
-                (algo-best-fitness ts)))
-        (car sorted-moves)
+             (best-solution-found-p ts top-move))
+        top-move
         (restart-case
             (aif (find-if-not #'(lambda (mv) (is-tabu-move-p ts mv)) sorted-moves) it
                  (error 'all-moves-tabu :moves all-moves :tabu-list (ts-tabu-list ts)))
           (select-best-tabu-move ()
             :report "Choost the best move, you'll need to move somehow, right?"
-            (car sorted-moves))
+            top-move)
           (flush-tabu-list ()
             :report "Erase everything on the tabu-list and resume."
             (clear-tabu-list ts)
-            (car sorted-moves))))))
+            top-move)))))
 
 ;; --------------------
 ;; If there is no candidate-list
@@ -122,7 +122,7 @@
                (let ((best-move (car (ts-candidate-list ts))))
                  (remove-affected-moves ts best-move)
                  (perform-add-tabu best-move))))
-      (if (ts-elite-listp ts)
+      (if (ts-elite-list-p ts)
           (if (ts-candidate-list ts)
               (select-perform-from-cand ts)
               (let ((sorted-moves (sort-moves (assess-moves sol (generate-moves ts)))))
