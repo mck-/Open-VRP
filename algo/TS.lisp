@@ -75,14 +75,14 @@
   "Takes <Node> with node-ID and uses get-best-insertion to insert in vehicle-ID. DESTRUCTIVE."
   (let* ((node-id (move-node-id mv))
          (veh-id (move-vehicle-id mv))
-         (best-move (get-best-insertion-move-in-vehicle sol veh-ID node-ID)))
-                                        ;if the move of node is intra-route, AND the node is being moved forward
-    (if (and (= (vehicle-with-node-ID sol node-ID) veh-ID)
+         (best-move (get-best-insertion-move-in-vehicle sol veh-id node-id)))
+         ;if the move of node is intra-route, AND the node is being moved forward
+    (if (and (eq (vehicle-with-node-ID sol node-ID) veh-ID)
              (> (move-index best-move)
-                (position node-id (route-to mv sol) :key #'node-id)))
-                                        ;then perform insertion first, afterward remove the old node, positioned before the new
-        (progn (perform-move sol best-move) (remove-node-ID sol node-ID))
-                                        ;in all other cases, it's okay to remove the node first, then reinsert
+                (position node-id (route-to mv sol) :key #'visit-node-id)))
+        ;then perform insertion first, afterward remove the old node, positioned before the new
+        (progn (perform-move sol best-move) (remove-node-id sol node-ID))
+        ;in all other cases, it's okay to remove the node first, then reinsert
         (progn (remove-node-ID sol node-ID) (perform-move sol best-move))))
   sol)
 

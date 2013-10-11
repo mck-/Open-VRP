@@ -3,9 +3,9 @@
 ;; Tabu Search tests
 ;; --------------------
 
-(define-test initialize/generate/assess
+(define-test initialize/generate/assess/perform
   (:tag :ts)
-  "Test initialize algorithm to generate initial feasible solutions, generate all possible moves"
+  "Test initialize algorithm to generate initial feasible solutions, generate all possible moves, assess and perform"
   (let* ((o1 (make-order :duration 1 :start 0 :end 11 :node-id :o1 :demand 1))
          (o2 (make-order :duration 2 :start 0 :end 20 :node-id :o2 :demand 1))
          (o3 (make-order :duration 3 :start 10 :end 13 :node-id :o3 :demand 1))
@@ -54,4 +54,34 @@
     (assert-equal 2 (assess-move prob2 (make-ts-best-insertion-move :node-id :o1 :vehicle-id :t3)))
     (assert-equal 4 (assess-move prob2 (make-ts-best-insertion-move :node-id :o2 :vehicle-id :t3)))
     (assert-equal 6 (assess-move prob2 (make-ts-best-insertion-move :node-id :o3 :vehicle-id :t3)))
-    (assert-equal 8 (assess-move prob2 (make-ts-best-insertion-move :node-id :o4 :vehicle-id :t3)))))
+    (assert-equal 8 (assess-move prob2 (make-ts-best-insertion-move :node-id :o4 :vehicle-id :t3)))
+
+    ;; Perform moves
+    (perform-move prob2 (make-ts-best-insertion-move :node-id :o5 :vehicle-id :t1))
+    (assert-equal '((:A :O1 :O2 :O3 :O4 :O5 :B) (:A :A) (:A :A))
+                  (route-indices prob2))
+    (perform-move prob2 (make-ts-best-insertion-move :node-id :o1 :vehicle-id :t1))
+    (assert-equal '((:A :O2 :O1 :O3 :O4 :O5 :B) (:A :A) (:A :A))
+                  (route-indices prob2))
+    (perform-move prob2 (make-ts-best-insertion-move :node-id :o1 :vehicle-id :t1))
+    (assert-equal '((:A :O1 :O2 :O3 :O4 :O5 :B) (:A :A) (:A :A))
+                  (route-indices prob2))
+    (perform-move prob2 (make-ts-best-insertion-move :node-id :o1 :vehicle-id :t2))
+    (assert-equal '((:A :O2 :O3 :O4 :O5 :B) (:A :O1 :A) (:A :A))
+                  (route-indices prob2))
+    (perform-move prob2 (make-ts-best-insertion-move :node-id :o5 :vehicle-id :t2))
+    (assert-equal '((:A :O2 :O3 :O4 :B) (:A :O5 :O1 :A) (:A :A))
+                  (route-indices prob2))
+    (perform-move prob2 (make-ts-best-insertion-move :node-id :o2 :vehicle-id :t1))
+    (assert-equal '((:A :O3 :O2 :O4 :B) (:A :O5 :O1 :A) (:A :A))
+                  (route-indices prob2))
+    (perform-move prob2 (make-ts-best-insertion-move :node-id :o4 :vehicle-id :t2))
+    (assert-equal '((:A :O3 :O2 :B) (:A :O4 :O5 :O1 :A) (:A :A))
+                  (route-indices prob2))
+    (perform-move prob2 (make-ts-best-insertion-move :node-id :o3 :vehicle-id :t2))
+    (assert-equal '((:A :O2 :B) (:A :O4 :O5 :O3 :O1 :A) (:A :A))
+                  (route-indices prob2))
+    (perform-move prob2 (make-ts-best-insertion-move :node-id :o2 :vehicle-id :t2))
+    (assert-equal '((:A :B) (:A :O4 :O5 :O3 :O2 :O1 :A) (:A :A))
+                  (route-indices prob2))
+    (assert-equal 10 (fitness prob2))))
