@@ -53,24 +53,22 @@
 (defmethod assess-move ((sol problem) (mv TS-best-insertion-move))
   (with-slots (node-id vehicle-id fitness) mv
     (handler-case
-        (let* ((dist-array (problem-dist-matrix sol))
-               (route (route-from mv sol))
-               (pos (position node-id route :key #'node-id))
-               (node-before (node-id (nth (1- pos) route)))
-               (dist-before (distance node-before node-id dist-array)))
+        (let* ((dist-matrix (problem-dist-matrix sol))
+               (route (route-indices (vehicle sol (vehicle-with-node-id sol node-id))))
+               (pos (position node-id route))
+               (node-before (nth (1- pos) route))
+               (dist-before (distance node-before node-id dist-matrix)))
           (setf fitness
-                                        ;cost of insertion
+                ;cost of insertion
                 (- (move-fitness (get-best-insertion-move-in-vehicle sol vehicle-id node-id))
-                                        ;save by removing:
-                   (if (= pos (1- (length route))) ;if the node is at end of route
-                       dist-before
-                       (let ((node-after (node-id (nth (1+ pos) route))))
-                         (- (+ dist-before
-                               (distance node-id node-after dist-array)) ;dist to next node
-                                        ;minus direct route, which is 0 if the node-before and node-after are the same.
-                            (handler-case (distance node-before node-after dist-array)
-                              (same-origin-destination () 0))))))))
-      (no-feasible-move () (setf fitness nil))))) ;when no feasible-moves exist, set fitness nil
+                   ;save by removing:
+                   (let ((node-after (nth (1+ pos) route)))
+                     (- (+ dist-before
+                           (distance node-id node-after dist-matrix)) ;dist to next node
+                     ;minus direct route, which is 0 if the node-before and node-after are the same.
+                        (handler-case (distance node-before node-after dist-matrix)
+                          (same-origin-destination () 0)))))))
+    (no-feasible-move () (setf fitness nil))))) ;when no feasible-moves exist, set fitness nil
 
 
 (defmethod perform-move ((sol problem) (mv TS-best-insertion-move))
