@@ -1,7 +1,7 @@
 ;;; Fleet related functions
 ;;; ---------------------------
 ;;; - route-indices (<vehicle>/<problem>) - returns list of node IDs
-;;; - vehicle-with-node-ID	(<Problem> int)   - returns <vehicle> that has the node-ID
+;;; - vehicle-with-node-id	(<Problem> int)   - returns <vehicle> that has the node-ID
 ;;; - total-dist (<vehicle>/<problem>)    - returns the total distance
 ;;; - vehicle (<problem> int)             - returns <Vehicle> with id
 ;;; - new-vehicle                         - macro that creates a <Vehicle> according to input
@@ -67,12 +67,3 @@
        (error 'vehicle-not-found :id id)))
 
 ;; ------------------
-
-;; Create Vehicle macro
-;; ------------------
-(defmacro new-vehicle (id base-node to-depot &key capacity speed)
-  `(make-vehicle
-    :id ,id
-    :route ,(if to-depot `(list ,base-node ,base-node) `(list ,base-node))
-    ,@(when capacity `(:capacity ,capacity))
-    ,@(when speed `(:speed ,speed))))

@@ -9,11 +9,9 @@
            :pitstop
            :vehicle
            :problem
-           :VRP
            :CVRP
            :VRPTW
            :CVRPTW
-           :drawer
 
            ;; algo
            :algo
@@ -74,7 +72,6 @@
            :algo-best-iteration
            :algo-current-sol
            :algo-iterations
-           :algo-animatep
 
            :drawer-min-coord
            :drawer-max-coord
@@ -97,34 +94,20 @@
   #+(or allegro clisp lispworks) (:import-from :clos :class-slots :slot-definition-name)
   #+cmu (:import-from :mop :class-slots :slot-definition-name)
   (:export ;; simple utils
-   :single
    :mac
-   :mapa-b
-   :map1-n
-   :map0-n
    :while
    :aif
    :awhile
    :it
-   :sum
-   :max-car
-   :max-cdr
    :copy-object
 
    ;; list utils
-   :get-min
-   :get-max
    :get-min-index
    :get-max-index
    :sort-ignore-nil
    :insert-before
    :insert-at-end
    :remove-index
-   :apply-on-index
-   :enumerate-interval
-   :shuffle-pool
-   :random-list-permutation
-   :with-tabu-indices
 
    ;; route utils
    :no-visits-p
@@ -140,12 +123,8 @@
    :sethash
    :alist-to-hash
    :distance
-   :node-distance
-   :generate-dist-array
-   :get-array-row
    :node
    :visit-node
-   :new-node
 
    ;; fleet utils
    :route-indices
@@ -154,7 +133,6 @@
    :route-dist
    :total-dist
    :vehicle
-   :new-vehicle
 
    ;; time utils
    :time-to-minutes
@@ -183,8 +161,6 @@
    :iterate-more
    :*start-time*
    :*multi-run-start-time*
-   :batch-run
-   :print-run-results-table
 
    ;; output
    :print-routes
@@ -195,7 +171,7 @@
    :plot-nodes
    :print-timestamp
    :with-log-or-print
-   :log-to-replp
+   :log-to-repl-p
 
    ;; conditions
    :same-origin-destination
@@ -204,27 +180,7 @@
    :index-out-of-bounds
    :unknown-log-mode
    :too-late-arrival
-   :vehicle-not-found
-
-   ;; init macros
-   :create-nodes
-   :create-vehicles
-   :define-problem
-
-   ;; input
-   :load-test-case-file
-   :load-solomon-vrp-file
-   :load-tsplib-vrp-file
-
-   ;; config utils
-   :toggle
-   :toggle-legend
-   :toggle-plot
-   :toggle-animate
-   :set-plot-file
-   :set-log-mode
-   :set-log-file
-   :set-dist-array))
+   :vehicle-not-found))
 
 (defpackage :open-vrp.algo
   (:use :common-lisp
@@ -235,7 +191,6 @@
    ;; tools
    :get-optimal-insertion
    :fitness-before-after
-   :insertion-move
    :get-best-insertion-move
    :get-best-insertion-move-in-vehicle
    :feasible-move-p

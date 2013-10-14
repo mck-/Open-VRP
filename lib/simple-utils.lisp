@@ -3,19 +3,6 @@
 ;; Simple utils from Paul Graham's Onlisp
 ;; -------------------------------
 
-(defun single (lst)
-  (and (consp lst) (not (cdr lst))))
-
-(defun map0-n (fn n)
-  "maps from 0 to n"
-  (loop for x from 0 to n
-       collect (funcall fn x)))
-
-(defun map1-n (fn n)
-  "maps from 1 to n"
-  (loop for x from 1 to n
-     collect (funcall fn x)))
-
 (defmacro mac (expr)
   `(pprint (macroexpand-1 ',expr)))
 

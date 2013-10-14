@@ -145,6 +145,6 @@
       (setf (algo-iterations ts) 0)
       (with-log-or-print (stream (algo-current-sol ts) *start-time*)
         (format stream "~&Stopping condition met.~%"))
-      (unless (log-to-replp ts)
+      (unless (log-to-repl-p ts)
         (format t "~&Stopping condition met.~%"))))
   (call-next-method))

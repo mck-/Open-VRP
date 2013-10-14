@@ -1,9 +1,7 @@
 ;;; Utilities for generating a distance table using a list of node coords.
 ;;; -----------------------------------------
 ;;; - distance (int int array)		- Expects two node-IDs and a dist-array
-;;; - node-distance (<Node> <Node>)	- Calculates distance between two <Node> objects
 ;;; - node (<Problem> int)		- Returns <Node> given a <Problem> and a node-id
-;;; - generate-dist-array (coord-list)	- Returns array of distances
 ;;; - new-node				- Macro that creates a <Node> according to input
 ;;; -----------------------------------------
 ;;; Distance matrix data-structure: Hash-table of hash-tables
@@ -52,13 +50,3 @@
   (gethash id (problem-visits prob)))
 
 ;; -------------------------
-
-;; Create Node macro
-;; -------------------------
-
-(defmacro new-node (id xcor ycor &key demand start end duration)
-  `(make-node :id ,id :xcor ,xcor :ycor ,ycor
-              ,@(when demand `(:demand ,demand))
-              ,@(when start `(:start ,start))
-              ,@(when end `(:end ,end))
-              ,@(when duration `(:duration ,duration))))

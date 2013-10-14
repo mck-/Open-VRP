@@ -43,10 +43,6 @@
   ((veh :initarg :veh :reader veh))
   (:report "Trying to check capacities for a vehicle that has no defined capacity."))
 
-;; (define-condition no-speed-vehicle (error)
-;;   ((veh :initarg :veh :reader veh))
-;;   (:report "Trying to check TW constraints for a vehicle that has no defined speed."))
-
 ;; lib/network.lisp lib/fleet.lisp
 (define-condition not-equal-length (error)
   ((lists :initarg :lists :reader lists))
@@ -56,8 +52,6 @@
   ((id :initarg :id :reader id)
    (prob :initarg :prob :reader prob))
   (:report "Vehicle with the given id not found in the given problem!"))
-
-
 
 ;; lib/init-macros.lisp
 (define-condition empty-network (error)()

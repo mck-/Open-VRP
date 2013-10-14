@@ -1,6 +1,6 @@
 (defsystem :open-vrp
   :description "Framework for modeling Vehicle Routing Problems"
-  :version "0.8.3"
+  :version "0.8.5"
   :author "mck- <kuomarc2@gmail.com>"
   :licence "LLGPL"
   :depends-on (#:alexandria #:open-vrp-lib)

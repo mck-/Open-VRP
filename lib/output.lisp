@@ -150,11 +150,11 @@
 
 
 ;; Acccessors for log-mode
-(defgeneric log-to-replp (prob/algo)
+(defgeneric log-to-repl-p (prob/algo)
   (:documentation "Returns T if :log-mode is set to 2, which is REPL."))
 
-(defmethod log-to-replp ((p problem))
+(defmethod log-to-repl-p ((p problem))
   (eq (problem-log-mode p) :repl))
 
-(defmethod log-to-replp ((a algo))
+(defmethod log-to-repl-p ((a algo))
   (eq (problem-log-mode (algo-current-sol a)) :repl))

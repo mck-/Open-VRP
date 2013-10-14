@@ -68,7 +68,7 @@
 
 ;; When all logging is done in file, at least print the final solution in repl
 (defmethod solve-prob :after ((p problem) (a algo))
-  (unless (log-to-replp p)
+  (unless (log-to-repl-p p)
     (print-final-results p a)))
 
   ;; @mck- Oct 9, 2013 - disable drawing for now
@@ -109,7 +109,7 @@
        (with-log-or-print (str ,prob *multi-run-start-time* nil)
          (print-multi-run-stats ,results str)
          (print-routes ,best str))
-       (unless (log-to-replp ,prob)
+       (unless (log-to-repl-p ,prob)
          (print-multi-run-stats ,results)
          (print-routes ,best))
        ,best)))
@@ -136,7 +136,7 @@
       (format str "~&Iterations to go: ~A~%" (algo-iterations a))
       (print-routes sol str))
     ;; Print dots in REPL if logging is to file
-    (unless (log-to-replp a)
+    (unless (log-to-repl-p a)
       (princ "."))
 
     ;; Checking if new best solution
@@ -169,6 +169,6 @@
   (run-algo (algo-current-sol a) a))
 
 (defmethod iterate-more :after ((a algo) int)
-  (unless (log-to-replp a)
+  (unless (log-to-repl-p a)
     (print-final-results (algo-best-sol a) a)))
 ;; ---------------------

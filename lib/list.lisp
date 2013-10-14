@@ -50,24 +50,6 @@
                                      ignore))))
       list))
 
-(defun sum (list)
-  "A quick list summer, 4 times as fast as (reduce #'+ list)"
-  (labels ((helper (todo ans)
-             (cond ((null todo) ans)
-                   (t
-                    (check-type (car todo) number)
-                    (helper (cdr todo)
-                            (+ ans (car todo)))))))
-    (helper list 0)))
-
-(defun max-car (list)
-  "Provided a list, return the maximum value considering the cars"
-  (reduce #'max list :key #'car))
-
-(defun max-cdr (list)
-  "Provided a list, return the maximum value considering the cdrs"
-  (reduce #'max list :key #'cdr))
-
 ;; --------------------------
 
 ;; Single route
@@ -102,22 +84,3 @@
                          (iter (1- n)
                                (cdr lst))))))
       (values (iter index list) item))))
-
-(defun enumerate-interval (n)
-  "Returns a list from 1 to n."
-  (map1-n #'(lambda (x) x) n))
-
-;; No unit tests for the below -- thinking to replace/deprecate these destructive utils..
-;; Gotta think of a more elegant way to handle tabu indices - @mck- Oct 1, 2013
-
-(defun mark-nill (list indices)
-  "Marks the indices on list with NIL. DESTRUCTIVE."
-  (mapcar #'(lambda (x) (setf (nth x list) nil)) indices)
-  list)
-
-(defmacro with-tabu-indices (tabu-indices fn arg-list)
-  `(funcall ,fn (mark-nill (copy-list ,arg-list) ,tabu-indices)))
-
-(defun random-list-permutation (length)
-  "Randomly creates a permutation from 1 to length."
-  (shuffle (enumerate-interval length)))
