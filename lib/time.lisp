@@ -12,7 +12,7 @@
 
 (defun time-to-minutes (time)
   "Given a time (either string or number) between 0000 and 2359, return the number of minutes since midnight."
-  (let ((number (if (stringp time) (parse-integer time) time)))
+  (let ((number (if (stringp time) (parse-integer (remove #\: time)) time)))
     (check-type number (integer 0 2359))
     (let ((hour (floor (/ number 100)))
           (min (mod number 100)))
