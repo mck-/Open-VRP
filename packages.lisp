@@ -256,6 +256,7 @@
   (:export :define-problem
            :load-testcase-Solomon
            :load-tsplib-vrp-file
+           :multi-run-algo
            :solve-prob
            :iterate-more
            :plot-solution
