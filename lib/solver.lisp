@@ -87,7 +87,7 @@
      ;so it won't override the first log-file made by solve-prob use -1 seconds
      (setq *multi-run-start-time* (- (get-universal-time) 1))
      (loop for ,(gensym) below ,times collect (handler-case ,@algo-call
-                                                (open-vrp.algo::no-initial-feasible-solution () nil))
+                                                (open-vrp.algo:no-initial-feasible-solution () nil))
         finally (setq *multi-run-finish-time* (get-universal-time)))))
 
 (defun get-best-solution-from-multi-run (solutions)
@@ -107,6 +107,7 @@
     `(let* ((,prob ,(cadar algo-call))
             (,results (multi-run ,times ,@algo-call))
             (,best (get-best-solution-from-multi-run ,results)))
+       (unless ,best (error 'no-feasible-solution :runs ,times))
        (with-log-or-print (str ,prob *multi-run-start-time* nil)
          (print-multi-run-stats ,results str)
          (print-routes ,best str))

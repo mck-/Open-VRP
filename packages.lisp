@@ -181,7 +181,8 @@
    :index-out-of-bounds
    :unknown-log-mode
    :too-late-arrival
-   :vehicle-not-found))
+   :vehicle-not-found
+   :no-feasible-solution))
 
 (defpackage :open-vrp.algo
   (:use :common-lisp

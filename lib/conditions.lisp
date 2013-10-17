@@ -71,3 +71,10 @@
 (define-condition unknown-log-mode (error)
   ((arg :initarg :arg :reader :arg))
   (:report "Log mode unknown! Choose either :none, :file, or :repl"))
+
+;; lib/solver.lisp
+(define-condition no-feasible-solution (error)
+  ((runs :initarg :runs :reader runs))
+  (:report (lambda (condition stream)
+             (format stream "Could not find a single solution! Not even after ~A runs!"
+                     (runs condition)))))
