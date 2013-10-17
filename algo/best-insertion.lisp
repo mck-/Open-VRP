@@ -37,10 +37,9 @@
       (setf (move-fitness m)
             (handler-case
                 (-
-                 (+ (distance node-before node-id dist-matrix)
-                    (distance node-id node-after dist-matrix))
-                 (handler-case (distance node-before node-after dist-matrix)
-                   (same-origin-destination () 0)))
+                 (+ (get-distance node-before node-id dist-matrix)
+                    (get-distance node-id node-after dist-matrix))
+                 (get-distance node-before node-after dist-matrix))
               (distance-between-nodes-undefined () nil))))))
 
 (defmethod perform-move ((sol problem) (m insertion-move))

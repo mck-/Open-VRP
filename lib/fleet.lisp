@@ -48,9 +48,9 @@
              (if (null (cdr togo)) sum
                  (iter (cdr togo)
                        (+ sum
-                          (distance (car togo)
-                                    (cadr togo)
-                                    dist-matrix))))))
+                          (get-distance (car togo)
+                                        (cadr togo)
+                                        dist-matrix))))))
     ;; Insert start and end-locations into route
     (iter (route-indices veh) 0)))
 

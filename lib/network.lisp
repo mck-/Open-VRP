@@ -38,6 +38,11 @@
          it
          (error 'distance-between-nodes-undefined :from from :to to))))
 
+(defun get-distance (from-id to-id matrix)
+  "Helper to distance, which will return distance 0 for same from and to condition"
+  (handler-case (distance from-id to-id matrix)
+    (same-origin-destination () 0)))
+
 ;; -------------------------
 
 ;; Accessor functions
