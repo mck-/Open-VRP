@@ -20,6 +20,7 @@
   "Given a solution, sets the :current-sol, :best-fitness and :best-sol slots of the <algo> object. Makes a copy of the solution for :best-sol. Returns <algo>."
   (setf (algo-current-sol algo) sol
         (algo-best-fitness algo) (fitness sol)
+        (algo-best-iteration algo) (algo-iterations algo)
         (algo-best-sol algo) (copy-object sol))
   algo)
 

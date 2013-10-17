@@ -8,7 +8,8 @@
 
 (defclass greedy-best-insertion (algo)
   ((name :initform "Greedy Best Insertion heuristic")
-   (desc :initform "Randomly insert nodes one by one to best vehicle at best location. Used as initial solution for search algos.")))
+   (desc :initform "Randomly insert nodes one by one to best vehicle at best location. Used as initial solution for search algos.")
+   (iterations :initform 1)))
 
 (defmethod run-algo ((p problem) (a greedy-best-insertion))
   "Randomly insert <Nodes> one by one to best <vehicle> in best location. Returns <Algo> object when done."
