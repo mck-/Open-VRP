@@ -86,7 +86,8 @@
   `(progn
      ;so it won't override the first log-file made by solve-prob use -1 seconds
      (setq *multi-run-start-time* (- (get-universal-time) 1))
-     (loop for ,(gensym) below ,times collect ,@algo-call
+     (loop for ,(gensym) below ,times collect (handler-case ,@algo-call
+                                                (open-vrp.algo::no-initial-feasible-solution () nil))
         finally (setq *multi-run-finish-time* (get-universal-time)))))
 
 (defun get-best-solution-from-multi-run (solutions)
@@ -94,7 +95,7 @@
   (labels ((iter (sols best)
              (if sols
                  (iter (cdr sols)
-                       (if (< (algo-best-fitness (car sols)) (algo-best-fitness best))
+                       (if (and (car sols) (< (algo-best-fitness (car sols)) (algo-best-fitness best)))
                            (car sols)
                            best))
                  best)))
