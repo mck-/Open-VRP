@@ -20,7 +20,7 @@
 
 (defun get-multi-run-stats (algo-objects)
   "Given a list of algo-objects, as returned by multi-run, return the stats with (values min max avg std runs time time/run)"
-  (let ((results (mapcar #'algo-best-fitness algo-objects))
+  (let ((results (mapcar #'algo-best-fitness (remove-if #'null algo-objects)))
         (run-time (- *multi-run-finish-time* *multi-run-start-time*)))
     (values
      (get-min results)

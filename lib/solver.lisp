@@ -93,14 +93,15 @@
 
 (defun get-best-solution-from-multi-run (solutions)
   "Given a list of solutions (from multi-run), return the best solution."
-  (labels ((iter (sols best)
-             (if sols
-                 (iter (cdr sols)
-                       (if (and (car sols) (< (algo-best-fitness (car sols)) (algo-best-fitness best)))
-                           (car sols)
-                           best))
-                 best)))
-    (iter (cdr solutions) (car solutions))))
+  (let ((feasibles (remove-if #'null solutions)))
+    (labels ((iter (sols best)
+               (if sols
+                   (iter (cdr sols)
+                         (if (and (car sols) (< (algo-best-fitness (car sols)) (algo-best-fitness best)))
+                             (car sols)
+                             best))
+                   best)))
+      (iter (cdr feasibles) (car feasibles)))))
 
 (defmacro multi-run-algo (times &body algo-call)
   "Run algo x times, print multi-run-stats and return the best result."
