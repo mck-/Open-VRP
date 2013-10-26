@@ -26,6 +26,4 @@
   (assert-equal 2020 (minutes-to-time 1220))
   (assert-equal 0 (minutes-to-time 0))
   (assert-equal 1439 (minutes-to-time 879))
-  (assert-error 'simple-type-error (minutes-to-time 1440))
-  (assert-error 'simple-type-error (minutes-to-time -1))
   (assert-error 'simple-type-error (minutes-to-time "23")))
