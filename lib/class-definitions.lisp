@@ -2,6 +2,10 @@
 ;;; Node, Vehicle, Problem, Drawer and Algo objects
 (in-package :open-vrp.classes)
 
+;; Default constants
+(defconstant +min-time+ 0)
+(defconstant +max-time+ 1440)
+
 ;; The node object
 ;; ----------------------
 
@@ -15,8 +19,8 @@
 (defstruct visit
   "These are the actual places on the network that need to be visited, and can be depots, orders, or breaks -- they are linked to a location by node ID"
   (node-id (gensym) :type symbol :read-only t)
-  (start 0 :type fixnum :read-only t)
-  (end 0 :type fixnum :read-only t)
+  (start +min-time+ :type fixnum :read-only t)
+  (end +max-time+ :type fixnum :read-only t)
   (duration 0 :type fixnum :read-only t))
 
 (defstruct (order (:include visit))
@@ -38,8 +42,8 @@
   (start-location :nil :type symbol :read-only t)
   (end-location :nil :type symbol :read-only t)
   (speed 1 :type number :read-only t)
-  (shift-start 0 :type fixnum :read-only t)
-  (shift-end 1440 :type fixnum :read-only t)
+  (shift-start +min-time+ :type fixnum :read-only t)
+  (shift-end +max-time+ :type fixnum :read-only t)
   capacity)
 
   ;; Todo:
@@ -47,8 +51,6 @@
   ;; (break-start 1400 :type fixnum :read-only t)
   ;; (break-duration 100 :type fixnum :read-only t)
   ;; type
-  ;;
-  ;; (speed 1 :read-only t))
 
 ;; ----------------------------
 
