@@ -22,7 +22,6 @@
 
 (defun minutes-to-time (minutes)
   "Given number of minutes since midnight, convert it into a number in 24hrs notation format"
-  (check-type minutes (integer 0 1439))
   (let ((hour (floor (/ minutes 60)))
-        (min (mod minutes 60)))
+        (min (floor (mod minutes 60))))
     (+ (* hour 100) min)))
