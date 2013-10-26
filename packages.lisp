@@ -134,6 +134,8 @@
    :route-dist
    :total-dist
    :vehicle
+   :veh-arrival-times
+   :arrival-times
 
    ;; time utils
    :time-to-minutes
@@ -263,6 +265,11 @@
            :iterate-more
            :plot-solution
            :print-routes
+
+           ;; utils
+           :arrival-times
+           :route-indices
+           :algo-best-sol
 
            ;; algos
            :tabu-search

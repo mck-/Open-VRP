@@ -59,6 +59,28 @@
   "Returns total distance of all routes combined. Includes to and from start and end locations."
   (loop for v in (get-busy-vehicles problem) sum (route-dist v (problem-dist-matrix problem))))
 
+(defun veh-arrival-times (veh dist-matrix)
+  "Returns arrival times at each node along a vehicle's route"
+  (let ((times (list (vehicle-shift-start veh))))
+    (labels ((iter (route time loc)
+               (if (null route) (nreverse
+                                 (push
+                                  (+ time (travel-time loc (vehicle-end-location veh) dist-matrix :speed (vehicle-speed veh)))
+                                  times))
+                   (let ((arr-time (+ time (travel-time loc (visit-node-id (car route)) dist-matrix :speed (vehicle-speed veh)))))
+                     (push arr-time times)
+                     (iter (cdr route)
+                           (time-after-visit (car route) arr-time)
+                           (visit-node-id (car route)))))))
+      (iter (vehicle-route veh)
+            (vehicle-shift-start veh)
+            (vehicle-start-location veh)))))
+
+(defun arrival-times (sol)
+  "Given a solution, return a list of lists of arrival times."
+  (mapcar #'(lambda (v) (arrival-times v (problem-dist-matrix sol)))
+          (problem-fleet sol)))
+
 ;; Accessor functions
 ;; ------------------
 (defmethod vehicle ((p problem) id)
