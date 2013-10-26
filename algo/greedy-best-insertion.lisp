@@ -21,4 +21,6 @@
              (return a))
       (no-feasible-move ()
         (print "No initial feasible solution!")
+        (print-routes p)
+        (print (arrival-times p))
         (error 'no-initial-feasible-solution :data insertion-order)))))
