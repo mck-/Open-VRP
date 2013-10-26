@@ -16,5 +16,6 @@
   ((moves :initarg :moves :reader moves))
   (:report "All moves are infeasible!"))
 
-(define-condition no-initial-feasible-solution (error)()
+(define-condition no-initial-feasible-solution (error)
+  ((data :initarg :data :reader data))
   (:report "Could not find feasible initial solution!"))
