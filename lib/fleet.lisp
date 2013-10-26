@@ -78,7 +78,7 @@
 
 (defun arrival-times (sol)
   "Given a solution, return a list of lists of arrival times."
-  (mapcar #'(lambda (v) (arrival-times v (problem-dist-matrix sol)))
+  (mapcar #'(lambda (v) (veh-arrival-times v (problem-dist-matrix sol)))
           (problem-fleet sol)))
 
 ;; Accessor functions
