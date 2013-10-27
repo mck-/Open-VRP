@@ -13,7 +13,9 @@
          (t2 (make-vehicle :id :2 :route (list (make-order :node-id :O5)
                                                (make-order :node-id :O8)
                                                (make-order :node-id :O6))))
-         (prob (make-instance 'problem :fleet (list t0 t1 t2))))
+         (prob (make-instance 'problem
+                              :fleet (list t0 t1 t2)
+                              :unserved '(:A :B))))
     (assert-equal nil (route-indices t0))
     (assert-equal '(:O1 :O2 :O3) (route-indices t1))
     (assert-equal '(:O5 :O8 :O6) (route-indices t2))
@@ -26,7 +28,10 @@
     (assert-equal :2 (vehicle-with-node-id prob :O8))
     (assert-equal nil (vehicle-with-node-id prob :Q8))
     (assert-error 'simple-type-error (vehicle-with-node-id "hello" :O1))
-    (assert-error 'simple-type-error (vehicle-with-node-id prob "O1"))))
+    (assert-error 'simple-type-error (vehicle-with-node-id prob "O1"))
+    ;; vehicle-with-node-id should return :UNSERVED if it is on that list
+    (assert-equal :UNSERVED (vehicle-with-node-id prob :A))
+    (assert-equal :UNSERVED (vehicle-with-node-id prob :B))))
 
 (define-test node-on-route-p
   "Test node-on-route-p util"

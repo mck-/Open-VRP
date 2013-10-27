@@ -30,15 +30,18 @@
   (find node-id (vehicle-route vehicle) :key #'visit-node-id))
 
 (defun vehicle-with-node-id (prob node-id)
-  "Given a node-id, return the vehicle-id that has the node in its route. Returns NIL if node-id cannot be found. Assumes only 1 presence of a node in the problem."
+  "Given a node-id, return the vehicle-id that has the node in its route. Returns NIL if node-id cannot be found. Assumes only 1 presence of a node in the problem. When allow-unserved is T, also search the unserved slot in problem, and return :UNSERVED if it is found there."
   (check-type prob problem)
   (check-type node-id symbol)
-  (reduce
-   (lambda (x y)
-     (or x (when (node-on-route-p node-id y)
-             (vehicle-id y))))
-   (problem-fleet prob)
-   :initial-value nil))
+  (or (reduce
+       (lambda (x y)
+         (or x (when (node-on-route-p node-id y)
+                 (vehicle-id y))))
+       (problem-fleet prob)
+       :initial-value nil)
+      (when (and (problem-allow-unserved prob)
+                 (member node-id (problem-unserved prob)))
+        :UNSERVED)))
 
 (defun route-dist (veh dist-matrix)
   "Returns total distance of the route(s) given a vehicle. Takes into account the start and end locations of the vehicle."
