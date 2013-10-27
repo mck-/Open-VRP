@@ -86,4 +86,10 @@
   (check-type node-id symbol)
   (push node-id (problem-unserved prob)))
 
+(defun remove-from-unserved (prob node-id)
+  "Remove node-id from the unserved list in problem"
+  (check-type prob problem)
+  (check-type node-id symbol)
+  (setf (problem-unserved prob) (remove node-id (problem-unserved prob))))
+
 ;; ---------------------------

@@ -60,4 +60,6 @@
     (add-to-unserved prob :A)
     (assert-equal '(:A) (problem-unserved prob))
     (add-to-unserved prob :B)
-    (assert-equal '(:B :A) (problem-unserved prob))))
+    (assert-equal '(:B :A) (problem-unserved prob))
+    (remove-from-unserved prob :A)
+    (assert-equal '(:B) (problem-unserved prob))))

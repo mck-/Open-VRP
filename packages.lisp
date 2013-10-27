@@ -121,6 +121,7 @@
    :remove-node-id
    :last-visit
    :add-to-unserved
+   :remove-from-unserved
 
    ;; network utils
    :sethash
