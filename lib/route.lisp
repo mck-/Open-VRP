@@ -55,7 +55,7 @@
 
 (defgeneric remove-node-id (veh/prob node-id)
   (:method (vehicle node-id) "Expects <vehicle>/<problem> and int as inputs!")
-  (:documentation "Removes the <node> with node-id from the route of <vehicle>. Returns NIL if failed to find node-id. When <problem> is given, remove the node from the first vehicle that holds it (should not occur more than once anyway)"))
+  (:documentation "Removes the <node> with node-id from the route of <vehicle>. Returns NIL if failed to find node-id. When <problem> is given, remove the node from the first vehicle that holds it (should not occur more than once anyway). Also supports removing from UNSERVED list, if it is held there."))
 
 (defmethod remove-node-id ((v vehicle) node-id)
   (if (node-on-route-p node-id v)
@@ -65,7 +65,9 @@
 
 (defmethod remove-node-id ((prob problem) node-id)
   (aif (vehicle-with-node-id prob node-id)
-       (remove-node-id (vehicle prob it) node-id)
+       (if (eq :UNSERVED it)
+           (remove-from-unserved prob node-id)
+           (remove-node-id (vehicle prob it) node-id))
        nil))
 ;; ----------------------------
 

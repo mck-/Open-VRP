@@ -103,6 +103,17 @@
                   (route-indices prob2))
     (assert-equal 10 (fitness prob2))
 
+    ;; Perform moves to UNSERVED list
+    (perform-move prob2 (make-ts-best-insertion-move :node-id :o1 :vehicle-id :UNSERVED))
+    (assert-equal '(:O1) (problem-unserved prob2))
+    (assert-equal '((:A :B) (:A :O4 :O5 :O3 :O2 :A) (:A :A))
+                  (route-indices prob2))
+    (assert-equal 1010 (fitness prob2))
+    (perform-move prob2 (make-ts-best-insertion-move :node-id :o1 :vehicle-id :t2))
+    (assert-equal '((:A :B) (:A :O4 :O5 :O3 :O2 :O1 :A) (:A :A))
+                  (route-indices prob2))
+    (assert-equal 10 (fitness prob2))
+
     ;; Select-move
     (let ((best-move (make-ts-best-insertion-move :node-id :o5 :vehicle-id :t1 :fitness -10))
           (assessed-moves (assess-moves (algo-current-sol algo-a) (generate-moves algo-a))))
