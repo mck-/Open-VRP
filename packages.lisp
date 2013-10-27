@@ -62,6 +62,8 @@
            :problem-visits
            :problem-dist-matrix
            :problem-fleet
+           :problem-allow-unserved
+           :problem-unserved
            :problem-log-file
            :problem-log-mode
 
@@ -118,6 +120,7 @@
    :remove-node-at
    :remove-node-id
    :last-visit
+   :add-to-unserved
 
    ;; network utils
    :sethash

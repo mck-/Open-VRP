@@ -77,3 +77,13 @@
   (car (last (vehicle-route vehicle))))
 
 ;; ---------------------------
+
+;; 4. Add to unserved list
+;; ----------------------------
+(defun add-to-unserved (prob node-id)
+  "Add node-id to the unserved list in problem"
+  (check-type prob problem)
+  (check-type node-id symbol)
+  (push node-id (problem-unserved prob)))
+
+;; ---------------------------
