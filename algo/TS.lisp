@@ -33,17 +33,17 @@
          for veh-id = (vehicle-id veh) append
            (loop for node-id being the hash-keys of (problem-visits prob)
                 for veh-w-node-id = (vehicle-with-node-id prob node-id)
-              unless (or;; Skip UNSERVED moves for later
-                      (eq :UNSERVED veh-w-node-id)
-                        ;; Do not generate moves that are not changing anything
+              unless (or
+                      ;; Do not generate moves that are not changing anything
                       (and (one-destination-p (vehicle-route veh))
-                              (eq (cadr (route-indices veh)) node-id))
-                         ;; Avoid moves that transfers a single node to an other empty vehicle
-                      (let ((vehicle-to (vehicle prob veh-w-node-id)))
-                        (and (no-visits-p (vehicle-route veh))
-                             (one-destination-p (vehicle-route vehicle-to))
-                             (eq (vehicle-start-location veh) (vehicle-start-location vehicle-to))
-                             (eq (vehicle-end-location veh) (vehicle-end-location vehicle-to)))))
+                           (eq (cadr (route-indices veh)) node-id))
+                      ;; Avoid moves that transfers a single node to an other empty vehicle (no need to check for nodes coming from UNSERVED list)
+                      (and (not (eq :UNSERVED veh-w-node-id))
+                           (let ((vehicle-to (vehicle prob veh-w-node-id)))
+                             (and (no-visits-p (vehicle-route veh))
+                                  (one-destination-p (vehicle-route vehicle-to))
+                                  (eq (vehicle-start-location veh) (vehicle-start-location vehicle-to))
+                                  (eq (vehicle-end-location veh) (vehicle-end-location vehicle-to))))))
               collect
                 (funcall
                  (symb 'make (ts-move-type ts))
