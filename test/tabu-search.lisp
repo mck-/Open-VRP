@@ -21,12 +21,14 @@
                 :A  {:o1 1 :o2 2 :o3 3 :o4 4 :o5 6      :B 5}
                 :B  {:o1 4 :o2 3 :o3 2 :o4 1 :o5 2 :A 5     }})
          (prob (make-instance 'problem :fleet (list t1 t2)
+                              :allow-unserved nil
                               :dist-matrix dist
                               :visits {:o1 o1 :o2 o2 :o3 o3 :o4 o4 :o5 o5}))
          (prob2 (make-instance 'problem
                                :fleet (list (make-vehicle :id :t1 :start-location :A :end-location :B :route (list o1 o2 o3 o4))
                                             (make-vehicle :id :t2 :start-location :A :end-location :A :route (list o5))
                                             (make-vehicle :id :t3 :start-location :A :end-location :A))
+                               :allow-unserved t
                                :dist-matrix dist
                                :visits {:o1 o1 :o2 o2 :o3 o3 :o4 o4 :o5 o5}))
          (prob3 (copy-object prob2))
@@ -42,7 +44,7 @@
 
     ;; Generate moves
     (assert-equal 10 (length (generate-moves algo)))
-    (assert-equal 13 (length (generate-moves algo2)))
+    (assert-equal 18 (length (generate-moves algo2)))
 
     ;; Assess moves
     (assert-equal 2 (assess-move prob2 (make-ts-best-insertion-move :node-id :o1 :vehicle-id :t1)))
