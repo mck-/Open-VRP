@@ -52,8 +52,8 @@
 
     ;; Generate moves
     (assert-equal 10 (length (generate-moves algo)))
-    (assert-equal 18 (length (generate-moves algo2)))
-    (assert-equal 10 (length (generate-moves algo4)))
+    (assert-equal 13 (length (generate-moves algo2)))
+    (assert-equal 9 (length (generate-moves algo4)))
 
     ;; Assess moves
     (assert-equal 2 (assess-move prob2 (make-ts-best-insertion-move :node-id :o1 :vehicle-id :t1)))

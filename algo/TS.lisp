@@ -48,17 +48,17 @@
                 (funcall
                  (symb 'make (ts-move-type ts))
                  :node-ID node-id
-                 :vehicle-ID veh-id))
-              into moves
-              finally
-                ;; Create UNSERVED related moves (if applicable)
-                (if (problem-allow-unserved prob)
-                    (return (append
-                     (loop for node-id being the hash-keys of (problem-visits prob)
-                          unless (member node-id (problem-unserved prob))
-                          collect (funcall (symb 'make (ts-move-type ts)) :node-ID node-id :vehicle-ID :UNSERVED))
-                     moves))
-                    (return moves))))))
+                 :vehicle-ID veh-id))))))
+              ;; into moves
+              ;; finally
+              ;;   ;; Create UNSERVED related moves (if applicable)
+              ;;   (if (problem-allow-unserved prob)
+              ;;       (return (append
+              ;;        (loop for node-id being the hash-keys of (problem-visits prob)
+              ;;             unless (member node-id (problem-unserved prob))
+              ;;             collect (funcall (symb 'make (ts-move-type ts)) :node-ID node-id :vehicle-ID :UNSERVED))
+              ;;        moves))
+              ;;       (return moves))))))
 
 ;; the difference between cost (inserting) and saving (removing)
 ;; cost of inserting is calculated by (get-best-insertion-move) -- or *unserved-penalty* when vehicle-id is :UNSERVED
