@@ -25,4 +25,7 @@
   (check-type minutes number)
   (let ((hour (floor (/ minutes 60)))
         (min (floor (mod minutes 60))))
-    (+ (* hour 100) min)))
+    (values
+     (+ (* hour 100) min)
+     hour
+     min)))
