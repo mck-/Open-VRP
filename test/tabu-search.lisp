@@ -60,6 +60,7 @@
     (assert-equal 4 (assess-move prob2 (make-ts-best-insertion-move :node-id :o2 :vehicle-id :t3)))
     (assert-equal 6 (assess-move prob2 (make-ts-best-insertion-move :node-id :o3 :vehicle-id :t3)))
     (assert-equal 8 (assess-move prob2 (make-ts-best-insertion-move :node-id :o4 :vehicle-id :t3)))
+    (assert-equal 988 (assess-move prob2 (make-ts-best-insertion-move :node-id :o5 :vehicle-id :UNSERVED)))
 
     ;; Perform moves
     (perform-move prob2 (make-ts-best-insertion-move :node-id :o5 :vehicle-id :t1))

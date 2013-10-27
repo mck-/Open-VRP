@@ -61,28 +61,37 @@
                     (return moves))))))
 
 ;; the difference between cost (inserting) and saving (removing)
-;; cost of inserting is calculated by (get-best-insertion-move)
+;; cost of inserting is calculated by (get-best-insertion-move) -- or *unserved-penalty* when vehicle-id is :UNSERVED
 ;; saving by removing the connecting arcs before and after, and connecting them directly
+
 (defmethod assess-move ((sol problem) (mv TS-best-insertion-move))
   (with-slots (node-id vehicle-id fitness) mv
-    (handler-case
-        (let* ((dist-matrix (problem-dist-matrix sol))
-               (veh (vehicle sol (vehicle-with-node-id sol node-id)))
-               (route (route-indices veh))
-               (pos (position node-id route))
-               (node-before (if (= pos 0) (vehicle-start-location veh) (nth (1- pos) route)))
-               (dist-before (get-distance node-before node-id dist-matrix)))
-          (setf fitness
-                ;cost of insertion
-                (- (move-fitness (get-best-insertion-move-in-vehicle sol vehicle-id node-id))
-                   ;save by removing:
-                   (let ((node-after (nth (1+ pos) route)))
-                     (- (+ dist-before
-                           (get-distance node-id node-after dist-matrix)) ;dist to next node
-                     ;minus direct route, which is 0 if the node-before and node-after are the same.
-                        (handler-case (get-distance node-before node-after dist-matrix)
-                          (same-origin-destination () 0)))))))
-    (no-feasible-move () (setf fitness nil))))) ;when no feasible-moves exist, set fitness nil
+    (flet ((insertion-cost (veh-id node-id)
+             "Cost of inserting node-id into veh-id, calculated using best-insertion-move, unless veh-id is :UNSERVED"
+             (if (eq :UNSERVED veh-id)
+                 *unserved-penalty*
+                 (move-fitness (get-best-insertion-move-in-vehicle sol veh-id node-id)))))
+      (let ((v-w-n-id (vehicle-with-node-id sol node-id)))
+        (handler-case
+            ;; Calculate move differently when it involves the :UNSERVED list
+            (if (eq :UNSERVED v-w-n-id)
+                (setf fitness (- (insertion-cost vehicle-id node-id) *unserved-penalty*))
+                (let* ((dist-matrix (problem-dist-matrix sol))
+                       (veh (vehicle sol v-w-n-id))
+                       (route (route-indices veh))
+                       (pos (position node-id route))
+                       (node-before (if (= pos 0) (vehicle-start-location veh) (nth (1- pos) route)))
+                       (dist-before (get-distance node-before node-id dist-matrix)))
+                  (setf fitness
+                        (- (insertion-cost vehicle-id node-id)
+                           ;save by removing:
+                           (let ((node-after (nth (1+ pos) route)))
+                             (- (+ dist-before
+                                   (get-distance node-id node-after dist-matrix)) ;dist to next node
+                                ;minus direct route, which is 0 if the node-before and node-after are the same.
+                                (handler-case (get-distance node-before node-after dist-matrix)
+                                  (same-origin-destination () 0))))))))
+          (no-feasible-move () (setf fitness nil))))))) ;when no feasible-moves exist, set fitness nil
 
 
 (defmethod perform-move ((sol problem) (mv TS-best-insertion-move))

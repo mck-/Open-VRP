@@ -155,6 +155,7 @@
    :in-time-p
 
    :fitness
+   :*unserved-penalty*
 
    ;; solver
    :init-algo
