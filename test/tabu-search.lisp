@@ -21,19 +21,29 @@
                 :A  {:o1 1 :o2 2 :o3 3 :o4 4 :o5 6      :B 5}
                 :B  {:o1 4 :o2 3 :o3 2 :o4 1 :o5 2 :A 5     }})
          (prob (make-instance 'problem :fleet (list t1 t2)
+                              :allow-unserved nil
                               :dist-matrix dist
                               :visits {:o1 o1 :o2 o2 :o3 o3 :o4 o4 :o5 o5}))
          (prob2 (make-instance 'problem
                                :fleet (list (make-vehicle :id :t1 :start-location :A :end-location :B :route (list o1 o2 o3 o4))
                                             (make-vehicle :id :t2 :start-location :A :end-location :A :route (list o5))
                                             (make-vehicle :id :t3 :start-location :A :end-location :A))
+                               :allow-unserved t
                                :dist-matrix dist
                                :visits {:o1 o1 :o2 o2 :o3 o3 :o4 o4 :o5 o5}))
          (prob3 (copy-object prob2))
+         (prob4 (make-instance 'problem
+                               :fleet (list (make-vehicle :id :t1 :start-location :A :end-location :B :route (list o1))
+                                            (make-vehicle :id :t2 :start-location :A :end-location :A))
+                               :allow-unserved t
+                               :unserved '(:o2 :o3 :o4 :o5)
+                               :dist-matrix dist
+                               :visits {:o1 o1 :o2 o2 :o3 o3 :o4 o4 :o5 o5}))
          (algo (initialize prob (make-instance 'tabu-search)))
          (algo2 (make-instance 'tabu-search :current-sol prob2 :best-sol prob2))
          (algo-a (make-instance 'tabu-search :current-sol prob3 :best-sol prob3 :best-fitness 17))
-         (algo-no-a (make-instance 'tabu-search :current-sol (copy-object prob3) :best-sol (copy-object prob3) :best-fitness 17 :aspiration-p nil)))
+         (algo-no-a (make-instance 'tabu-search :current-sol (copy-object prob3) :best-sol (copy-object prob3) :best-fitness 17 :aspiration-p nil))
+         (algo4 (make-instance 'tabu-search :current-sol prob4 :best-sol prob4)))
     (assert-equal 7 (algo-best-fitness algo))
     (assert-equal '((:A :O1 :O2 :O3 :O4 :O5 :B) (:A :B))
                   (route-indices (algo-current-sol algo)))
@@ -42,7 +52,8 @@
 
     ;; Generate moves
     (assert-equal 10 (length (generate-moves algo)))
-    (assert-equal 13 (length (generate-moves algo2)))
+    (assert-equal 18 (length (generate-moves algo2)))
+    (assert-equal 10 (length (generate-moves algo4)))
 
     ;; Assess moves
     (assert-equal 2 (assess-move prob2 (make-ts-best-insertion-move :node-id :o1 :vehicle-id :t1)))
@@ -58,6 +69,9 @@
     (assert-equal 4 (assess-move prob2 (make-ts-best-insertion-move :node-id :o2 :vehicle-id :t3)))
     (assert-equal 6 (assess-move prob2 (make-ts-best-insertion-move :node-id :o3 :vehicle-id :t3)))
     (assert-equal 8 (assess-move prob2 (make-ts-best-insertion-move :node-id :o4 :vehicle-id :t3)))
+    (assert-equal 988 (assess-move prob2 (make-ts-best-insertion-move :node-id :o5 :vehicle-id :UNSERVED)))
+    (assert-equal nil (assess-move prob4 (make-ts-best-insertion-move :node-id :o1 :vehicle-id :t1)))
+    (assert-equal -1000 (assess-move prob4 (make-ts-best-insertion-move :node-id :o2 :vehicle-id :t1)))
 
     ;; Perform moves
     (perform-move prob2 (make-ts-best-insertion-move :node-id :o5 :vehicle-id :t1))
@@ -85,6 +99,17 @@
     (assert-equal '((:A :O2 :B) (:A :O4 :O5 :O3 :O1 :A) (:A :A))
                   (route-indices prob2))
     (perform-move prob2 (make-ts-best-insertion-move :node-id :o2 :vehicle-id :t2))
+    (assert-equal '((:A :B) (:A :O4 :O5 :O3 :O2 :O1 :A) (:A :A))
+                  (route-indices prob2))
+    (assert-equal 10 (fitness prob2))
+
+    ;; Perform moves to UNSERVED list
+    (perform-move prob2 (make-ts-best-insertion-move :node-id :o1 :vehicle-id :UNSERVED))
+    (assert-equal '(:O1) (problem-unserved prob2))
+    (assert-equal '((:A :B) (:A :O4 :O5 :O3 :O2 :A) (:A :A))
+                  (route-indices prob2))
+    (assert-equal 1010 (fitness prob2))
+    (perform-move prob2 (make-ts-best-insertion-move :node-id :o1 :vehicle-id :t2))
     (assert-equal '((:A :B) (:A :O4 :O5 :O3 :O2 :O1 :A) (:A :A))
                   (route-indices prob2))
     (assert-equal 10 (fitness prob2))

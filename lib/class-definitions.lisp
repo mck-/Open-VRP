@@ -70,6 +70,8 @@
    (visits :reader problem-visits :initarg :visits :type hash-table)
    (dist-matrix :accessor problem-dist-matrix :initarg :dist-matrix :initform nil :type hash-table)
    (fleet :reader problem-fleet :initarg :fleet :type list)
+   (allow-unserved :reader problem-allow-unserved :initarg :allow-unserved :initform T)
+   (unserved :accessor problem-unserved :initarg :unserved :initform nil :type list)
    (log-file :accessor problem-log-file :initarg :log-file :initform nil)
    (log-mode :accessor problem-log-mode :initarg :log-mode :initform :repl)))
    ;; log-mode :none = off, :file = output file, :repl = REPL

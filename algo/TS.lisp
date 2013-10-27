@@ -32,59 +32,84 @@
       (loop for veh in (problem-fleet prob)
          for veh-id = (vehicle-id veh) append
            (loop for node-id being the hash-keys of (problem-visits prob)
-              unless (or ;; Do not generate moves that are not changing anything
+                for veh-w-node-id = (vehicle-with-node-id prob node-id)
+              unless (or
+                      ;; Do not generate moves that are not changing anything
                       (and (one-destination-p (vehicle-route veh))
-                              (eq (cadr (route-indices veh)) node-id))
-                         ;; Avoid moves that transfers a single node to an other empty vehicle
-                      (let ((vehicle-to (vehicle prob (vehicle-with-node-id prob node-id))))
-                        (and (no-visits-p (vehicle-route veh))
-                             (one-destination-p (vehicle-route vehicle-to))
-                             (eq (vehicle-start-location veh) (vehicle-start-location vehicle-to))
-                             (eq (vehicle-end-location veh) (vehicle-end-location vehicle-to)))))
+                           (eq (cadr (route-indices veh)) node-id))
+                      ;; Avoid moves that transfers a single node to an other empty vehicle (no need to check for nodes coming from UNSERVED list)
+                      (and (not (eq :UNSERVED veh-w-node-id))
+                           (let ((vehicle-to (vehicle prob veh-w-node-id)))
+                             (and (no-visits-p (vehicle-route veh))
+                                  (one-destination-p (vehicle-route vehicle-to))
+                                  (eq (vehicle-start-location veh) (vehicle-start-location vehicle-to))
+                                  (eq (vehicle-end-location veh) (vehicle-end-location vehicle-to))))))
               collect
                 (funcall
                  (symb 'make (ts-move-type ts))
                  :node-ID node-id
-                 :vehicle-ID veh-id))))))
+                 :vehicle-ID veh-id))
+              into moves
+              finally
+                ;; Create UNSERVED related moves (if applicable)
+                (if (problem-allow-unserved prob)
+                    (return (append
+                     (loop for node-id being the hash-keys of (problem-visits prob)
+                          unless (member node-id (problem-unserved prob))
+                          collect (funcall (symb 'make (ts-move-type ts)) :node-ID node-id :vehicle-ID :UNSERVED))
+                     moves))
+                    (return moves))))))
 
 ;; the difference between cost (inserting) and saving (removing)
-;; cost of inserting is calculated by (get-best-insertion-move)
+;; cost of inserting is calculated by (get-best-insertion-move) -- or *unserved-penalty* when vehicle-id is :UNSERVED
 ;; saving by removing the connecting arcs before and after, and connecting them directly
+
 (defmethod assess-move ((sol problem) (mv TS-best-insertion-move))
   (with-slots (node-id vehicle-id fitness) mv
-    (handler-case
-        (let* ((dist-matrix (problem-dist-matrix sol))
-               (veh (vehicle sol (vehicle-with-node-id sol node-id)))
-               (route (route-indices veh))
-               (pos (position node-id route))
-               (node-before (if (= pos 0) (vehicle-start-location veh) (nth (1- pos) route)))
-               (dist-before (get-distance node-before node-id dist-matrix)))
-          (setf fitness
-                ;cost of insertion
-                (- (move-fitness (get-best-insertion-move-in-vehicle sol vehicle-id node-id))
-                   ;save by removing:
-                   (let ((node-after (nth (1+ pos) route)))
-                     (- (+ dist-before
-                           (get-distance node-id node-after dist-matrix)) ;dist to next node
-                     ;minus direct route, which is 0 if the node-before and node-after are the same.
-                        (handler-case (get-distance node-before node-after dist-matrix)
-                          (same-origin-destination () 0)))))))
-    (no-feasible-move () (setf fitness nil))))) ;when no feasible-moves exist, set fitness nil
+    (flet ((insertion-cost (veh-id node-id)
+             "Cost of inserting node-id into veh-id, calculated using best-insertion-move, unless veh-id is :UNSERVED"
+             (if (eq :UNSERVED veh-id)
+                 *unserved-penalty*
+                 (move-fitness (get-best-insertion-move-in-vehicle sol veh-id node-id)))))
+      (let ((v-w-n-id (vehicle-with-node-id sol node-id)))
+        (handler-case
+            ;; Calculate move differently when it involves the :UNSERVED list
+            (if (eq :UNSERVED v-w-n-id)
+                (setf fitness (- (insertion-cost vehicle-id node-id) *unserved-penalty*))
+                (let* ((dist-matrix (problem-dist-matrix sol))
+                       (veh (vehicle sol v-w-n-id))
+                       (route (route-indices veh))
+                       (pos (position node-id route))
+                       (node-before (if (= pos 0) (vehicle-start-location veh) (nth (1- pos) route)))
+                       (dist-before (get-distance node-before node-id dist-matrix)))
+                  (setf fitness
+                        (- (insertion-cost vehicle-id node-id)
+                           ;save by removing:
+                           (let ((node-after (nth (1+ pos) route)))
+                             (- (+ dist-before
+                                   (get-distance node-id node-after dist-matrix)) ;dist to next node
+                                ;minus direct route, which is 0 if the node-before and node-after are the same.
+                                (handler-case (get-distance node-before node-after dist-matrix)
+                                  (same-origin-destination () 0))))))))
+          (no-feasible-move () (setf fitness nil))))))) ;when no feasible-moves exist, set fitness nil
 
 
 (defmethod perform-move ((sol problem) (mv TS-best-insertion-move))
   "Takes <Node> with node-ID and uses get-best-insertion to insert in vehicle-ID. DESTRUCTIVE."
-  (let* ((node-id (move-node-id mv))
-         (veh-id (move-vehicle-id mv))
-         (best-move (get-best-insertion-move-in-vehicle sol veh-id node-id)))
-         ;if the move of node is intra-route, AND the node is being moved forward
-    (if (and (eq (vehicle-with-node-ID sol node-ID) veh-ID)
-             (> (move-index best-move)
-                (position node-id (route-to mv sol) :key #'visit-node-id)))
-        ;then perform insertion first, afterward remove the old node, positioned before the new
-        (progn (perform-move sol best-move) (remove-node-id sol node-ID))
-        ;in all other cases, it's okay to remove the node first, then reinsert
-        (progn (remove-node-ID sol node-ID) (perform-move sol best-move))))
+  (let ((node-id (move-node-id mv))
+        (veh-id (move-vehicle-id mv)))
+    ;; If move is to put it to :UNSERVED, just push it there and remove the node
+    (if (eq :UNSERVED veh-id)
+        (progn (add-to-unserved sol node-id) (remove-node-id sol node-id))
+        (let ((best-move (get-best-insertion-move-in-vehicle sol veh-id node-id)))
+          ;if the move of node is intra-route, AND the node is being moved forward
+          (if (and (eq (vehicle-with-node-id sol node-id) veh-id)
+                   (> (move-index best-move)
+                      (position node-id (route-to mv sol) :key #'visit-node-id)))
+              ;then perform insertion first, afterward remove the old node, positioned before the new
+              (progn (perform-move sol best-move) (remove-node-id sol node-id))
+              ;in all other cases, it's okay to remove the node first, then reinsert
+              (progn (remove-node-id sol node-id) (perform-move sol best-move))))))
   sol)
 
 (defmethod select-move ((ts tabu-search) all-moves)

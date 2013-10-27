@@ -14,13 +14,12 @@
 (defmethod run-algo ((p problem) (a greedy-best-insertion))
   "Randomly insert <Nodes> one by one to best <vehicle> in best location. Returns <Algo> object when done."
   (let ((insertion-order (shuffle (loop for visits being the hash-values of (problem-visits p) collect (visit-node-id visits)))))
-    (handler-case
-        (loop for node in insertion-order
-           do (perform-move p (get-best-insertion-move p node))
-           finally (init-algo p a)
-             (return a))
-      (no-feasible-move ()
-        (print "No initial feasible solution!")
-        (print-routes p)
-        (print (arrival-times p))
-        (error 'no-initial-feasible-solution :data insertion-order)))))
+    (loop for node in insertion-order
+       do (handler-case
+              (perform-move p (get-best-insertion-move p node))
+            (no-feasible-move ()
+              (if (problem-allow-unserved p)
+                  (add-to-unserved p node)
+                  (error 'no-initial-feasible-solution :data p))))
+       finally (init-algo p a)
+         (return a))))

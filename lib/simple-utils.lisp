@@ -28,7 +28,8 @@
 
 (defun vrp-object (object)
   "Tests if the object is an instance of a VRP object that needs deep copy. (problem, fleet, vehicle)"
-  (member (type-of object) '(problem fleet vehicle)))
+  (or (typep object 'problem)
+      (typep object 'vehicle)))
 
 (defun copy-object (object)
   "A deep-cloner for CLOS."
@@ -39,11 +40,9 @@
         (when (slot-boundp object slot-name)
           (let ((value (slot-value object slot-name)))
             (setf (slot-value clone slot-name)
-                  (cond ((eq (type-of value) 'network)
-                         value)
-                        ((vrp-object value)
+                  (cond ((vrp-object value)
                          (copy-object (slot-value object slot-name)))
-                        ((listp value)
+                        ((and (listp value) (not (symbolp (car value))))
                          (mapcar #'copy-object value))
                         (t value)))))))
     clone))

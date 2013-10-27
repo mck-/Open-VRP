@@ -62,6 +62,8 @@
            :problem-visits
            :problem-dist-matrix
            :problem-fleet
+           :problem-allow-unserved
+           :problem-unserved
            :problem-log-file
            :problem-log-mode
 
@@ -118,6 +120,8 @@
    :remove-node-at
    :remove-node-id
    :last-visit
+   :add-to-unserved
+   :remove-from-unserved
 
    ;; network utils
    :sethash
@@ -151,6 +155,7 @@
    :in-time-p
 
    :fitness
+   :*unserved-penalty*
 
    ;; solver
    :init-algo

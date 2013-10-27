@@ -51,3 +51,15 @@
     (assert-true (no-visits-p (vehicle-route t3)))
     (assert-equal '(:O5 :O6) (route-indices t2))
     (assert-equal :O6 (visit-node-id (last-visit t2)))))
+
+(define-test unserved-list
+  "Test the unserved-list"
+  (:tag :route)
+  (let ((prob (make-instance 'problem :allow-unserved t)))
+    (assert-equal '() (problem-unserved prob))
+    (add-to-unserved prob :A)
+    (assert-equal '(:A) (problem-unserved prob))
+    (add-to-unserved prob :B)
+    (assert-equal '(:B :A) (problem-unserved prob))
+    (remove-from-unserved prob :A)
+    (assert-equal '(:B) (problem-unserved prob))))
