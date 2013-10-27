@@ -15,7 +15,8 @@
 (defun route-from (ins-move sol)
   "Returns the route that contains the node that will be moved. Returns NIL if it cannot be found in any vehicle."
   (aif (vehicle-with-node-id sol (move-node-id ins-move))
-       (vehicle-route (vehicle sol it))
+       (unless (eq :UNSERVED it)
+         (vehicle-route (vehicle sol it)))
        nil))
 
 (defun route-to (ins-move sol)
