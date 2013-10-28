@@ -13,7 +13,9 @@
   (format stream "~&---------------")
   (dolist (busy-veh (get-busy-vehicles prob))
     (format stream "~&[~5@A]: ~A~%" (vehicle-id busy-veh) (route-indices busy-veh)))
-  (format stream "~&---------------~%"))
+  (format stream "~&---------------~%")
+  (when (problem-allow-unserved prob)
+    (format stream "~&Unserved: ~A" (problem-unserved prob))))
 
 (defmethod print-routes ((a algo) &optional (stream t))
   (print-routes (algo-best-sol a) stream))
