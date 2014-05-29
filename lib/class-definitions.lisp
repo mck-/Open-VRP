@@ -31,7 +31,7 @@
 
 (defclass problem ()
   ((name :reader problem-name :initarg :name :initform "VRP")
-   (desc :reader problem-desc :initarg :desc :initform "Vehicle Routing Problem")
+   (desc :reader problem-desc :initarg :desc :initform "Vehicle Routing Problem" :allocation :class)
    (network :reader problem-network :initarg :network)
    (dist-array :accessor problem-dist-array :initarg :dist-array :initform nil)
    (fleet :reader problem-fleet :initarg :fleet)
@@ -76,7 +76,7 @@
 
 (defclass algo ()
   ((name :reader algo-name :initarg :name)
-   (desc :reader algo-desc :initarg :desc)
+   (desc :reader algo-desc :initarg :desc :allocation :class)
    (best-sol :accessor algo-best-sol :initarg :best-sol :initform nil)
    (best-fitness :accessor algo-best-fitness :initarg :best-fitness :initform nil)
    (best-iteration :accessor algo-best-iteration :initform 0)
